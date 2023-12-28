@@ -1,0 +1,197 @@
+/*   BASE CSS STYLES */
+:root {
+    --color-dark: #22314E;
+    --color-light: #FAF8D9;
+}
+
+/*  https://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting */
+.noselect {
+    -webkit-touch-callout: none;
+    /* iOS Safari */
+    -webkit-user-select: none;
+    /* Safari */
+    -khtml-user-select: none;
+    /* Konqueror HTML */
+    -moz-user-select: none;
+    /* Old versions of Firefox */
+    -ms-user-select: none;
+    /* Internet Explorer/Edge */
+    user-select: none;
+    /* Non-prefixed version, currently */
+}
+
+.noclick {
+    pointer-events: none;
+}
+
+html {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    background-color: var(--color-dark);
+    transition-duration: 0.3s;
+}
+
+
+
+
+div.maincontainer {
+    display: flex;
+    padding: 0%;
+    margin: 0px;
+    height: 95vh;
+}
+
+
+div.bigcontainer {
+    display: flex;
+    padding: 0%;
+    margin: 0%;
+    height: 100%;
+}
+div.titlecontainer {
+    display: flex;
+    padding: 0%;
+    margin: 0.5%;
+    height: 20%;
+}
+div.container {
+    display: flex;
+    padding: 0%;
+    margin: 0.5%;
+    width:100%;
+}
+
+
+/* jcenter for rows */
+div.rows {
+    flex-direction: row;
+}
+
+/* acenter for cols */
+div.cols {
+    flex-direction: column;
+}
+
+
+/*****CUSTOM CSS ******/
+.invis {
+    visibility: hidden;
+}
+
+.big2 {
+    font-size: 2em;
+}
+
+.jspace {
+    justify-content: space-evenly;
+}
+
+.jcenter {
+    justify-content: center;
+}
+
+.jright {
+    justify-content: right;
+}
+
+.jleft {
+    justify-content: left;
+}
+
+.acenter {
+    align-items: center;
+}
+
+.tcenter {
+    text-align: center;
+}
+
+.dmargin {
+    margin: 5px;
+}
+
+.dpadding {
+    padding: 5px;
+}
+
+
+
+.headingh {
+    height: 278px;
+}
+
+.indexw {
+    width: 560px;
+}
+
+.eduw {
+    width: 300px;
+}
+
+.edubodyw {
+    width: 520px;
+}
+
+.fixedw {
+    width: 600px;
+}
+
+.aboutw {
+    width: 800px;
+}
+
+.projectsw {
+    width: 400px;
+}
+
+/* absolute position from edges of page */
+.shiftr {
+    position: absolute;
+    left: 500px;
+}
+
+.fixedh {
+    height: 500px;
+}
+
+.validw {
+    width: 10px;
+    ;
+}
+
+.fright {
+    /* float:right; */
+    margin-left: auto;
+}
+
+.wordwrap {
+    inline-size: 940px;
+    overflow-wrap: break-word;
+}
+
+
+/* TESTING */
+
+.test {
+    border-radius: 3px;
+    border: 2.5px solid #000000;
+}
+
+.test1 {
+    border-radius: 3px;
+    border: 2.5px solid #c85656;
+}
+
+.test2 {
+    border-radius: 3px;
+    border: 2.5px solid #6160be;
+}
+
+
+.test3 {
+    border-radius: 3px;
+    border: 2.5px solid #37cd80;
+}

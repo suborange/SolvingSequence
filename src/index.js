@@ -6,8 +6,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const port = 3000;
 const app = (0, express_1.default)();
+app.set('view engine', 'ejs');
+app.use(express_1.default.static('public'));
 app.get("/", (req, res) => {
-    res.send("this is something completLY! DIFF");
+    res.render('index');
 });
 app.get("/hi", (req, res) => {
     res.send("hBYYYEEEE");

@@ -12,6 +12,9 @@
 
 
 # JavaScript
+- read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
+    - maybe use await function? grab 10 numbers, complete the function awaiting for end, then grabs next ten numbers?
+    - scrape data of web, to have newlines for each number? ( no thats like twice as big of a file)
 - make a canvas and redesign the cube for clarity, with animations
 - need a wya to check if solved, or parts of it being solved? 
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
