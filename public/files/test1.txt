@@ -21,7 +21,7 @@ var sketch1 = function (sketch) {
             // **** FUNCTIONS *****  
             // TURN FACES
             turnZ(angle) {
-                let vz = sketch.sketch.createVector();
+                let vz = sketch.createVector();
                 vz.x = sketch.round(this.normal.x * sketch.cos(angle) - this.normal.y * sketch.sin(angle));
                 vz.y = sketch.round(this.normal.x * sketch.sin(angle) + this.normal.y * sketch.cos(angle));
                 vz.z = sketch.round(this.normal.z);
@@ -29,7 +29,7 @@ var sketch1 = function (sketch) {
             }
 
             turnY(angle) {
-                let vy = sketch.sketch.createVector();
+                let vy = sketch.createVector();
                 vy.x = sketch.round(this.normal.x * sketch.cos(angle) - this.normal.z * sketch.sin(angle));
                 vy.z = sketch.round(this.normal.x * sketch.sin(angle) + this.normal.z * sketch.cos(angle));
                 vy.y = sketch.round(this.normal.y);
@@ -37,7 +37,7 @@ var sketch1 = function (sketch) {
             }
 
             turnX(angle) {
-                let vx = sketch.sketch.createVector();
+                let vx = sketch.createVector();
                 vx.y = sketch.round(this.normal.y * sketch.cos(angle) - this.normal.z * sketch.sin(angle));
                 vx.z = sketch.round(this.normal.y * sketch.sin(angle) + this.normal.z * sketch.cos(angle));
                 vx.x = sketch.round(this.normal.x);
@@ -49,13 +49,13 @@ var sketch1 = function (sketch) {
                 sketch.push();
                 sketch.noStroke();
                 sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
-                sketch.rectMode(CENTER);
+                sketch.rectMode(sketch.CENTER);
                 sketch.translate(30 * this.normal.x, 30 * this.normal.y, 30 * this.normal.z);
                 if (sketch.abs(this.normal.x)) {
-                    rotateY(sketch.sketch.HALF_PI);
+                    sketch.rotateY(sketch.HALF_PI);
                 }
                 else if (this.normal.y) {
-                    rotateX(sketch.sketch.HALF_PI);
+                    sketch.rotateX(sketch.HALF_PI);
                 }
                 // console.log(this.normal.x , this.normal.y, this.normal.z); seems to be working fine.. 
                 sketch.square(0, 0, 60);
@@ -163,7 +163,7 @@ var sketch1 = function (sketch) {
             update() {
                 if (this.animate) {
                     this.angle += this.dir * 0.1;
-                    if (sketch.abs(this.angle) > sketch.sketch.HALF_PI) {
+                    if (sketch.abs(this.angle) > sketch.HALF_PI) {
                         this.angle = 0;
                         this.animate = false;
                         console.log("animating", this.angle);
@@ -197,8 +197,8 @@ var sketch1 = function (sketch) {
 
         // **** START CANVAS AND SETUP ****
 
-        sketch.createCanvas(450, 291, sketch.WEBGL);
-        // canvas.parent("canvastl");
+        let canvas = sketch.createCanvas(450, 291, sketch.WEBGL);
+        canvas.parent("canvastl");
         sketch.frameRate(60);
 
 
@@ -649,25 +649,6 @@ var sketch1 = function (sketch) {
 
 }
 
-var s2 = function (sketch) {
-
-    sketch.setup = function () {
-        let canvas2 = sketch.createCanvas(100, 100, sketch.WEBGL);
-        canvas2.position(100, 100);
-    }
-    sketch.draw = function () {
-        //for canvas 2
-        sketch.background(100);
-        sketch.rotateX(sketch.frameCount * 0.01);
-        sketch.rotateZ(sketch.frameCount * 0.02);
-        sketch.cone(30, 50);
-    }
-};
-
-// create the second instance of p5 and pass in the function for sketch 2
+new p5(sketch1);
 
 
-
-const canvastl = document.querySelector('#canvastl');
-
-new p5(s2, canvastl);
