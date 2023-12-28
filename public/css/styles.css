@@ -55,15 +55,44 @@ div.titlecontainer {
     display: flex;
     padding: 0%;
     margin: 0.5%;
-    height: 20%;
+    height: 15%;
 }
 div.container {
     display: flex;
     padding: 0%;
     margin: 0.5%;
     width:100%;
+    height:100%;
+    
 }
 
+div.gcontainer {
+    display: grid;
+    padding: 0%;
+    margin: 0.5%;
+    width:100%;
+    height:100%;
+}
+div.cubewrap {
+    display: flex;
+    height: 40%;
+    width: 100%;
+}
+div.movewrap {
+    display: flex;
+    height: 10%;
+    width: 100%;
+}
+div.cube {    
+    display: flex;
+    padding: 0%;
+    margin: 0.5%;
+    width:50%;
+}
+
+div.move {
+
+}
 
 /* jcenter for rows */
 div.rows {
@@ -101,12 +130,28 @@ div.cols {
     justify-content: left;
 }
 
-.acenter {
+.jstretch {
+    justify-content: stretch;
+}
+
+.icenter {
     align-items: center;
+}
+
+.istretch {
+    align-items: stretch;
 }
 
 .tcenter {
     text-align: center;
+}
+
+.acenter {
+align-content: center;
+}
+
+.astretch {
+    align-content: stretch;
 }
 
 .dmargin {

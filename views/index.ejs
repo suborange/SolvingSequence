@@ -1,22 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
 <%- include('partials/head.ejs') %>
-<body>
 
-    <div class="maincontainer jspace cols  ">
-        <div class="titlecontainer jcenter acenter test1 ">
-            <h1>Pi Solves a Rubik's Cube</h1>
-        </div>
-        <div class="bigcontainer rows  ">
-            <div class="container jcenter acenter test2 ">
-                <h1>Notation</h1>
+    <body>
+
+        <div class="maincontainer jspace cols  ">
+            <div class="titlecontainer jcenter icenter test1 ">
+                <h1>Pi Solves a Rubik's Cube</h1>
             </div>
-            <div class="container jcenter acenter test2 ">
-                <h1>Canvas</h1>
+            <div class="bigcontainer rows  ">
+                <div class="container jcenter icenter test2 ">
+                    <h1>Notation</h1>
+                </div>
+                <div class="container jcenter icenter cols test2 ">
+                    <div class="cubewrap ">
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>Cube 1 no scramble</h1>
+                        </div>
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>cube 2 with first scramble</h1>
+                        </div>
+                    </div>    
+                    <div class="movewrap ">
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>Move 1 - no scramble</h1>
+                        </div>
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>move 2 - first scramble</h1>
+                        </div>
+                    </div>     
+                    <div class="cubewrap ">
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>cube 3 with another scramble</h1>
+                        </div>
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>cube 4 with another scramble</h1>
+                        </div>
+                    </div>    
+                    <div class="movewrap ">
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>move 3 - another scramble</h1>
+                        </div>
+                        <div class="cube icenter jcenter test1 ">
+                            <h1>move 4 - another scramble</h1>
+                        </div>
+                    </div>                
+                </div>
             </div>
+
         </div>
-       
-    </div>
-    
-</body>
+
+    </body>
+
 </html>
