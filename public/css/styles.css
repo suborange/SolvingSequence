@@ -55,7 +55,8 @@ div.titlecontainer {
     display: flex;
     padding: 0%;
     margin: 0.5%;
-    height: 15%;
+    height: 10%;
+    font-size: 2em;
 }
 div.container {
     display: flex;
@@ -75,24 +76,18 @@ div.gcontainer {
 }
 div.cubewrap {
     display: flex;
-    height: 40%;
     width: 100%;
 }
 div.movewrap {
     display: flex;
-    height: 10%;
     width: 100%;
 }
 div.cube {    
     display: flex;
     padding: 0%;
     margin: 0.5%;
-    width:50%;
 }
 
-div.move {
-
-}
 
 /* jcenter for rows */
 div.rows {
@@ -204,7 +199,38 @@ align-content: center;
 
 .validw {
     width: 10px;
-    ;
+    
+}
+
+.fullw{
+    width: 100%;
+}
+
+.fullh {
+    height: 100%;
+}
+
+.halfw {
+    width: 50%;
+}
+
+.nineheight {
+    height: 90%;
+}
+
+.eightheight {
+    height: 80%;
+}
+
+.fourheight {
+    height: 40%;
+}
+
+.twoheight{
+    height: 20%;
+}
+.oneheight {
+    height: 10%;
 }
 
 .fright {
