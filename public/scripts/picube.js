@@ -370,8 +370,8 @@ var sketch1 = function (sketch) {
         // camera controls for free rotation
         sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        sketch.rotateX(sketch.frameCount * 0.003);
-        sketch.rotateZ(sketch.frameCount * 0.003);
+        sketch.rotateX(sketch.frameCount * 0.002);
+        sketch.rotateZ(sketch.frameCount * 0.002);
         // move.update();
 
 
