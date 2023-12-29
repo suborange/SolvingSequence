@@ -231,7 +231,7 @@ for (let i = 0; i < 1; i++) {
 
             // **** START CANVAS AND SETUP ****
 
-            let canvas = sketch.createCanvas(450, 291, sketch.WEBGL);
+            let canvas = sketch.createCanvas(430, 230, sketch.WEBGL);
             canvas.parent(canvas_id[0]); //  "canvastl"
             sketch.frameRate(60);
 
@@ -384,7 +384,7 @@ for (let i = 0; i < 1; i++) {
                     scramble = false;
                     prev_pit = 0; // reset for "solve"
                 }
-                console.log("random_digits", random_digits);
+                // console.log("random_digits", random_digits);
 
 
                 if (random_digits[index] >= prev_pit) {

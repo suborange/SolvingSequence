@@ -2,7 +2,7 @@
 + wireframe the website for 4 quadrants, for each canvas
 + make a quadrant for all the notation correctly aligned and designed to show each digit clearly. 
 - need to redesign to show current scramble, and then show all concurrent digits and moves ( which will be the same, against different scrambles)
-    - need to add another box below to show the current digits and moves
+    + need to add another box below to show the current digits and moves
 
 # HTML
 - i think it us just one home page, maybe a page on how it works and was built?

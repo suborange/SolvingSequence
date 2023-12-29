@@ -35,7 +35,19 @@ body {
 }
 
 
+h1 {
+    font-size: 2em;
+    font-family: 'Chakra Petch';
+    margin: 0%;
+    padding: 0%;
+}
 
+h2{
+    font-size: 1.8em;
+    font-family: 'Chakra Petch';
+    margin: 0%;
+    padding: 0%;
+}
 
 div.maincontainer {
     display: flex;
@@ -54,14 +66,14 @@ div.bigcontainer {
 div.titlecontainer {
     display: flex;
     padding: 0%;
-    margin: 0.5%;
+    margin-top: 0.5%;
     height: 10%;
     font-size: 2em;
 }
 div.container {
     display: flex;
     padding: 0%;
-    margin: 0.5%;
+    /* margin: 0.5%; */
     width:100%;
     height:100%;
     
@@ -70,7 +82,7 @@ div.container {
 div.gcontainer {
     display: grid;
     padding: 0%;
-    margin: 0.5%;
+    /* margin: 0.5%; */
     width:100%;
     height:100%;
 }
@@ -84,8 +96,9 @@ div.movewrap {
 }
 div.cube {    
     display: flex;
-    padding: 0%;
-    margin: 0.5%;
+    padding: 0.15%;
+    margin-left: 0.15%;
+    margin-right: 0.15%;
 }
 
 
@@ -233,6 +246,10 @@ align-content: center;
     height: 40%;
 }
 
+.threeheight {
+    height: 30%;
+}
+
 .twoheight{
     height: 20%;
 }
@@ -258,6 +275,22 @@ align-content: center;
     overflow-wrap: break-word;
 }
 
+.tbord {
+    border-top: 2.5px solid #6160be;
+}
+
+.thalfbord {
+    border-top: 2.5px solid #37cd80;
+    border-left: 2.5px solid #37cd80;
+    border-right: 2.5px solid #37cd80;
+}
+
+.bhalfbord {
+    border-bottom: 2.5px solid #37cd80;
+    border-left: 2.5px solid #37cd80;
+    border-right: 2.5px solid #37cd80;
+    margin-bottom: 0.3%;
+}
 
 /* TESTING */
 
