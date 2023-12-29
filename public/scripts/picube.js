@@ -96,7 +96,7 @@ for (let i = 0; i < 1; i++) {
                     sketch.noStroke();
                     sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
                     sketch.rectMode(sketch.CENTER);
-                    sketch.translate(30 * this.normal.x, 30 * this.normal.y, 30 * this.normal.z);
+                    sketch.translate(20 * this.normal.x, 20 * this.normal.y, 20 * this.normal.z);
                     if (sketch.abs(this.normal.x)) {
                         sketch.rotateY(sketch.HALF_PI);
                     }
@@ -104,7 +104,7 @@ for (let i = 0; i < 1; i++) {
                         sketch.rotateX(sketch.HALF_PI);
                     }
                     // console.log(this.normal.x , this.normal.y, this.normal.z); seems to be working fine.. 
-                    sketch.square(0, 0, 60);
+                    sketch.square(0, 0, 40);
                     sketch.pop();
                 }
             } // end face
@@ -225,21 +225,8 @@ for (let i = 0; i < 1; i++) {
             // *** END CLASSES  ****
 
             // *** PRECANVAS ***
-
-            // let tempits = localStorage.getItem('pi_digits');
-            // if (tempits) {
-            //     // console.log("|",tempits,"|");
-            //     get_pits += tempits;
-            //     get_pits += "##"; // add two for ending? something along this line. 
-            // }
-            // else {
-            //     get_pits = "314159";
-            // }
-
-            // console.log(`get pits: | ${get_pits} |`);
-
-            // document.querySelector("#display_digits").innerHTML = `${get_pits.length - 2}`;
-            let get_pits = 3.14159
+            // GET PI NUMBERS 
+            let get_pits = 3.14159;
 
             // **** START CANVAS AND SETUP ****
 
@@ -258,7 +245,7 @@ for (let i = 0; i < 1; i++) {
             for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
                 for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
                     for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz++) {
-                        let _len = 60;
+                        let _len = 40;
                         let offset = (dim - 1) * _len * 0.5;
                         let x = _X * _len - offset;
                         let y = _Y * _len - offset;
@@ -302,7 +289,7 @@ for (let i = 0; i < 1; i++) {
                     // translate?
                     qb.matrix = qb.matrix_next;
 
-                    qb.update((qb.matrix.x / 60), (qb.matrix.y / 60), (qb.matrix.z / 60));
+                    qb.update((qb.matrix.x / 40), (qb.matrix.y / 40), (qb.matrix.z / 40));
                     qb.turnXfaces(angle);
                 } // end if axis    
 
@@ -325,7 +312,7 @@ for (let i = 0; i < 1; i++) {
                     qb.matrix_next.y = sketch.round(qb.matrix.y);
                     qb.matrix = qb.matrix_next;
 
-                    qb.update((qb.matrix.x / 60), (qb.matrix.y / 60), (qb.matrix.z / 60));
+                    qb.update((qb.matrix.x / 40), (qb.matrix.y / 40), (qb.matrix.z / 40));
                     qb.turnYfaces(angle);
                 } // end if axis     
 
@@ -348,7 +335,7 @@ for (let i = 0; i < 1; i++) {
                     qb.matrix_next.z = sketch.round(qb.matrix.z);
                     qb.matrix = qb.matrix_next;
 
-                    qb.update((qb.matrix.x / 60), (qb.matrix.y / 60), (qb.matrix.z / 60));
+                    qb.update((qb.matrix.x / 40), (qb.matrix.y / 40), (qb.matrix.z / 40));
                     qb.turnZfaces(angle);
                 } // end if axis
 
@@ -369,7 +356,7 @@ for (let i = 0; i < 1; i++) {
             sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
             sketch.rotateX(sketch.frameCount * 0.002);
-            sketch.rotateZ(sketch.frameCount * 0.002);
+            sketch.rotateZ(sketch.frameCount * 0.0022);
             // move.update();
 
 
