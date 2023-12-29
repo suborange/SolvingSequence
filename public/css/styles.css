@@ -49,6 +49,11 @@ h2{
     padding: 0%;
 }
 
+span {
+    font-size: 1.2em;
+    color: #c85656;
+}
+
 div.maincontainer {
     display: flex;
     padding: 0%;
@@ -283,6 +288,7 @@ align-content: center;
     border-top: 2.5px solid #37cd80;
     border-left: 2.5px solid #37cd80;
     border-right: 2.5px solid #37cd80;
+    /* box-shadow: 2px 2px #37cd80; */
 }
 
 .bhalfbord {
@@ -290,6 +296,7 @@ align-content: center;
     border-left: 2.5px solid #37cd80;
     border-right: 2.5px solid #37cd80;
     margin-bottom: 0.3%;
+    /* box-shadow: 2px 2px #37cd80; */
 }
 
 /* TESTING */

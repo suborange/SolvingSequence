@@ -5,11 +5,12 @@
     + need to add another box below to show the current digits and moves
 
 # HTML
-- i think it us just one home page, maybe a page on how it works and was built?
+- i think it is just one home page, maybe a page on how it works and was built?
+- link to how it was built?
 
 
 # CSS
-- find good color pallete and design in relation to rubiks cube. 
+- find good color pallete, design, font, borders, etc. in relation to rubiks cube. 
 
 
 # JavaScript
@@ -20,3 +21,6 @@
 - need a wya to check if solved, or parts of it being solved? 
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
+- scramble the cube first, then have all canvases start solving
+
+- displaying number values needs to account for commas

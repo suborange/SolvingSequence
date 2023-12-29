@@ -33,11 +33,11 @@
                         </div>
                     </div>
                     <div class="movewrap oneheight">
-                        <div id="scramble1" class="cube icenter jcenter halfw bhalfbord ">
+                        <div class="cube icenter jcenter halfw bhalfbord ">
                             <h2 id="scramble1">No scramble</h2>
                         </div>
                         <div id="scramble2" class="cube icenter jcenter halfw bhalfbord ">
-                            <h2>WR: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2 </h2>
+                            <h2 id="scramble2">WR: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2 </h2>
                         </div>
                     </div>
                     <div class="cubewrap threeheight">
@@ -50,21 +50,23 @@
                     </div>
                     <div class="movewrap oneheight">
                         <div class="cube icenter tcenter jcenter halfw bhalfbord ">
-                            <h2>F' D F2 L2 R2 F' D R2 D U F2 R2 F2 D L2 R' F' L2 U'</h2>
+                            <h2 id="scramble3"></h2>
                         </div>
                         <div class="cube icenter jcenter halfw bhalfbord ">
-                            <h2>F' U B2 L2 D R2 F' D L2 D R2 D U F2 D L2 R' U R' F'</h2>
+                            <h2 id="scramble4">U B2 L2 D R2 F' D L2 F' D R2 D U F2 D L2 R' U R' F'</h2>
                         </div>
                     </div>
                     <div class="movewrap oneheight">
-                        <div class="cube icenter jcenter fullw  ">
-                            <h2>Digits: </h2>
+                        <div class="cube icenter jcenter fullw rows ">
+                            <h2>Digits:&nbsp;</h2>
+                            <h2><span id="digit_queue">| - | - | - | - | 3 | 1 | 4 | </span></h2>
                         </div>
                     </div>
                     <div class="movewrap oneheight">
                         <div class="cube icenter jcenter fullw  rows ">
-                            <h2>Current Digit#: 10 |&nbsp;</h2>
-                            <h2>Current Move: R</h2>
+                            <h2 >Current Move: <span id="curr_move" class="">-&nbsp;</span> |&nbsp;</h2>
+                            <h2 >Curr Digit#: <span id="curr_digit">-</span></h2>
+                            
                         </div>
                     </div>
                 </div>
