@@ -50,6 +50,10 @@ h2{
     padding: 0%;
 }
 
+img.notation {
+    width: 50%;    
+}
+
 span.current {
     font-size: 1.35em;
     color: #c85656;
