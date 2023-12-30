@@ -5,7 +5,7 @@ const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10
 
 
 var random_digits = [];
-for (let iran = 0; iran < 15; iran++) {
+for (let iran = 0; iran < 1; iran++) {
     var r = Math.floor(Math.random() * (9) + 1);
     if (r != random_digits[iran - 1] && r != random_digits[iran - 2]) { // if not duplicate to last number
         random_digits.push(r);
@@ -40,7 +40,7 @@ const S_SLICE = 0;
 const M_SLICE = 0;
 const E_SLICE = 0;
 // GET PI NUMBERS 
-let get_pits = '---314159265358979323846264338327950';
+let get_pits = '---3141592653589';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -53,7 +53,7 @@ function displayPi(start, end) {
     // find the pi digit, and adjust it as it runs. 
     // console.log("start: ", start, " | end: ", end);
     document.querySelector("#curr_digit").innerHTML = `${start-2}`;
-    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | ${get_pits.substring(start, end)} | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
+    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
    
 
 }
@@ -254,7 +254,7 @@ for (let i = 0; i < 1; i++) {
 
             // **** START CANVAS AND SETUP ****
 
-            let canvas = sketch.createCanvas(430, 230, sketch.WEBGL);
+            let canvas = sketch.createCanvas(430, 250, sketch.WEBGL);
             canvas.parent(canvas_id[0]); //  "canvastl"
             sketch.frameRate(60);
 
@@ -497,11 +497,7 @@ for (let i = 0; i < 1; i++) {
                     // get ready for next move
                     prev_pit = random_digits[index];
                 } // END CLOCKWISE
-                else { // INVERSE, COUNTER-CLOCKWISE MOVES
-                    // if (repeat) {
-                    //   curr_digit = get_pits.substring(start-1,start);
-                    //   console.log("repeat move: ", curr_digit);
-                    // }
+                else { // INVERSE, COUNTER-CLOCKWISE MOVES           
                     switch (random_digits[index]) {
                         case 1:
                             // M SLICE INVERSE
@@ -588,7 +584,7 @@ for (let i = 0; i < 1; i++) {
             // sketch.frameCount
             // right now every 2 seconds. 
             // do {
-            if (sketch.frameCount % 100 == 0 && is_solving && !scramble) {
+            if (sketch.frameCount % 120 == 0 && is_solving && !scramble) {
 
                 // get the pis and numbers and do the switching for each rotation and angle.'
 
@@ -757,7 +753,8 @@ for (let i = 0; i < 1; i++) {
                 console.log(`pit: ${curr_pit}`)                
                 start++; // go to next digit
                 if (start > get_pits.length) {
-                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | ${get_pits.substring(start, end)} | - | - | - |`;
+                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                    console.log("STOPPED");
                     is_solving = false;
                 }
             }

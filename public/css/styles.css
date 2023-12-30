@@ -40,18 +40,32 @@ h1 {
     font-family: 'Chakra Petch';
     margin: 0%;
     padding: 0%;
+    
 }
 
 h2{
-    font-size: 1.8em;
+    font-size: 1.65em;
     font-family: 'Chakra Petch';
     margin: 0%;
     padding: 0%;
 }
 
-span {
-    font-size: 1.2em;
+span.current {
+    font-size: 1.35em;
     color: #c85656;
+}
+span.wr {
+    color:#37cd80;
+}
+
+span.pi {
+    display: inline-block;
+    font-family: 'Chakra Petch';
+    font-size: 1.35em;
+    margin: 0 ;    
+    line-height: 20px;
+    height: 20px;
+    
 }
 
 div.maincontainer {
@@ -67,6 +81,7 @@ div.bigcontainer {
     padding: 0%;
     margin: 0%;
     height: 100%;
+    width: 95%;
 }
 div.titlecontainer {
     display: flex;
@@ -255,6 +270,10 @@ align-content: center;
     height: 30%;
 }
 
+.freeheight {
+    height: 33%;
+}
+
 .twoheight{
     height: 20%;
 }
@@ -262,6 +281,9 @@ align-content: center;
     height: 10%;
 }
 
+.fillbheight {
+    height: 7%;
+}
 .inherith {
     height: inherit;
 }
