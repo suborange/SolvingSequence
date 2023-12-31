@@ -308,17 +308,17 @@ for (let i = 0; i < 1; i++) {
             moves.push(new Move(RIGHT, 0, 0, CLOCKWISE)); // 3
             moves.push(new Move(LEFT, 0, 0, CLOCKWISE)); // 4
             moves.push(new Move(0, 0, FRONT, CLOCKWISE)); // 5
-            moves.push(new Move(0, 0, BACK, COUNTER_CLOCKWISE)); // 6
-            moves.push(new Move(0, E_SLICE, 0, COUNTER_CLOCKWISE)); // 7
+            moves.push(new Move(0, 0, BACK, CLOCKWISE)); // 6
+            moves.push(new Move(0, E_SLICE, 0, CLOCKWISE)); // 7
             moves.push(new Move(0, 0, S_SLICE, CLOCKWISE)); // 8
             moves.push(new Move(M_SLICE, 0, 0, COUNTER_CLOCKWISE)); // 9 
             moves.push(new Move(0, UP, 0, COUNTER_CLOCKWISE)); // 10 
-            moves.push(new Move(0, DOWN, 0, CLOCKWISE)); // 11
+            moves.push(new Move(0, DOWN, 0, COUNTER_CLOCKWISE)); // 11
             moves.push(new Move(RIGHT, 0, 0, COUNTER_CLOCKWISE)); // 12
             moves.push(new Move(LEFT, 0, 0, COUNTER_CLOCKWISE)); // 13
             moves.push(new Move(0, 0, FRONT, COUNTER_CLOCKWISE)); // 14
-            moves.push(new Move(0, 0, BACK, CLOCKWISE)); // 15
-            moves.push(new Move(0, E_SLICE, 0, CLOCKWISE)); // 16
+            moves.push(new Move(0, 0, BACK, COUNTER_CLOCKWISE)); // 15
+            moves.push(new Move(0, E_SLICE, 0, COUNTER_CLOCKWISE)); // 16
             moves.push(new Move(0, 0, S_SLICE, COUNTER_CLOCKWISE)); // 17
             
 
