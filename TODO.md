@@ -8,7 +8,7 @@
 # HTML
 - i think it is just one home page, maybe a page on how it works and was built?
 - link to how it was built?
-- add notations
++ add notations + templates
 
 # CSS
 - find good color pallete, design, font, borders, etc. in relation to rubiks cube. 
