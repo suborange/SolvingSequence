@@ -34,43 +34,116 @@ body {
     transition-duration: 0.3s;
 }
 
+p {
+    font-family: 'Chakra Petch';
+    margin: 0;
+    padding: 0;
+}
 
 h1 {
+    color: #000000;
     font-size: 2em;
     font-family: 'Chakra Petch';
     margin: 0%;
     padding: 0%;
+    text-shadow: 0px 0px 4px #250550, 0px 0px 20px #000000;
+    /* text-shadow: 4px 4px 5px #16042e, 0px 0px 10px #ffffff; */
     
 }
 
-h2{
+h2.subtitle {
+    font-size: 2em;
+    font-family: 'Chakra Petch';
+    /*
+        font-family: 'Unispace';
+        font-weight: bold;*/
+    margin: 0%;
+    padding: 0%;
+}
+
+h2 {
     font-size: 1.65em;
     font-family: 'Chakra Petch';
+    /*
+    font-family: 'Unispace';
+    font-weight: bold;*/
     margin: 0%;
     padding: 0%;
 }
 
 img.notation {
-    width: 50%;    
+    width: 99%;
 }
 
 span.current {
     font-size: 1.35em;
     color: #c85656;
 }
+
 span.wr {
-    color:#37cd80;
+    color: #37cd80;
 }
 
 span.pi {
     display: inline-block;
     font-family: 'Chakra Petch';
     font-size: 1.35em;
-    margin: 0 ;    
+    margin: 0;
+    padding:0;
     line-height: 20px;
     height: 20px;
-    
+    color: rgb(198, 218, 248);
 }
+
+span.r {
+    color: green;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    height: 20px;
+}
+
+span.u {
+    color: white;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    height: 20px;
+}
+
+span.b {
+    color: blue;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    height: 20px;
+}
+
+span.i {
+    color: orange;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    height: 20px;
+}
+
+span.k {
+    color: yellow;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    
+    height: 20px;
+}
+
+span.s {
+    color: red;
+    margin: 0;
+    padding:0;
+    line-height: 20px;
+    height: 20px;
+}
+
 
 div.maincontainer {
     display: flex;
@@ -85,8 +158,9 @@ div.bigcontainer {
     padding: 0%;
     margin: 0%;
     height: 100%;
-    width: 95%;
+    width: 96%;
 }
+
 div.titlecontainer {
     display: flex;
     padding: 0%;
@@ -94,31 +168,35 @@ div.titlecontainer {
     height: 10%;
     font-size: 2em;
 }
+
 div.container {
     display: flex;
     padding: 0%;
     /* margin: 0.5%; */
-    width:100%;
-    height:100%;
-    
+    width: 100%;
+    height: 100%;
+
 }
 
 div.gcontainer {
     display: grid;
     padding: 0%;
     /* margin: 0.5%; */
-    width:100%;
-    height:100%;
+    width: 100%;
+    height: 100%;
 }
+
 div.cubewrap {
     display: flex;
     width: 100%;
 }
+
 div.movewrap {
     display: flex;
     width: 100%;
 }
-div.cube {    
+
+div.cube {
     display: flex;
     padding: 0.15%;
     margin-left: 0.15%;
@@ -179,7 +257,7 @@ div.cols {
 }
 
 .acenter {
-align-content: center;
+    align-content: center;
 }
 
 .astretch {
@@ -236,10 +314,10 @@ align-content: center;
 
 .validw {
     width: 10px;
-    
+
 }
 
-.fullw{
+.fullw {
     width: 100%;
 }
 
@@ -258,6 +336,11 @@ align-content: center;
 .eightheight {
     height: 80%;
 }
+
+.sevheight {
+    height: 70%;
+}
+
 .sixheight {
     height: 60%;
 }
@@ -278,9 +361,10 @@ align-content: center;
     height: 33%;
 }
 
-.twoheight{
+.twoheight {
     height: 20%;
 }
+
 .oneheight {
     height: 10%;
 }
@@ -288,6 +372,7 @@ align-content: center;
 .fillbheight {
     height: 7%;
 }
+
 .inherith {
     height: inherit;
 }
@@ -311,17 +396,21 @@ align-content: center;
 }
 
 .thalfbord {
-    border-top: 2.5px solid #37cd80;
-    border-left: 2.5px solid #37cd80;
-    border-right: 2.5px solid #37cd80;
+    border-top: 4px solid #192338;
+    border-left: 4px solid #192338;
+    border-right: 4px solid #192338;
+    border-bottom: 1px#22314E;
+    border-radius: 10px;
     /* box-shadow: 2px 2px #37cd80; */
 }
 
 .bhalfbord {
-    border-bottom: 2.5px solid #37cd80;
-    border-left: 2.5px solid #37cd80;
-    border-right: 2.5px solid #37cd80;
+    border-bottom: 4px solid #192338;
+    border-left: 4px solid #192338;
+    border-right: 4px solid #192338;
+    border-top: 1px#22314E;
     margin-bottom: 0.3%;
+    border-radius: 10px;
     /* box-shadow: 2px 2px #37cd80; */
 }
 
