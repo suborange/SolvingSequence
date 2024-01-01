@@ -11,7 +11,7 @@ for (let iran = 0; iran < 1; iran++) {
         random_digits.push(r);
     }
 }
-random_digits = wr_scramble;
+// random_digits = wr_scramble;
 console.log("random: ", random_digits);
 
 
@@ -45,7 +45,7 @@ const CLOCKWISE = 1;
 const COUNTER_CLOCKWISE = -1;
 
 // GET PI NUMBERS 
-let get_pits = '---314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460';
+let get_pits = '---3141592';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -414,8 +414,8 @@ for (let i = 0; i < 1; i++) {
             // camera controls for free rotation
             sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-            // sketch.rotateX(sketch.frameCount * 0.002);
-            // sketch.rotateZ(sketch.frameCount * 0.0022);
+            sketch.rotateX(sketch.frameCount * 0.002);
+            sketch.rotateZ(sketch.frameCount * 0.0022);
             
             if ( move != null ){
                 
@@ -452,7 +452,7 @@ for (let i = 0; i < 1; i++) {
 
                     // if finished scrambling, do it
                     if (index >= random_digits.length - 1) {
-                        // scramble = false;
+                        scramble = false;
                         prev_pit = 0; // reset for "solve"
                     }
                     // console.log("random_digits", random_digits);

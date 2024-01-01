@@ -31,6 +31,7 @@ html {
 
 body {
     background-color: var(--color-dark);
+    color: var(--color-light);
     transition-duration: 0.3s;
 }
 
@@ -41,7 +42,7 @@ p {
 }
 
 h1 {
-    color: #000000;
+    color: var(--color-light);
     font-size: 2em;
     font-family: 'Chakra Petch';
     margin: 0%;
@@ -77,11 +78,11 @@ img.notation {
 
 span.current {
     font-size: 1.35em;
-    color: #c85656;
+    color: #c9282d;
 }
 
 span.wr {
-    color: #37cd80;
+    color: #6f90b8;
 }
 
 span.pi {
@@ -92,7 +93,9 @@ span.pi {
     padding:0;
     line-height: 20px;
     height: 20px;
-    color: rgb(198, 218, 248);
+    /* color: rgb(198, 218, 248); */
+    /* color: var(--color-light); */
+    color: #f2af32;
 }
 
 span.r {
