@@ -82,7 +82,7 @@ span.current {
 }
 
 span.wr {
-    color: #6f90b8;
+    color: #93c1fa;
 }
 
 span.pi {
@@ -96,6 +96,7 @@ span.pi {
     /* color: rgb(198, 218, 248); */
     /* color: var(--color-light); */
     color: #f2af32;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 
 span.r {

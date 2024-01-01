@@ -24,12 +24,14 @@ let move;
 let moves = [];
 let bool = true;
 let start = 3;
+let curr_pit;
 // let end = 1;
 let is_solving = true;  // start as solving
 let prev_pit = 0;
 let repeat = false;
 let scramble = true;
-
+let cam1;
+let cam2;
 
 // CONSTANTS 
 const BACK = -1;
@@ -43,9 +45,13 @@ const M_SLICE = 0;
 const E_SLICE = 0;
 const CLOCKWISE = 1;
 const COUNTER_CLOCKWISE = -1;
+const X_PLANE = 0;
+const Y_PLANE = 1;
+const Z_PLANE = 2;
+
 
 // GET PI NUMBERS 
-let get_pits = '---3141592';
+let get_pits = '---112233445566778899';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -219,20 +225,22 @@ for (let i = 0; i < 1; i++) {
                 y = 0;
                 z = 0;
                 dir;
+                plane;
                 animate = false;
 
-                constructor(x, y, z, dir) {
+                constructor(x, y, z, dir, p) {
                     this.x = x;
                     this.y = y;
                     this.z = z;
                     this.dir = dir;
+                    this.plane = p;
 
                 }
 
                 // ***** FUNCTIONS *****
                 start() {
                     this.animate = true;
-                    this.angle=0;
+                    this.angle = 0;
                 }
 
                 update() {
@@ -243,17 +251,18 @@ for (let i = 0; i < 1; i++) {
                             this.angle = 0;
                             this.animate = false;
 
-                            if (sketch.abs(this.z) > 0) { // Z axis animation
+                            // this does not work with slicing, because it IS 0!
+                            if (this.plane == 2) { // Z axis animation
                                 rotateZaxis(this.dir * sketch.HALF_PI, this.z);
                                 console.log("dir:", this.dir, "z-animation", this.z);
                             }
-                            else if (sketch.abs(this.x) > 0) { // X axis animation
+                            else if (this.plane == 0) { // X axis animation
                                 rotateXaxis(this.dir * sketch.HALF_PI, this.x);
-                                console.log("dir:", this.dir,"x-animation", this.x);
+                                console.log("dir:", this.dir, "x-animation", this.x);
                             }
-                            else if (sketch.abs(this.y) > 0) { // Y axis animation
+                            else if (this.plane == 1) { // Y axis animation
                                 rotateYaxis(this.dir * sketch.HALF_PI, this.y);
-                                console.log("dir:", this.dir,"y-animation", this.y);
+                                console.log("dir:", this.dir, "y-animation", this.y);
                             }
 
                         }
@@ -275,6 +284,11 @@ for (let i = 0; i < 1; i++) {
             canvas.parent(canvas_id[0]); //  "canvastl"
             sketch.frameRate(60);
 
+
+            cam1 = sketch.createCamera();
+            cam2 = sketch.createCamera();
+            cam1.setPosition(80,80,80);
+            cam1.lookAt(0,0,0);
 
             // SETUP VARIABLES 
 
@@ -302,30 +316,30 @@ for (let i = 0; i < 1; i++) {
             index = 0;
             // z face, clockwise
             move = null;
-            moves[0]= new Move(M_SLICE, 0, 0, CLOCKWISE); //0
-            moves.push(new Move(0, UP, 0, CLOCKWISE)); // 1
-            moves.push(new Move(0, DOWN, 0, CLOCKWISE)); // 2
-            moves.push(new Move(RIGHT, 0, 0, CLOCKWISE)); // 3
-            moves.push(new Move(LEFT, 0, 0, CLOCKWISE)); // 4
-            moves.push(new Move(0, 0, FRONT, CLOCKWISE)); // 5
-            moves.push(new Move(0, 0, BACK, CLOCKWISE)); // 6
-            moves.push(new Move(0, E_SLICE, 0, CLOCKWISE)); // 7
-            moves.push(new Move(0, 0, S_SLICE, CLOCKWISE)); // 8
-            moves.push(new Move(M_SLICE, 0, 0, COUNTER_CLOCKWISE)); // 9 
-            moves.push(new Move(0, UP, 0, COUNTER_CLOCKWISE)); // 10 
-            moves.push(new Move(0, DOWN, 0, COUNTER_CLOCKWISE)); // 11
-            moves.push(new Move(RIGHT, 0, 0, COUNTER_CLOCKWISE)); // 12
-            moves.push(new Move(LEFT, 0, 0, COUNTER_CLOCKWISE)); // 13
-            moves.push(new Move(0, 0, FRONT, COUNTER_CLOCKWISE)); // 14
-            moves.push(new Move(0, 0, BACK, COUNTER_CLOCKWISE)); // 15
-            moves.push(new Move(0, E_SLICE, 0, COUNTER_CLOCKWISE)); // 16
-            moves.push(new Move(0, 0, S_SLICE, COUNTER_CLOCKWISE)); // 17
-            
+            moves[0] = new Move(M_SLICE, 0, 0, CLOCKWISE, 0); //0
+            moves.push(new Move(0, UP, 0, CLOCKWISE, 1)); // 1
+            moves.push(new Move(0, DOWN, 0, CLOCKWISE, 1)); // 2
+            moves.push(new Move(RIGHT, 0, 0, CLOCKWISE, 0)); // 3
+            moves.push(new Move(LEFT, 0, 0, CLOCKWISE, 0)); // 4
+            moves.push(new Move(0, 0, FRONT, CLOCKWISE, 2)); // 5
+            moves.push(new Move(0, 0, BACK, CLOCKWISE, 2)); // 6
+            moves.push(new Move(0, E_SLICE, 0, CLOCKWISE, 1)); // 7
+            moves.push(new Move(0, 0, S_SLICE, CLOCKWISE, 2)); // 8
+            moves.push(new Move(M_SLICE, 0, 0, COUNTER_CLOCKWISE, 0)); // 9 
+            moves.push(new Move(0, UP, 0, COUNTER_CLOCKWISE, 1)); // 10 
+            moves.push(new Move(0, DOWN, 0, COUNTER_CLOCKWISE, 1)); // 11
+            moves.push(new Move(RIGHT, 0, 0, COUNTER_CLOCKWISE, 0)); // 12
+            moves.push(new Move(LEFT, 0, 0, COUNTER_CLOCKWISE, 0)); // 13
+            moves.push(new Move(0, 0, FRONT, COUNTER_CLOCKWISE, 2)); // 14
+            moves.push(new Move(0, 0, BACK, COUNTER_CLOCKWISE, 2)); // 15
+            moves.push(new Move(0, E_SLICE, 0, COUNTER_CLOCKWISE, 1)); // 16
+            moves.push(new Move(0, 0, S_SLICE, COUNTER_CLOCKWISE, 2)); // 17
+
 
             // // if (sketch.frameCount > 200 && sketch.frameCount % 200 == 0){
             // move.start(); // goes into the switch statement based off digits
-         
-            
+
+
             // }
 
 
@@ -414,11 +428,16 @@ for (let i = 0; i < 1; i++) {
             // camera controls for free rotation
             sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-            sketch.rotateX(sketch.frameCount * 0.002);
-            sketch.rotateZ(sketch.frameCount * 0.0022);
-            
-            if ( move != null ){
-                
+            // sketch.rotateX(sketch.frameCount * 0.002);
+            sketch.rotateY(sketch.frameCount * 0.002);
+            // sketch.rotateZ(sketch.frameCount * 0.002);
+
+            // if () {
+              
+            // }
+
+            if (move != null) {
+
                 move.update();
                 for (let i = 0; i < cube.length; i++) {
                     sketch.push();
@@ -436,215 +455,215 @@ for (let i = 0; i < 1; i++) {
                     sketch.pop();
                 }
             }
-       
-                // sketch.frameCount
-                // right now every 2 seconds. 
-                // do {
-                if (sketch.frameCount % 120 == 0 && is_solving && !scramble) {
 
-                    // get the pis and numbers and do the switching for each rotation and angle.'
+            // sketch.frameCount
+            // right now every 2 seconds. 
+            // do {
+            if (sketch.frameCount % 120 == 0 && is_solving && !scramble) {
+
+                // get the pis and numbers and do the switching for each rotation and angle.'
 
 
-                    let curr_pit = get_pits.substring(start, start + 1);
+                curr_pit = get_pits.substring(start, start + 1);
 
-                    displayPi(start, start +1);
+                displayPi(start, start + 1);
 
+                // repeat last digit?
+                if (curr_pit == 0) {
                     // repeat last digit?
-                    if (curr_pit == 0) {
-                        // repeat last digit?
-                        curr_pit = prev_pit;
-                    }
-
-
-                    // console.log("pits:", get_pits, "length: ", get_pits.length);
-                    // runPi(start, start + 1); // from pi.js
-
-                    if (curr_pit >= prev_pit) {
-                        switch (curr_pit) {
-                            // REGULAR CLOCKWISE MOVES
-                            case "1":
-                                // M SLICE 
-                                console.log("M-SLICE MOVE");
-                                document.querySelector("#curr_move").innerHTML = "M ";
-                                // rotateXaxis(sketch.HALF_PI, M_SLICE);
-                                move = moves[0];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "2":
-                                // UP 
-                                console.log("UP MOVE");
-                                document.querySelector("#curr_move").innerHTML = "U ";
-                                // rotateYaxis(sketch.HALF_PI, UP);
-                                move = moves[1];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "3":
-                                // DOWN 
-                                console.log("DOWN MOVE");
-                                document.querySelector("#curr_move").innerHTML = "D ";
-                                // rotateYaxis(-1 * sketch.HALF_PI, DOWN);
-                                move = moves[2];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "4":
-                                // RIGHT
-                                console.log("RIGHT MOVE");
-                                document.querySelector("#curr_move").innerHTML = "R ";
-                                // rotateXaxis(sketch.HALF_PI, RIGHT);
-                                move = moves[3];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "5":
-                                // LEFT
-                                console.log("LEFT MOVE");
-                                document.querySelector("#curr_move").innerHTML = "L ";
-                                // rotateXaxis(sketch.HALF_PI, LEFT);
-                                move = moves[4];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "6":
-                                // FRONT
-                                console.log("FRONT MOVE");
-                                document.querySelector("#curr_move").innerHTML = "F ";
-                                // rotateZaxis(sketch.HALF_PI, FRONT);
-                                move = moves[5];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "7":
-                                // BACK 
-                                console.log("BACK MOVE");
-                                document.querySelector("#curr_move").innerHTML = "B ";
-                                // rotateZaxis(-1 * sketch.HALF_PI, BACK);
-                                move = moves[6];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "8":
-                                // E-SLICE 
-                                console.log("E-SLICE MOVE");
-                                document.querySelector("#curr_move").innerHTML = "E ";
-                                // rotateYaxis(-1 * sketch.HALF_PI, E_SLICE);
-                                move = moves[7];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "9":
-                                // FRONT
-                                console.log("FRONT MOVE");
-                                document.querySelector("#curr_move").innerHTML = "S ";
-                                // rotateZaxis(sketch.HALF_PI, S_SLICE);
-                                move = moves[8];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            default:
-                                // console.log("something went wrong here, #: ", curr_pit);                      
-                                break;
-                        }
-                        // get ready for next move
-                        prev_pit = curr_pit;
-                    } // END CLOCKWISE
-                    else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
-                        switch (curr_pit) {
-                            // COUNTER CLOCKWISE - INVERSE ROTATIONS
-
-                            case "1":
-                                // M SLICE INVERSE
-                                console.log("M-SLICE MOVE");
-                                document.querySelector("#curr_move").innerHTML = "M\'";
-                                // rotateXaxis(-1 * sketch.HALF_PI, M_SLICE);
-                                move = moves[9];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "2":
-                                // UP INVERSE
-                                console.log("UP INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "U\'";
-                                // rotateYaxis(-1 * sketch.HALF_PI, UP);
-                                move = moves[10];
-                                move.start(); 
-                                repeat = false;
-                                break;
-                            case "3":
-                                // DOWN INVERSE
-                                console.log("DOWN INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "D\'";
-                                // rotateYaxis(sketch.HALF_PI, DOWN);
-                                move = moves[11];
-                                repeat = false;
-                                break;
-                            case "4":
-                                // RIGHT INVERSE
-                                console.log("RIGHT INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "R\'";
-                                // rotateXaxis(-1 * sketch.HALF_PI, RIGHT);
-                                move = moves[12];
-                                repeat = false;
-                                break;
-                            case "5":
-                                // LEFT INVERSE
-                                console.log("LEFT INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "L\'";
-                                // rotateXaxis(-1 * sketch.HALF_PI, LEFT);
-                                move = moves[13];
-                                repeat = false;
-                                break;
-                            case "6":
-                                // FRONT INVERSE 
-                                console.log("FRONT INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "F\'";
-                                // rotateZaxis(-1 * sketch.HALF_PI, FRONT);
-                                move = moves[14];
-                                repeat = false;
-                                break;
-                            case "7":
-                                // BACK INVERSE
-                                console.log("BACK INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "B\'";
-                                // rotateZaxis(sketch.HALF_PI, BACK);
-                                move = moves[15];
-                                repeat = false;
-                                break;
-                            case "8":
-                                // E-SLICE  INVERSE
-                                console.log("E-SLICE INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "E\'";
-                                // rotateYaxis(sketch.HALF_PI, E_SLICE);
-                                move = moves[16];
-                                repeat = false;
-                                break;
-                            case "9":
-                                // S-SLICE INVERSE 
-                                console.log("S-SLICE INVERTED MOVE");
-                                document.querySelector("#curr_move").innerHTML = "S\'";
-                                // rotateZaxis(-1 * sketch.HALF_PI, S_SLICE);
-                                move = moves[17];
-                                repeat = false;
-                                break;
-                            default:
-                                break;
-                        }
-                        // get ready for next move
-                        prev_pit = curr_pit;
-                    }
-
-                    console.log(`pit: ${curr_pit}`)                
-                    start++; // go to next digit
-                    if (start > get_pits.length) {
-                        document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                        console.log("STOPPED");
-                        is_solving = false;
-                    }
+                    curr_pit = prev_pit;
                 }
 
-                
+
+                // console.log("pits:", get_pits, "length: ", get_pits.length);
+                // runPi(start, start + 1); // from pi.js
+
+                if (curr_pit >= prev_pit) {
+                    switch (curr_pit) {
+                        // REGULAR CLOCKWISE MOVES
+                        case "1":
+                            // M SLICE 
+                            console.log("M-SLICE MOVE");
+                            document.querySelector("#curr_move").innerHTML = "M ";
+                            // rotateXaxis(sketch.HALF_PI, M_SLICE);
+                            move = moves[0];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "2":
+                            // UP 
+                            console.log("UP MOVE");
+                            document.querySelector("#curr_move").innerHTML = "U ";
+                            // rotateYaxis(sketch.HALF_PI, UP);
+                            move = moves[1];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "3":
+                            // DOWN 
+                            console.log("DOWN MOVE");
+                            document.querySelector("#curr_move").innerHTML = "D ";
+                            // rotateYaxis(-1 * sketch.HALF_PI, DOWN);
+                            move = moves[2];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "4":
+                            // RIGHT
+                            console.log("RIGHT MOVE");
+                            document.querySelector("#curr_move").innerHTML = "R ";
+                            // rotateXaxis(sketch.HALF_PI, RIGHT);
+                            move = moves[3];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "5":
+                            // LEFT
+                            console.log("LEFT MOVE");
+                            document.querySelector("#curr_move").innerHTML = "L ";
+                            // rotateXaxis(sketch.HALF_PI, LEFT);
+                            move = moves[4];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "6":
+                            // FRONT
+                            console.log("FRONT MOVE");
+                            document.querySelector("#curr_move").innerHTML = "F ";
+                            // rotateZaxis(sketch.HALF_PI, FRONT);
+                            move = moves[5];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "7":
+                            // BACK 
+                            console.log("BACK MOVE");
+                            document.querySelector("#curr_move").innerHTML = "B ";
+                            // rotateZaxis(-1 * sketch.HALF_PI, BACK);
+                            move = moves[6];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "8":
+                            // E-SLICE 
+                            console.log("E-SLICE MOVE");
+                            document.querySelector("#curr_move").innerHTML = "E ";
+                            // rotateYaxis(-1 * sketch.HALF_PI, E_SLICE);
+                            move = moves[7];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "9":
+                            // FRONT
+                            console.log("FRONT MOVE");
+                            document.querySelector("#curr_move").innerHTML = "S ";
+                            // rotateZaxis(sketch.HALF_PI, S_SLICE);
+                            move = moves[8];
+                            move.start();
+                            repeat = false;
+                            break;
+                        default:
+                            // console.log("something went wrong here, #: ", curr_pit);                      
+                            break;
+                    }
+                    // get ready for next move
+                    prev_pit = curr_pit;
+                } // END CLOCKWISE
+                else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
+                    switch (curr_pit) {
+                        // COUNTER CLOCKWISE - INVERSE ROTATIONS
+
+                        case "1":
+                            // M SLICE INVERSE
+                            console.log("M-SLICE MOVE");
+                            document.querySelector("#curr_move").innerHTML = "M\'";
+                            // rotateXaxis(-1 * sketch.HALF_PI, M_SLICE);
+                            move = moves[9];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "2":
+                            // UP INVERSE
+                            console.log("UP INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "U\'";
+                            // rotateYaxis(-1 * sketch.HALF_PI, UP);
+                            move = moves[10];
+                            move.start();
+                            repeat = false;
+                            break;
+                        case "3":
+                            // DOWN INVERSE
+                            console.log("DOWN INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "D\'";
+                            // rotateYaxis(sketch.HALF_PI, DOWN);
+                            move = moves[11];
+                            repeat = false;
+                            break;
+                        case "4":
+                            // RIGHT INVERSE
+                            console.log("RIGHT INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "R\'";
+                            // rotateXaxis(-1 * sketch.HALF_PI, RIGHT);
+                            move = moves[12];
+                            repeat = false;
+                            break;
+                        case "5":
+                            // LEFT INVERSE
+                            console.log("LEFT INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "L\'";
+                            // rotateXaxis(-1 * sketch.HALF_PI, LEFT);
+                            move = moves[13];
+                            repeat = false;
+                            break;
+                        case "6":
+                            // FRONT INVERSE 
+                            console.log("FRONT INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "F\'";
+                            // rotateZaxis(-1 * sketch.HALF_PI, FRONT);
+                            move = moves[14];
+                            repeat = false;
+                            break;
+                        case "7":
+                            // BACK INVERSE
+                            console.log("BACK INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "B\'";
+                            // rotateZaxis(sketch.HALF_PI, BACK);
+                            move = moves[15];
+                            repeat = false;
+                            break;
+                        case "8":
+                            // E-SLICE  INVERSE
+                            console.log("E-SLICE INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "E\'";
+                            // rotateYaxis(sketch.HALF_PI, E_SLICE);
+                            move = moves[16];
+                            repeat = false;
+                            break;
+                        case "9":
+                            // S-SLICE INVERSE 
+                            console.log("S-SLICE INVERTED MOVE");
+                            document.querySelector("#curr_move").innerHTML = "S\'";
+                            // rotateZaxis(-1 * sketch.HALF_PI, S_SLICE);
+                            move = moves[17];
+                            repeat = false;
+                            break;
+                        default:
+                            break;
+                    }
+                    // get ready for next move
+                    prev_pit = curr_pit;
+                }
+
+                console.log(`pit: ${curr_pit}`)
+                start++; // go to next digit
+                if (start > get_pits.length) {
+                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                    console.log("STOPPED");
+                    is_solving = false;
+                }
+            }
+
+
             // before all of this, scramble. then start
 
             // is_solving = false;
@@ -677,7 +696,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "M";
                             // rotateXaxis(sketch.HALF_PI, M_SLICE);
                             move = moves[0];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 2:
@@ -687,7 +706,7 @@ for (let i = 0; i < 1; i++) {
                             // rotateYaxis(sketch.HALF_PI, UP);
                             move = moves[1];
                             move.start();
-                            
+
                             repeat = false;
                             break;
                         case 3:
@@ -696,7 +715,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "D";
                             // rotateYaxis(-1 * sketch.HALF_PI, DOWN);
                             move = moves[2];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 4:
@@ -706,7 +725,7 @@ for (let i = 0; i < 1; i++) {
                             // rotateXaxis(sketch.HALF_PI, RIGHT);
                             move = moves[3];
                             move.start();
-                            
+
                             repeat = false;
                             break;
                         case 5:
@@ -715,7 +734,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "L";
                             // rotateXaxis(sketch.HALF_PI, LEFT);
                             move = moves[4];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 6:
@@ -724,7 +743,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "F";
                             // rotateZaxis(sketch.HALF_PI, FRONT);
                             move = moves[5];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 7:
@@ -733,7 +752,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "B";
                             // rotateZaxis(-1 * sketch.HALF_PI, BACK);
                             move = moves[6];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 8:
@@ -743,7 +762,7 @@ for (let i = 0; i < 1; i++) {
                             // rotateYaxis(-1 * sketch.HALF_PI, E_SLICE);
                             move = moves[7];
                             move.start();
-                            
+
                             repeat = false;
                             break;
                         case 9:
@@ -752,7 +771,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "S";
                             // rotateZaxis(sketch.HALF_PI, S_SLICE);
                             move = moves[8];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         default:
@@ -777,7 +796,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "M\'";
                             // rotateXaxis(-1 * sketch.HALF_PI, M_SLICE);
                             move = moves[9];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 2:
@@ -786,7 +805,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "U\'";
                             // rotateYaxis(-1 * sketch.HALF_PI, UP);
                             move = moves[10];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 3:
@@ -795,7 +814,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "D\'";
                             // rotateYaxis(sketch.HALF_PI, DOWN);
                             move = moves[11];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 4:
@@ -804,7 +823,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "R\'";
                             // rotateXaxis(-1 * sketch.HALF_PI, RIGHT);
                             move = moves[12];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 5:
@@ -813,7 +832,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "L\'";
                             // rotateXaxis(-1 * sketch.HALF_PI, LEFT);
                             move = moves[13];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 6:
@@ -822,7 +841,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "F\'";
                             // rotateZaxis(-1 * sketch.HALF_PI, FRONT);
                             move = moves[14];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 7:
@@ -831,7 +850,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "B\'";
                             // rotateZaxis(sketch.HALF_PI, BACK);
                             move = moves[15];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 8:
@@ -840,7 +859,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "E\'";
                             // rotateYaxis(sketch.HALF_PI, E_SLICE);
                             move = moves[16];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         case 9:
@@ -849,7 +868,7 @@ for (let i = 0; i < 1; i++) {
                             document.querySelector(`#${scramble_text}`).innerHTML += "S\'";
                             // rotateZaxis(-1 * sketch.HALF_PI, S_SLICE);
                             move = moves[17];
-                            move.start();                                
+                            move.start();
                             repeat = false;
                             break;
                         default:
