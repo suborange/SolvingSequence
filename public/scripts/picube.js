@@ -51,7 +51,7 @@ const Z_PLANE = 2;
 
 
 // GET PI NUMBERS 
-let get_pits = '---998877665544332211';
+let get_pits = '---314';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -295,7 +295,7 @@ for (let i = 0; i < 1; i++) {
 
             cam1 = sketch.createCamera();
             cam2 = sketch.createCamera();
-            cam1.setPosition(180,180,180);
+            cam1.setPosition(180,200,180);
             cam1.lookAt(0,0,0);
 
             // SETUP VARIABLES 
@@ -692,11 +692,7 @@ for (let i = 0; i < 1; i++) {
 
 
 
-                // if finished scrambling, do it
-                if (index >= random_digits.length - 1) {
-                    scramble = false;
-                    prev_pit = 0; // reset for "solve"
-                }
+              
                 // console.log("random_digits", random_digits);
 
                 // pass the scramble id correctly here. 
@@ -904,6 +900,11 @@ for (let i = 0; i < 1; i++) {
                     prev_pit = random_digits[index];
                 }
                 index++; // next scramble
+                  // if finished scrambling, do it
+                  if (index >= random_digits.length - 1) {
+                    scramble = false;
+                    prev_pit = 0; // reset for "solve"
+                }
                 document.querySelector(`#${scramble_text}`).innerHTML += " ";
 
 
