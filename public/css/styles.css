@@ -77,8 +77,8 @@ img.notation {
 }
 
 span.current {
-    font-size: 1.35em;
-    color: #c9282d;
+    font-size: 1.6em;
+    color: #ffb300;
 }
 
 span.wr {
@@ -95,7 +95,7 @@ span.pi {
     height: 20px;
     /* color: rgb(198, 218, 248); */
     /* color: var(--color-light); */
-    color: #f2af32;
+    color: #ffb300;
     text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
 }
 

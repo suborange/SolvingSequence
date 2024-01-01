@@ -25,3 +25,8 @@
 - scramble the cube first, then have all canvases start solving
 
 - displaying number values needs to account for commas
+
+
+# P5 
+- make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
+- when something is finished, snap to a camera that is fixed
