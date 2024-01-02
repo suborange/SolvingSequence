@@ -1,9 +1,90 @@
+// get random digits to relate to the random scramble moves? or have a certain scramble?
+
+// test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
+const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
 
 
-for (let i = 0; i < 1; i++) {
-    let sketch1 = function (sketch) {
+var random_digits = [];
+for (let iran = 0; iran < 1; iran++) {
+    var r = Math.floor(Math.random() * (9) + 1);
+    if (r != random_digits[iran - 1] && r != random_digits[iran - 2]) { // if not duplicate to last number
+        random_digits.push(r);
+    }
+}
+// random_digits = wr_scramble;
+console.log("random: ", random_digits);
+
+
+
+
+// setup for the vectors and 3d array(matrix)
+let dim;
+let cube;
+let move;
+let moves = [];
+let bool = true;
+let start = 3;
+let curr_pit;
+// let end = 1;
+let is_solving = true;  // start as solving
+let prev_pit = 0;
+let repeat = false;
+let scramble = true;
+let cam1;
+let cam2;
+let cam3;
+let cam4;
+let sketchs = [];
+
+// CONSTANTS 
+const BACK = -1;
+const FRONT = 1;
+const LEFT = -1;
+const RIGHT = 1;
+const UP = -1;
+const DOWN = 1;
+const S_SLICE = 0;
+const M_SLICE = 0;
+const E_SLICE = 0;
+const CLOCKWISE = 1;
+const COUNTER_CLOCKWISE = -1;
+const X_PLANE = 0;
+const Y_PLANE = 1;
+const Z_PLANE = 2;
+
+
+// GET PI NUMBERS 
+let get_pits = '---31415926535897932384626433832';
+// 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
+
+// start = 3;
+// end = 4;
+
+// document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | ${get_pits.substring(start, end)} | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
+
+// FUNCTIONS
+function displayPi(start, end) {
+    // find the pi digit, and adjust it as it runs. 
+    // console.log("start: ", start, " | end: ", end);
+    document.querySelector("#curr_digit").innerHTML = `${start - 2}`;
+    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
+
+
+}
+
+
+// SETUP AND DRAW
+// CREATE FACE AND CUBIE CLASSES TO DRAW
+// CREATE TURNING FUNCTIONS FOR EACH FACE
+
+const canvas_id = ['canvastl', 'canvastr', 'canvasbl', 'canvasbr'];
+const scramble_id = ['scramble1', 'scramble2', 'scramble3', 'scramble4']; // make an object?
+let canvases = [];
+
+for (let i = 0; i < 4; i++) {
+    sketchs[i] = function (sketch) {
         // console.log(canvases);
-        sketch.setup = function () {
+        sketch[i].setup = function () {
             // *** FACE ***
             class Face {
                 normal; // normal vector
@@ -181,12 +262,12 @@ for (let i = 0; i < 1; i++) {
                                 console.log("dir:", this.dir, "z-animation", this.z);
                             }
                             else if (this.plane == X_PLANE) { // X axis animation
-                                
+
                                 // if (this.x == LEFT) {
                                 //     rotateXaxis(this.dir  * -1 * sketch.HALF_PI, this.x);
                                 // }
                                 // else {
-                                    rotateXaxis(this.dir *  sketch.HALF_PI, this.x);
+                                rotateXaxis(this.dir * sketch.HALF_PI, this.x);
                                 // }
                                 console.log("dir:", this.dir, "x-animation", this.x);
                             }
@@ -211,16 +292,43 @@ for (let i = 0; i < 1; i++) {
             // **** START CANVAS AND SETUP ****
 
             let canvas = sketch.createCanvas(430, 250, sketch.WEBGL);
-            canvas.parent(canvas_id[0]); //  "canvastl"
+            if ( i == 0 ) {
+                canvas.parent(canvas_id[i]);
+                cam1 = sketch.createCamera();
+                cam1.setPosition(180, 200, 180);
+                cam1.lookAt(0, 0, 0);
+                sketch.setCamera(cam1);
+                console.log('first canvas');
+            }
+            else if ( i == 1 ) {
+                console.log('second canvas');
+                canvas.parent(canvas_id[i])
+                cam2 = sketch.createCamera();
+                cam2.setPosition(180, 200, 180);
+            cam2.lookAt(0, 0, 0);
+            sketch.setCamera(cam2);
+            }
+            else if ( i == 2 ) {
+                console.log('second canvas');
+                canvas.parent(canvas_id[i])
+                cam3 = sketch.createCamera();
+                cam3.setPosition(180, 200, 180);
+            cam3.lookAt(0, 0, 0);
+            sketch.setCamera(cam3);
+            }
+            else if ( i == 3 ) {
+                console.log('second canvas');
+                canvas.parent(canvas_id[i])
+                cam4 = sketch.createCamera();         
+            cam4.setPosition(180, 200, 180);
+            cam4.lookAt(0, 0, 0);
+            sketch.setCamera(cam4);
+            }
+            //  "canvastl"
+            // canvas.parent(canvas_id[i]);
             sketch.frameRate(60);
+        
 
-
-            cam1 = sketch.createCamera();
-            cam2 = sketch.createCamera();
-            cam1.setPosition(180,200,180);
-            cam1.lookAt(0,0,0);
-
-            sketch.setCamera(cam1);
 
             // SETUP VARIABLES 
 
@@ -260,22 +368,22 @@ for (let i = 0; i < 1; i++) {
             move = null;
             moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
             moves.push(new Move(-2, UP, -2, CLOCKWISE, Y_PLANE)); // 1
-            moves.push(new Move( -2, DOWN,  -2, CLOCKWISE, Y_PLANE)); // 2
-            moves.push(new Move(RIGHT,  -2,  -2, CLOCKWISE, X_PLANE)); // 3 - !
-            moves.push(new Move(LEFT,  -2,  -2, CLOCKWISE, X_PLANE)); // 4 - 
-            moves.push(new Move( -2,  -2, FRONT, CLOCKWISE, Z_PLANE)); // 5
-            moves.push(new Move( -2,  -2, BACK, CLOCKWISE, Z_PLANE)); // 6
-            moves.push(new Move( -2, E_SLICE,  -2, CLOCKWISE, Y_PLANE)); // 7
-            moves.push(new Move( -2,  -2, S_SLICE, CLOCKWISE, Z_PLANE)); // 8
-            moves.push(new Move(M_SLICE,  -2,  -2, COUNTER_CLOCKWISE, X_PLANE)); // 9 
-            moves.push(new Move( -2, UP,  -2, COUNTER_CLOCKWISE, Y_PLANE)); // 10 
-            moves.push(new Move( -2, DOWN,  -2, COUNTER_CLOCKWISE, Y_PLANE)); // 11
-            moves.push(new Move(RIGHT,  -2,  -2, COUNTER_CLOCKWISE, X_PLANE)); // 12
-            moves.push(new Move(LEFT,  -2,  -2, COUNTER_CLOCKWISE, X_PLANE)); // 13
-            moves.push(new Move( -2,  -2, FRONT, COUNTER_CLOCKWISE, Z_PLANE)); // 14
-            moves.push(new Move( -2,  -2, BACK, COUNTER_CLOCKWISE, Z_PLANE)); // 15
-            moves.push(new Move( -2, E_SLICE,  -2, COUNTER_CLOCKWISE, Y_PLANE)); // 16
-            moves.push(new Move( -2,  -2, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
+            moves.push(new Move(-2, DOWN, -2, CLOCKWISE, Y_PLANE)); // 2
+            moves.push(new Move(RIGHT, -2, -2, CLOCKWISE, X_PLANE)); // 3 - !
+            moves.push(new Move(LEFT, -2, -2, CLOCKWISE, X_PLANE)); // 4 - 
+            moves.push(new Move(-2, -2, FRONT, CLOCKWISE, Z_PLANE)); // 5
+            moves.push(new Move(-2, -2, BACK, CLOCKWISE, Z_PLANE)); // 6
+            moves.push(new Move(-2, E_SLICE, -2, CLOCKWISE, Y_PLANE)); // 7
+            moves.push(new Move(-2, -2, S_SLICE, CLOCKWISE, Z_PLANE)); // 8
+            moves.push(new Move(M_SLICE, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 9 
+            moves.push(new Move(-2, UP, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 10 
+            moves.push(new Move(-2, DOWN, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 11
+            moves.push(new Move(RIGHT, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 12
+            moves.push(new Move(LEFT, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 13
+            moves.push(new Move(-2, -2, FRONT, COUNTER_CLOCKWISE, Z_PLANE)); // 14
+            moves.push(new Move(-2, -2, BACK, COUNTER_CLOCKWISE, Z_PLANE)); // 15
+            moves.push(new Move(-2, E_SLICE, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 16
+            moves.push(new Move(-2, -2, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
 
 
             // // if (sketch.frameCount > 200 && sketch.frameCount % 200 == 0){
@@ -366,20 +474,26 @@ for (let i = 0; i < 1; i++) {
         sketch.draw = function () {
 
 
-            //sketch.background(34, 49, 78); // #22314E
-            sketch.background(62, 90, 142);// #3E5A8E
+            sketch.background(34, 49, 78); // #22314E
+            // sketch.background(62, 90, 142);// #3E5A8E
             // camera controls for free rotation
             // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
-           
-            cam1.move(1, 0,0);
-            cam1.lookAt(0,0,0);
+
+            cam1.move(1, 0, 0);
+            cam1.lookAt(0, 0, 0);
+            cam2.move(1, 0, 0);
+            cam2.lookAt(0, 0, 0);
+            cam3.move(1, 0, 0);
+            cam3.lookAt(0, 0, 0);
+            cam4.move(1, 0, 0);
+            cam4.lookAt(0, 0, 0);
 
             // sketch.rotateX(sketch.frameCount * 0.002);
             // sketch.rotateY(sketch.frameCount * 0.002);
             // sketch.rotateZ(sketch.frameCount * 0.002);
 
             // if () {
-              
+
             // }
 
             if (move != null) {
@@ -619,7 +733,7 @@ for (let i = 0; i < 1; i++) {
 
 
 
-              
+
                 // console.log("random_digits", random_digits);
 
                 // pass the scramble id correctly here. 
@@ -791,7 +905,7 @@ for (let i = 0; i < 1; i++) {
                             console.log("BACK INVERTED MOVE");
                             document.querySelector(`#${scramble_text}`).innerHTML += "B\'";
                             // rotateZaxis(sketch.HALF_PI, BACK);
-                            move = moves[6];                            
+                            move = moves[6];
                             move.start();
                             repeat = false;
                             break;
@@ -827,8 +941,8 @@ for (let i = 0; i < 1; i++) {
                     prev_pit = random_digits[index];
                 }
                 index++; // next scramble
-                  // if finished scrambling, do it
-                  if (index >= random_digits.length - 1) {
+                // if finished scrambling, do it
+                if (index >= random_digits.length - 1) {
                     scramble = false;
                     prev_pit = 0; // reset for "solve"
                 }
@@ -841,8 +955,12 @@ for (let i = 0; i < 1; i++) {
 
     }
 
-    new p5(sketch1);
+    
 }
 
 
 
+new p5(sketchs[0]);
+new p5(sketchs[1]);
+new p5(sketchs[2]);
+new p5(sketchs[3]);
