@@ -43,6 +43,9 @@ let cam1;
 let cam2;
 let cam3;
 let cam4;
+let cam_move = 1;
+let cube_size = 40;
+let trans_size = cube_size /2;
 let sketchs = [];
 
 // CONSTANTS 
@@ -63,7 +66,7 @@ const Z_PLANE = 2;
 
 
 // GET PI NUMBERS 
-let get_pits = '---------31415926535897932384626433832';
+let get_pits = '---------31415926535';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -142,7 +145,7 @@ sketch1 = function (sketch) {
                 sketch.noStroke();
                 sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
                 sketch.rectMode(sketch.CENTER);
-                sketch.translate(40 * this.normal.x, 40 * this.normal.y, 40 * this.normal.z);
+                sketch.translate(trans_size * this.normal.x, trans_size * this.normal.y, trans_size * this.normal.z);
                 if (sketch.abs(this.normal.x)) {
                     sketch.rotateY(sketch.HALF_PI);
                 }
@@ -150,7 +153,7 @@ sketch1 = function (sketch) {
                     sketch.rotateX(sketch.HALF_PI);
                 }
                 // console.log(this.normal.x , this.normal.y, this.normal.z); seems to be working fine.. 
-                sketch.square(0, 0, 80);
+                sketch.square(0, 0, cube_size);
                 sketch.pop();
             }
         } // end face
@@ -291,11 +294,13 @@ sketch1 = function (sketch) {
 
         let canvas = sketch.createCanvas(650, 450, sketch.WEBGL);
 
-        canvas.parent(canvas_id[0]);
+        canvas.parent(canvas_id[0]);        
         cam1 = sketch.createCamera();
-        cam1.setPosition(190, 320, 190);
-        cam1.lookAt(0, 0, 0);
-        sketch.setCamera(cam1);
+        cam1.setPosition(0,0,230);
+        // cam1.lookAt(0, 0, 0);
+      
+        sketch.setCamera(cam1);        
+        
         console.log('first canvas');
 
 
@@ -316,7 +321,7 @@ sketch1 = function (sketch) {
         for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
             for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
                 for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz++) {
-                    let _len = 80;
+                    let _len = cube_size;
                     let offset = (dim - 1) * _len * 0.5;
                     let x = _X * _len - offset;
                     let y = _Y * _len - offset;
@@ -372,7 +377,7 @@ sketch1 = function (sketch) {
                 // translate?
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
+                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
                 qb.turnXfaces(angle);
             } // end if axis    
 
@@ -395,7 +400,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.y = sketch.round(qb.matrix.y);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
+                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
                 qb.turnYfaces(angle);
             } // end if axis     
 
@@ -415,7 +420,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.z = sketch.round(qb.matrix.z);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
+                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
                 qb.turnZfaces(angle);
             } // end if axis
 
@@ -436,8 +441,21 @@ sketch1 = function (sketch) {
         // camera controls for free rotation
         // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        cam1.move(1, 0, 0);
+        if (sketch.frameCount % 3000 == 0 ) {
+            cam_move *= -1; // flip direction every once in a while 
+        }
+        sketch.rotateX(sketch.HALF_PI / 2);
+        sketch.rotateZ(sketch.HALF_PI / 2);
+        // sketch.rotateY(sketch.HALF_PI / 2);
+       
+        sketch.push();
+        cam1.move(cam_move, 0, 0);
+    //     sketch.rotateX(sketch.frameCount * 0.002);
+    // sketch.rotateZ(sketch.frameCount * 0.002);
+    // sketch.rotateY(sketch.frameCount * 0.002);
         cam1.lookAt(0, 0, 0);   
+        sketch.pop();
+    
 
         if (move != null ) {
 
