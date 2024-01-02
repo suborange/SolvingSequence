@@ -82,7 +82,7 @@ h2.subtitle {
 }
 
 h2 {
-    font-size: 1.5em;
+    font-size: 1.8em;
     font-family: 'Chakra Petch';
     /*
     font-family: 'Unispace';
@@ -96,13 +96,14 @@ img.notation {
 }
 
 span.current {
-    font-size: 1.8em;
+    font-size: 2em;
     color: #ffb300;
 }
 
 span.wr {
     /* color: #93c1fa; */
     color: #ff6f00;
+    font-size: 1.3em;
 }
 
 span.pi {
@@ -352,6 +353,8 @@ div.cols {
 .halfw {
     width: 50%;
 }
+
+
 
 .nineheight {
     height: 90%;
