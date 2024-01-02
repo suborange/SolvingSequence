@@ -90,7 +90,7 @@ const canvas_id = ['canvastl', 'canvastr', 'canvasbl', 'canvasbr'];
 const scramble_id = ['scramble1', 'scramble2', 'scramble3', 'scramble4']; // make an object?
 let canvases = [];
 
-
+for (let i =0; i <4; i++){
 sketch1 = function (sketch) {
     // console.log(canvases);
     sketch.setup = function () {
@@ -291,7 +291,7 @@ sketch1 = function (sketch) {
 
         let canvas = sketch.createCanvas(430, 250, sketch.WEBGL);
 
-        canvas.parent(canvas_id[0]);
+        canvas.parent(canvas_id[i]);
         cam1 = sketch.createCamera();
         cam1.setPosition(180, 200, 180);
         cam1.lookAt(0, 0, 0);
@@ -299,9 +299,6 @@ sketch1 = function (sketch) {
         console.log('first canvas');
 
 
-
-        //  "canvastl"
-        // canvas.parent(canvas_id[i]);
         sketch.frameRate(60);
 
 
@@ -903,12 +900,5 @@ sketch1 = function (sketch) {
     }
 
 }
-
-
-
-
-
 new p5(sketch1);
-// new p5(sketchs[1]);
-// new p5(sketchs[2]);
-// new p5(sketchs[3]);
+}
