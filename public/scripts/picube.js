@@ -142,7 +142,7 @@ sketch1 = function (sketch) {
                 sketch.noStroke();
                 sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
                 sketch.rectMode(sketch.CENTER);
-                sketch.translate(35 * this.normal.x, 35 * this.normal.y, 35 * this.normal.z);
+                sketch.translate(40 * this.normal.x, 40 * this.normal.y, 40 * this.normal.z);
                 if (sketch.abs(this.normal.x)) {
                     sketch.rotateY(sketch.HALF_PI);
                 }
@@ -150,7 +150,7 @@ sketch1 = function (sketch) {
                     sketch.rotateX(sketch.HALF_PI);
                 }
                 // console.log(this.normal.x , this.normal.y, this.normal.z); seems to be working fine.. 
-                sketch.square(0, 0, 70);
+                sketch.square(0, 0, 80);
                 sketch.pop();
             }
         } // end face
@@ -293,7 +293,7 @@ sketch1 = function (sketch) {
 
         canvas.parent(canvas_id[0]);
         cam1 = sketch.createCamera();
-        cam1.setPosition(180, 280, 180);
+        cam1.setPosition(190, 320, 190);
         cam1.lookAt(0, 0, 0);
         sketch.setCamera(cam1);
         console.log('first canvas');
@@ -316,7 +316,7 @@ sketch1 = function (sketch) {
         for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
             for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
                 for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz++) {
-                    let _len = 70;
+                    let _len = 80;
                     let offset = (dim - 1) * _len * 0.5;
                     let x = _X * _len - offset;
                     let y = _Y * _len - offset;
@@ -372,7 +372,7 @@ sketch1 = function (sketch) {
                 // translate?
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 70), (qb.matrix.y / 70), (qb.matrix.z / 70));
+                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
                 qb.turnXfaces(angle);
             } // end if axis    
 
@@ -395,7 +395,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.y = sketch.round(qb.matrix.y);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 70), (qb.matrix.y / 70), (qb.matrix.z / 70));
+                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
                 qb.turnYfaces(angle);
             } // end if axis     
 
@@ -415,7 +415,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.z = sketch.round(qb.matrix.z);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / 70), (qb.matrix.y / 70), (qb.matrix.z / 70));
+                qb.update((qb.matrix.x / 80), (qb.matrix.y / 80), (qb.matrix.z / 80));
                 qb.turnZfaces(angle);
             } // end if axis
 

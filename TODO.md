@@ -28,7 +28,8 @@
 
 
 # P5 
-- make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
++ make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
+## not sure if posssible
 - when something is finished, snap to a camera that is fixed
 
 - can i use the mouse move thing, find the values of the mouse movement, and copy his camera swivel?
