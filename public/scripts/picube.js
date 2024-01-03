@@ -66,7 +66,7 @@ const Z_PLANE = 2;
 
 
 // GET PI NUMBERS 
-let get_pits = '---------31415926535';
+let get_pits = '---------314159';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // start = 3;
@@ -75,15 +75,29 @@ let get_pits = '---------31415926535';
 // document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | ${get_pits.substring(start, end)} | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
 
 // FUNCTIONS
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}asdfasdfasd
+
 function displayPi(start, end) {
     // find the pi digit, and adjust it as it runs. 
-    // console.log("start: ", start, " | end: ", end);
-    document.querySelector("#curr_digit").innerHTML = `${start - 8}`;
+    let current_digit = numberWithCommas(start - 8); // convert with commas
+    
+    document.querySelector("#curr_digit").innerHTML = `${current_digit}`;
     document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
 
 
 }
 
+
+function AddDigit() {
+    // find the next digit, then return it to be added to the line. 
+    
+}
+
+function WriteToFile() {
+
+}
 
 // SETUP AND DRAW
 // CREATE FACE AND CUBIE CLASSES TO DRAW
@@ -441,18 +455,17 @@ sketch1 = function (sketch) {
         // camera controls for free rotation
         // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        if (sketch.frameCount % 3000 == 0 ) {
-            cam_move *= -1; // flip direction every once in a while 
+        if (sketch.frameCount % 1440 == 0 ) {
+            cam_move *= -1; // flip direction every once in a while
+            cam1.setPosition(0,0,230); 
+            cam1.lookAt(0, 0, 0);   
         }
         sketch.rotateX(sketch.HALF_PI / 2);
         sketch.rotateZ(sketch.HALF_PI / 2);
-        // sketch.rotateY(sketch.HALF_PI / 2);
        
         sketch.push();
         cam1.move(cam_move, 0, 0);
-    //     sketch.rotateX(sketch.frameCount * 0.002);
-    // sketch.rotateZ(sketch.frameCount * 0.002);
-    // sketch.rotateY(sketch.frameCount * 0.002);
+
         cam1.lookAt(0, 0, 0);   
         sketch.pop();
     

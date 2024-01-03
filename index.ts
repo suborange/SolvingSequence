@@ -9,7 +9,7 @@ app.get("/", (req: Request, res: Response): void => {
     res.render('index');
 });
 
-app.get("/hi", (req: Request, res: Response): void => {
+app.get("/pi", async (req: Request, res: Response): Promise<void> => {
     res.send("hBYYYEEEE");
 });
 

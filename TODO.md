@@ -6,12 +6,13 @@
     + need to add another box below to show the current digits and moves
 
 # HTML
-- i think it is just one home page, maybe a page on how it works and was built?
++ i think it is just one home page, 
+- maybe a page on how it works and was built?
 - link to how it was built?
 + add notations + templates
 
 # CSS
-- find good color pallete, design, font, borders, etc. in relation to rubiks cube. 
++ find good color pallete, design, font, borders, etc. in relation to rubiks cube. 
 
 
 # JavaScript
@@ -24,8 +25,11 @@
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
 - scramble the cube first, then have all canvases start solving
 
-- displaying number values needs to account for commas
+- displaying number values needs to account for commas ( it might)
 
+- write the moves to a file, every 100 moves or something new line.
+
+- maybe line ip the move, camera reset, on move ending, so it looks less choppy?
 
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
