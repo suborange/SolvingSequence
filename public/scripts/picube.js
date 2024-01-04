@@ -122,24 +122,19 @@ async function WriteToFile(event) {
     // var stream = fileo.createWriteStream("files/moves.txt", {flags: 'a'});
     // stream.write(move.concat(spacer)); // should append
     let data;
-    if (start % 100 == 0) { // every 100 add a newline
-        full_move = event.currentTarget.move.concat('\n');
-    }
-    else {
-        full_move = event.currentTarget.move.concat(' ');
-    }
+    console.log(event.currentTarget.move);
     try {
-        let url = `/write/${full_move}`;
-        console.log("URL:",url, " | moves: ", full_move, "-");
+        let url = `write/${event.currentTarget.move}`;
+        // console.log("URL:",url, " | moves: ", full_move, "-");
         let response = await fetch(url);
          data = await response.json();
-         console.log("URL:",url, " | moves: ", full_move, "- || data:",data);
+        //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
     }
     catch (err) {
-        console.log('something went wrong at fetching', err);
+        console.log('something went wrong at fetching', err.stack);
     }
     
-    if (data != 0) {
+    if (data.code != 0) {
         console.log('response returned bad value');
     }
 
@@ -736,10 +731,10 @@ sketch1 = function (sketch) {
             }
             // update the current move only once, instead of within switch
             document.querySelector("#curr_move").innerHTML = temp_move;
-            // write_button.move = temp_move;
+            write_button.move = temp_move;
             
             // // ReadDigit();
-            // write_button.click();
+            write_button.click();
             
 
            

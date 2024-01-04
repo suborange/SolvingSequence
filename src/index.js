@@ -1,13 +1,4 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -18,22 +9,47 @@ const port = 3000;
 const app = (0, express_1.default)();
 app.set('view engine', 'ejs');
 app.use(express_1.default.static('public'));
+let start = 1;
 app.get("/", (req, res) => {
     res.render('index');
 });
-app.get("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("hBYYYEEEE");
-}));
-app.get("/write/:move", (req, res) => {
-    let temp = 1;
+app.get("/pi", (req, res) => {
+    let temp = {
+        "code": 1
+    };
+    console.log("getting digit... ");
     try {
         var stream = fs_1.default.createWriteStream("files/moves.txt", { flags: 'a' });
         console.log("appending move: ", req.params.move);
         stream.write(req.params.move);
-        temp = 0;
+        temp.code = 0;
     }
     catch (err) {
-        temp = 1;
+        temp.code = 1;
+        console.log('something went wrong in get request', err);
+    }
+    res.send(temp);
+});
+app.get("/write/:move", (req, res) => {
+    let temp = {
+        "code": 1
+    };
+    let full_move;
+    if (start % 100 == 0) { // every 100 add a newline
+        full_move = req.params.move.concat('\n');
+    }
+    else {
+        full_move = req.params.move.concat(' ');
+    }
+    start++;
+    try {
+        var stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
+        console.log("appending move: ", full_move);
+        stream.write(full_move);
+        temp.code = 0;
+    }
+    catch (err) {
+        temp.code = 1;
         console.log('something went wrong in get request', err);
     }
     res.send(temp);
