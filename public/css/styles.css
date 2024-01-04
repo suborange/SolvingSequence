@@ -243,6 +243,7 @@ div.cols {
 /*****CUSTOM CSS ******/
 .invis {
     visibility: hidden;
+    display: none;
 }
 
 .big2 {

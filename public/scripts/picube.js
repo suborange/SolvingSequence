@@ -1,7 +1,11 @@
+// const fileo = requiure ('fs');
 // get random digits to relate to the random scramble moves? or have a certain scramble?
-
+const write_button = document.getElementById('write_digit');
+write_button.addEventListener('click', appendToFile);
+write_button.spacer = ' '; // init spacer for writing?
+write_button.move = '';
 // test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
-const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
+// const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
 
 
 // var rand_scramble1 = ['-', '-', '-']; // 6 seconds delay to start
@@ -69,15 +73,12 @@ const Z_PLANE = 2;
 let get_pits = '---------314159';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
-// start = 3;
-// end = 4;
 
-// document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | ${get_pits.substring(start, end)} | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
 
 // FUNCTIONS
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-} asdfasdfasd
+} 
 
 function displayPi(start, end) {
     // find the pi digit, and adjust it as it runs. 
@@ -87,36 +88,38 @@ function displayPi(start, end) {
     document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
 
 }
-
+// fetch from https://pi.delivery/#apifetch
 function ReadDigit() {
-    fetch('/files/pi.txt').
-    then((respone) => {
+    fetch('files/pi.txt').
+    then((response) => {
         const reader = response.body.getReader();
         //read returns promise when value has been recieved
-        reader.read().then(function pump({done, value }){
+        reader.read(1).then(function pump({done, value }){
             if (done) {
                 // do something with LAST CHUNK
+                console.log('inside done:', value);
                 return;
             }
             // otherwise deal with chunk of data here
-
+            AddDigit(value);
+            console.log('chunk:', value);
 
             return reader.read().then(pump);
-
-
-        })
-
-
-    });
+        });
+    }).
+    catch((err) => console.log('error ', err));
 }
 
-function AddDigit() {
+function AddDigit(new_digit) {
     // find the next digit, then return it to be added to the line. 
+    get_pits = get_pits.concat(new_digit);
+    console.log('added new digit:', get_pits);
 
 }
 
-function WriteToFile() {
-
+function WriteToFile(move, spacer) {
+    var stream = fileo.createWriteStream("files/moves.txt", {flags: 'a'});
+    stream.write(move.concat(spacer)); // should append
 }
 
 // SETUP AND DRAW
@@ -706,6 +709,8 @@ sketch1 = function (sketch) {
             }
             // update the current move only once, instead of within switch
             document.querySelector("#curr_move").innerHTML = temp_move;
+            write_button.move = temp_move;
+            // ReadDigit();
 
             console.log(`pit: ${curr_pit}`)
             start++; // go to next digit
@@ -713,7 +718,14 @@ sketch1 = function (sketch) {
 
             // get the next digit in line, append the string with new digits
             // get digit
-            get_pits = get_pits.concat(); // should append one character to new string
+            // get_pits = get_pits.concat(); // should append one character to new string
+            if ((start - 8) % 100 == 0) {
+                write_button.spacer = '\n'; // pass newline for every hundred moves
+            }
+            else {
+                write_button.spacer = ' ';// pass a space for every new move
+            }
+            write_button.click();
 
 
             if (start > get_pits.length) {
