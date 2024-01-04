@@ -24,7 +24,19 @@ app.get("/", (req, res) => {
 app.get("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.send("hBYYYEEEE");
 }));
-app.get("/write", (req, res) => {
+app.get("/write/:move", (req, res) => {
+    let temp = 1;
+    try {
+        var stream = fs_1.default.createWriteStream("files/moves.txt", { flags: 'a' });
+        console.log("appending move: ", req.params.move);
+        stream.write(req.params.move);
+        temp = 0;
+    }
+    catch (err) {
+        temp = 1;
+        console.log('something went wrong in get request', err);
+    }
+    res.send(temp);
 });
 app.listen(port, () => {
     console.log(`listening on port ${port}`);

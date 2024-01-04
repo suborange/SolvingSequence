@@ -1,9 +1,10 @@
 // const fileo = requiure ('fs');
 // get random digits to relate to the random scramble moves? or have a certain scramble?
 const write_button = document.getElementById('write_digit');
-write_button.addEventListener('click', appendToFile);
-write_button.spacer = ' '; // init spacer for writing?
-write_button.move = '';
+write_button.addEventListener('click', WriteToFile);
+write_button.move='';
+
+
 // test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
 // const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
 
@@ -51,7 +52,7 @@ let cam_move = 1;
 let cube_size = 40;
 let trans_size = cube_size / 2;
 let sketchs = [];
-
+let full_move;
 // CONSTANTS 
 const BACK = -1;
 const FRONT = 1;
@@ -70,7 +71,7 @@ const Z_PLANE = 2;
 
 
 // GET PI NUMBERS 
-let get_pits = '---------314159';
+let get_pits = '---------314159265358979323846264338327950288419716';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 
@@ -117,10 +118,34 @@ function AddDigit(new_digit) {
 
 }
 
-function WriteToFile(move, spacer) {
-    var stream = fileo.createWriteStream("files/moves.txt", {flags: 'a'});
-    stream.write(move.concat(spacer)); // should append
+async function WriteToFile(event) {
+    // var stream = fileo.createWriteStream("files/moves.txt", {flags: 'a'});
+    // stream.write(move.concat(spacer)); // should append
+    let data;
+    if (start % 100 == 0) { // every 100 add a newline
+        full_move = event.currentTarget.move.concat('\n');
+    }
+    else {
+        full_move = event.currentTarget.move.concat(' ');
+    }
+    try {
+        let url = `/write/${full_move}`;
+        console.log("URL:",url, " | moves: ", full_move, "-");
+        let response = await fetch(url);
+         data = await response.json();
+         console.log("URL:",url, " | moves: ", full_move, "- || data:",data);
+    }
+    catch (err) {
+        console.log('something went wrong at fetching', err);
+    }
+    
+    if (data != 0) {
+        console.log('response returned bad value');
+    }
+
 }
+
+
 
 // SETUP AND DRAW
 // CREATE FACE AND CUBIE CLASSES TO DRAW
@@ -133,7 +158,7 @@ let canvases = [];
 
 sketch1 = function (sketch) {
     // console.log(canvases);
-    sketch.setup = function () {
+    sketch.setup =  function () {
         // *** FACE ***
         class Face {
             normal; // normal vector
@@ -470,7 +495,7 @@ sketch1 = function (sketch) {
     // **** DRAW ****
 
 
-    sketch.draw = function () {
+    sketch.draw =  function () {
 
 
         // sketch.background(34, 49, 78); // #22314E
@@ -478,7 +503,7 @@ sketch1 = function (sketch) {
         // camera controls for free rotation
         // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        if (sketch.frameCount % 1440 == 0) {
+        if (sketch.frameCount % 2880 == 0) {
             cam_move *= -1; // flip direction every once in a while
             cam1.setPosition(0, 0, 230);
             cam1.lookAt(0, 0, 0);
@@ -516,7 +541,7 @@ sketch1 = function (sketch) {
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         // do {
-        if (sketch.frameCount % 130 == 0 && is_solving) {
+        if (sketch.frameCount % 120 == 0 && is_solving) {
 
             let temp_move;
 
@@ -625,6 +650,7 @@ sketch1 = function (sketch) {
 
                         break;
                     default:
+                        temp_move = "-";
                         move = moves[moves.length - 1];
                         move.start();
                         break;
@@ -700,6 +726,7 @@ sketch1 = function (sketch) {
                         move.start();
                         break;
                     default:
+                        temp_move = "-";
                         move = moves[moves.length - 1];
                         move.start();
                         break;
@@ -709,8 +736,13 @@ sketch1 = function (sketch) {
             }
             // update the current move only once, instead of within switch
             document.querySelector("#curr_move").innerHTML = temp_move;
-            write_button.move = temp_move;
-            // ReadDigit();
+            // write_button.move = temp_move;
+            
+            // // ReadDigit();
+            // write_button.click();
+            
+
+           
 
             console.log(`pit: ${curr_pit}`)
             start++; // go to next digit
@@ -719,13 +751,13 @@ sketch1 = function (sketch) {
             // get the next digit in line, append the string with new digits
             // get digit
             // get_pits = get_pits.concat(); // should append one character to new string
-            if ((start - 8) % 100 == 0) {
-                write_button.spacer = '\n'; // pass newline for every hundred moves
-            }
-            else {
-                write_button.spacer = ' ';// pass a space for every new move
-            }
-            write_button.click();
+            // if ((start - 8) % 100 == 0) {
+            //     write_button.spacer = '\n'; // pass newline for every hundred moves
+            // }
+            // else {
+            //     write_button.spacer = ' ';// pass a space for every new move
+            // }
+            // write_button.click();
 
 
             if (start > get_pits.length) {
