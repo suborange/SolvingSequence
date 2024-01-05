@@ -12,24 +12,28 @@ app.get("/", (req: Request, res: Response): void => {
 });
 
 app.get("/pi", (req: Request, res: Response): void => {
-    let temp = {
-        "digit": 'e'
+    let temp:number = -1;
+    var pi = {
+        "digit": -1
     };
     console.log("getting digit... ");
     try {
         var stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8'});
-        stream.on('readable', ()=> {
-            temp.digit = stream.read(1);
-            console.log("value:", temp.digit);
+        stream.on('readable', (temp:number )=> {
+            temp = stream.read(1);
+            console.log("value:", temp);
+            
         });   
-
+      pi.digit = temp;
     }
     catch (err) {
-        temp.digit = 'e';
+        pi.digit = -1;
         console.log('something went wrong in get request', err);
+        res.send(temp);
     }
+    res.send(pi);
 
-    res.send(temp);
+   
 });
 
 app.get("/write/:move", (req: Request, res: Response): void => {

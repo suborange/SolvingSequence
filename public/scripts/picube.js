@@ -100,13 +100,13 @@ async function ReadDigit() {
         let url = `pi`;
         let response = await fetch(url);
         data = await response.json();
-        console.log("fetched data: ", data.digit);
+        console.log("fetched data: ", data);
         
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
     }    
-    if (data.digit != 'e') {
+    if (data.digit >=0) {
         AddDigit(data.digit);        
     }
     else {
