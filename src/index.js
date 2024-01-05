@@ -15,17 +15,18 @@ app.get("/", (req, res) => {
 });
 app.get("/pi", (req, res) => {
     let temp = {
-        "code": 1
+        "digit": 'e'
     };
     console.log("getting digit... ");
     try {
-        var stream = fs_1.default.createWriteStream("files/moves.txt", { flags: 'a' });
-        console.log("appending move: ", req.params.move);
-        stream.write(req.params.move);
-        temp.code = 0;
+        var stream = fs_1.default.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
+        stream.on('readable', () => {
+            temp.digit = stream.read(1);
+            console.log("value:", temp.digit);
+        });
     }
     catch (err) {
-        temp.code = 1;
+        temp.digit = 'e';
         console.log('something went wrong in get request', err);
     }
     res.send(temp);
@@ -44,7 +45,7 @@ app.get("/write/:move", (req, res) => {
     start++;
     try {
         var stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
-        console.log("appending move: ", full_move);
+        console.log("GET: appending move: ", full_move);
         stream.write(full_move);
         temp.code = 0;
     }

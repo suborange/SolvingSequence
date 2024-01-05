@@ -4,6 +4,10 @@ const write_button = document.getElementById('write_digit');
 write_button.addEventListener('click', WriteToFile);
 write_button.move='';
 
+const read_button = document.getElementById('read_digit');
+read_button.addEventListener('click', ReadDigit);
+
+
 
 // test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
 // const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
@@ -90,25 +94,43 @@ function displayPi(start, end) {
 
 }
 // fetch from https://pi.delivery/#apifetch
-function ReadDigit() {
-    fetch('files/pi.txt').
-    then((response) => {
-        const reader = response.body.getReader();
-        //read returns promise when value has been recieved
-        reader.read(1).then(function pump({done, value }){
-            if (done) {
-                // do something with LAST CHUNK
-                console.log('inside done:', value);
-                return;
-            }
-            // otherwise deal with chunk of data here
-            AddDigit(value);
-            console.log('chunk:', value);
+async function ReadDigit() {
+    let data;
+    try {
+        let url = `pi`;
+        let response = await fetch(url);
+        data = await response.json();
+        console.log("fetched data: ", data.digit);
+        
+    }
+    catch (err) {
+        console.log('something went wrong at fetching', err.stack);
+    }    
+    if (data.digit != 'e') {
+        AddDigit(data.digit);        
+    }
+    else {
+        console.log('response returned bad value');
+    }
 
-            return reader.read().then(pump);
-        });
-    }).
-    catch((err) => console.log('error ', err));
+    // fetch('files/pi.txt').
+    // then((response) => {
+    //     const reader = response.body.getReader();
+    //     //read returns promise when value has been recieved
+    //     reader.read(1).then(function pump({done, value }){
+    //         if (done) {
+    //             // do something with LAST CHUNK
+    //             console.log('inside done:', value);
+    //             return;
+    //         }
+    //         // otherwise deal with chunk of data here
+    //         AddDigit(value);
+    //         console.log('chunk:', value);
+
+    //         return reader.read().then(pump);
+    //     });
+    // }).
+    // catch((err) => console.log('error ', err));
 }
 
 function AddDigit(new_digit) {
@@ -119,25 +141,20 @@ function AddDigit(new_digit) {
 }
 
 async function WriteToFile(event) {
-    // var stream = fileo.createWriteStream("files/moves.txt", {flags: 'a'});
-    // stream.write(move.concat(spacer)); // should append
     let data;
-    console.log(event.currentTarget.move);
+    console.log("write:", event.currentTarget.move);
     try {
-        let url = `write/${event.currentTarget.move}`;
-        // console.log("URL:",url, " | moves: ", full_move, "-");
+        let url = `write/${event.currentTarget.move}`;        
         let response = await fetch(url);
          data = await response.json();
         //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
-    }
-    
+    }    
     if (data.code != 0) {
         console.log('response returned bad value');
     }
-
 }
 
 
@@ -542,6 +559,7 @@ sketch1 = function (sketch) {
 
             curr_pit = get_pits.substring(start, start + 1);
 
+            ReadDigit(); // read and append next digit
             displayPi(start, start + 1);
 
             // repeat last digit?
