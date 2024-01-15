@@ -2,7 +2,7 @@
 // get random digits to relate to the random scramble moves? or have a certain scramble?
 const write_button = document.getElementById('write_digit');
 write_button.addEventListener('click', WriteToFile);
-write_button.move='';
+write_button.move = '';
 
 const read_button = document.getElementById('read_digit');
 read_button.addEventListener('click', ReadDigit);
@@ -73,6 +73,31 @@ const X_PLANE = 0;
 const Y_PLANE = 1;
 const Z_PLANE = 2;
 
+const audio_file = new Audio();
+const audio_path = [
+    "audio/good_01.m4a",
+    "audio/good_02.m4a",
+    "audio/good_03.m4a",
+    "audio/good_04.m4a",
+    "audio/good_05.m4a",
+    "audio/good_06.m4a",
+    "audio/good_07.m4a",
+    "audio/good_08.m4a",
+    "audio/good_09.m4a",
+    "audio/good_10.m4a",
+    "audio/okay_01.m4a",
+    "audio/okay_02.m4a",
+    "audio/okay_03.m4a",
+    "audio/okay_04.m4a",
+    "audio/okay_05.m4a",
+    "audio/okay_06.m4a",
+    "audio/okay_07.m4a",
+    "audio/okay_08.m4a",
+    "audio/short_01.m4a",
+    "audio/short_02.m4a",
+    "audio/short_03.m4a",
+    "audio/short_04.m4a",
+    "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
 let get_pits = '---------314159265358979323846264338327950288419716';
@@ -83,7 +108,7 @@ let get_pits = '---------314159265358979323846264338327950288419716';
 // FUNCTIONS
 function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-} 
+}
 
 function displayPi(start, end) {
     // find the pi digit, and adjust it as it runs. 
@@ -101,13 +126,13 @@ async function ReadDigit() {
         let response = await fetch(url);
         data = await response.json();
         // console.log("fetched data: ", data);
-        
+
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
-    }    
-    if (data.digit >=0) {
-        AddDigit(data.digit);        
+    }
+    if (data.digit >= 0) {
+        AddDigit(data.digit);
     }
     else {
         console.log('response returned bad value');
@@ -144,14 +169,14 @@ async function WriteToFile(event) {
     let data;
     // console.log("write:", event.currentTarget.move);
     try {
-        let url = `write/${event.currentTarget.move}`;        
+        let url = `write/${event.currentTarget.move}`;
         let response = await fetch(url);
-         data = await response.json();
+        data = await response.json();
         //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
-    }    
+    }
     if (data.code != 0) {
         console.log('response returned bad value');
     }
@@ -170,7 +195,7 @@ let canvases = [];
 
 sketch1 = function (sketch) {
     // console.log(canvases);
-    sketch.setup =  function () {
+    sketch.setup = function () {
         // *** FACE ***
         class Face {
             normal; // normal vector
@@ -332,6 +357,11 @@ sketch1 = function (sketch) {
             start() {
                 this.animate = true;
                 this.angle = 0;
+                // need to start a sound here. i guess just start asap? last around half a second?
+                const r_index = Math.floor(Math.random() * (audio_path.length));
+                audio_file.src = audio_path[r_index];
+                audio_file.play();
+                console.log("audio: ", audio_path[r_index]);
             }
 
             update() {
@@ -339,7 +369,9 @@ sketch1 = function (sketch) {
                     this.angle += this.dir * 0.06;
                     // console.log("animating", this.angle);
 
-                    // need to start a sound here. i guess just start asap? last around half a second?
+
+
+                    // after animation, change positions.
                     if (sketch.abs(this.angle) > sketch.HALF_PI) {
                         this.angle = 0;
                         this.animate = false;
@@ -380,7 +412,7 @@ sketch1 = function (sketch) {
 
         sketch.setCamera(cam1);
 
-        
+
 
 
 
@@ -509,7 +541,7 @@ sketch1 = function (sketch) {
 
 
     // **** DRAW ****
-    sketch.draw =  function () {
+    sketch.draw = function () {
 
 
         // sketch.background(34, 49, 78); // #22314E
@@ -535,7 +567,7 @@ sketch1 = function (sketch) {
         if (move != null) {
 
             move.update();
-            
+
             for (let i = 0; i < cube.length; i++) {
                 sketch.push();
                 // Z ANIMATION
@@ -577,9 +609,9 @@ sketch1 = function (sketch) {
                     case "1":
                         // M SLICE 
                         // console.log("M-SLICE MOVE");
-                        
+
                         temp_move = "M";
-                        
+
                         move = moves[9];
                         move.start();
 
@@ -587,9 +619,9 @@ sketch1 = function (sketch) {
                     case "2":
                         // UP 
                         // console.log("UP MOVE");
-                        
+
                         temp_move = "U";
-                        
+
                         move = moves[10];
                         move.start();
 
@@ -597,9 +629,9 @@ sketch1 = function (sketch) {
                     case "3":
                         // DOWN 
                         // console.log("DOWN MOVE");
-                        
+
                         temp_move = "D";
-                        
+
                         move = moves[2];
                         move.start();
 
@@ -607,9 +639,9 @@ sketch1 = function (sketch) {
                     case "4":
                         // RIGHT
                         // console.log("RIGHT MOVE");
-                        
+
                         temp_move = "R";
-                        
+
                         move = moves[3];
                         move.start();
 
@@ -617,9 +649,9 @@ sketch1 = function (sketch) {
                     case "5":
                         // LEFT
                         // console.log("LEFT MOVE");
-                        
+
                         temp_move = "L";
-                        
+
                         move = moves[13];
                         move.start();
 
@@ -627,9 +659,9 @@ sketch1 = function (sketch) {
                     case "6":
                         // FRONT
                         // console.log("FRONT MOVE");
-                        
+
                         temp_move = "F";
-                        
+
                         move = moves[5];
                         move.start();
 
@@ -637,9 +669,9 @@ sketch1 = function (sketch) {
                     case "7":
                         // BACK 
                         // console.log("BACK MOVE");
-                        
+
                         temp_move = "B";
-                        
+
                         move = moves[15];
                         move.start();
 
@@ -647,9 +679,9 @@ sketch1 = function (sketch) {
                     case "8":
                         // E-SLICE 
                         // console.log("E-SLICE MOVE");
-                        
+
                         temp_move = "E";
-                        
+
                         move = moves[7];
                         move.start();
 
@@ -678,7 +710,7 @@ sketch1 = function (sketch) {
                     case "1":
                         // M SLICE INVERSE
                         // console.log("M-SLICE INVERTED MOVE");                        
-                        temp_move = "M\'";                        
+                        temp_move = "M\'";
                         move = moves[0];
                         move.start();
                         break;
@@ -750,12 +782,12 @@ sketch1 = function (sketch) {
             // update the current move only once, instead of within switch
             document.querySelector("#curr_move").innerHTML = temp_move;
             write_button.move = temp_move;
-            
+
             // // ReadDigit();
             write_button.click();
-            
 
-           
+
+
 
             // console.log(`pit: ${curr_pit}`)
             start++; // go to next digit
