@@ -20,7 +20,7 @@
     - maybe use await function? grab 10 numbers, complete the function awaiting for end, then grabs next ten numbers?
     - scrape data of web, to have newlines for each number? ( no thats like twice as big of a file)
 - make a canvas and redesign the cube for clarity, with animations
-- need a wya to check if solved, or parts of it being solved? 
+- need a way to check if solved, or parts of it being solved? 
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
 - scramble the cube first, then have all canvases start solving
@@ -30,6 +30,8 @@
 - write the moves to a file, every 100 moves or something new line.
 
 - maybe line ip the move, camera reset, on move ending, so it looks less choppy?
+
+- add sound effect for each turn, make it?
 
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around

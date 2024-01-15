@@ -68,7 +68,7 @@ h1 {
     padding: 0%;
     text-shadow: 0px 0px 4px #250550, 0px 0px 20px #000000;
     /* text-shadow: 4px 4px 5px #16042e, 0px 0px 10px #ffffff; */
-    
+    /* text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black; */
 }
 
 h2.subtitle {
@@ -106,6 +106,10 @@ span.wr {
     font-size: 1.3em;
 }
 
+span.thicc {
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+}
+
 span.pi {
     display: inline-block;
     font-family: 'Chakra Petch';
@@ -117,7 +121,7 @@ span.pi {
     /* color: rgb(198, 218, 248); */
     /* color: var(--color-light); */
     color: #ffb300;
-    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    /* text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black; */
 }
 
 span.r {

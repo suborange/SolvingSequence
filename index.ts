@@ -31,9 +31,7 @@ app.get("/pi", (req: Request, res: Response): void => {
         console.log('something went wrong in get request', err);
         res.send(temp);
     }
-    res.send(pi);
-
-   
+    res.send(pi);   
 });
 
 app.get("/write/:move", (req: Request, res: Response): void => {

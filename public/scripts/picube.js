@@ -100,7 +100,7 @@ async function ReadDigit() {
         let url = `pi`;
         let response = await fetch(url);
         data = await response.json();
-        console.log("fetched data: ", data);
+        // console.log("fetched data: ", data);
         
     }
     catch (err) {
@@ -136,13 +136,13 @@ async function ReadDigit() {
 function AddDigit(new_digit) {
     // find the next digit, then return it to be added to the line. 
     get_pits = get_pits.concat(new_digit);
-    console.log('added new digit:', get_pits);
+    // console.log('added new digit:', get_pits);
 
 }
 
 async function WriteToFile(event) {
     let data;
-    console.log("write:", event.currentTarget.move);
+    // console.log("write:", event.currentTarget.move);
     try {
         let url = `write/${event.currentTarget.move}`;        
         let response = await fetch(url);
@@ -336,24 +336,29 @@ sketch1 = function (sketch) {
 
             update() {
                 if (this.animate) {
-                    this.angle += this.dir * 0.1;
-                    // console.log("animating", this.dir, "z thing:", this.z, " pi", sketch.HALF_PI);
+                    this.angle += this.dir * 0.06;
+                    // console.log("animating", this.angle);
+
+                    // need to start a sound here. i guess just start asap? last around half a second?
                     if (sketch.abs(this.angle) > sketch.HALF_PI) {
                         this.angle = 0;
                         this.animate = false;
 
-                        // this does not work with slicing, because it IS 0!
+                        // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
                         if (this.plane == Z_PLANE) { // Z axis animation
                             rotateZaxis(this.dir * sketch.HALF_PI, this.z);
-                            console.log("dir:", this.dir, "z-animation", this.z);
+                            // console.log("current framecount: ", sketch.frameCount);
+                            // console.log("dir:", this.dir, "z-animation", this.z);
                         }
                         else if (this.plane == X_PLANE) { // X axis animation
                             rotateXaxis(this.dir * sketch.HALF_PI, this.x);
-                            console.log("dir:", this.dir, "x-animation", this.x);
+                            // console.log("current framecount: ", sketch.frameCount);
+                            // console.log("dir:", this.dir, "x-animation", this.x);
                         }
                         else if (this.plane == Y_PLANE) { // Y axis animation
                             rotateYaxis(this.dir * -1 * sketch.HALF_PI, this.y);
-                            console.log("dir:", this.dir, "y-animation", this.y);
+                            // console.log("current framecount: ", sketch.frameCount);
+                            // console.log("dir:", this.dir, "y-animation", this.y);
                         }
 
                     }
@@ -375,7 +380,7 @@ sketch1 = function (sketch) {
 
         sketch.setCamera(cam1);
 
-        console.log('first canvas');
+        
 
 
 
@@ -401,7 +406,6 @@ sketch1 = function (sketch) {
                     let y = _Y * _len - offset;
                     let z = _Z * _len - offset;
                     let m = sketch.createVector(x, y, z);
-
 
                     cube[index] = new Cubie(m, _len, xx, yy, zz);
                     // console.log("x: ", cube[index].xi, "y: ", cube[index].yi, "z: ", cube[index].zi);
@@ -429,7 +433,7 @@ sketch1 = function (sketch) {
         moves.push(new Move(-2, -2, BACK, COUNTER_CLOCKWISE, Z_PLANE)); // 15
         moves.push(new Move(-2, E_SLICE, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 16
         moves.push(new Move(-2, -2, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
-        moves.push(new Move(-2, -2, -2, -2, -2));
+        moves.push(new Move(-2, -2, -2, -2, -2)); // temnp no move?
 
 
     } // end setup
@@ -505,8 +509,6 @@ sketch1 = function (sketch) {
 
 
     // **** DRAW ****
-
-
     sketch.draw =  function () {
 
 
@@ -533,6 +535,7 @@ sketch1 = function (sketch) {
         if (move != null) {
 
             move.update();
+            
             for (let i = 0; i < cube.length; i++) {
                 sketch.push();
                 // Z ANIMATION
@@ -559,7 +562,7 @@ sketch1 = function (sketch) {
 
             curr_pit = get_pits.substring(start, start + 1);
 
-            ReadDigit(); // read and append next digit
+            // ReadDigit(); // read and append next digit
             displayPi(start, start + 1);
 
             // repeat last digit?
@@ -568,15 +571,12 @@ sketch1 = function (sketch) {
             }
 
 
-            // console.log("pits:", get_pits, "length: ", get_pits.length);
-
-
             if (curr_pit >= prev_pit) {
                 switch (curr_pit) {
                     // REGULAR CLOCKWISE MOVES
                     case "1":
                         // M SLICE 
-                        console.log("M-SLICE MOVE");
+                        // console.log("M-SLICE MOVE");
                         
                         temp_move = "M";
                         
@@ -586,7 +586,7 @@ sketch1 = function (sketch) {
                         break;
                     case "2":
                         // UP 
-                        console.log("UP MOVE");
+                        // console.log("UP MOVE");
                         
                         temp_move = "U";
                         
@@ -596,7 +596,7 @@ sketch1 = function (sketch) {
                         break;
                     case "3":
                         // DOWN 
-                        console.log("DOWN MOVE");
+                        // console.log("DOWN MOVE");
                         
                         temp_move = "D";
                         
@@ -606,7 +606,7 @@ sketch1 = function (sketch) {
                         break;
                     case "4":
                         // RIGHT
-                        console.log("RIGHT MOVE");
+                        // console.log("RIGHT MOVE");
                         
                         temp_move = "R";
                         
@@ -616,7 +616,7 @@ sketch1 = function (sketch) {
                         break;
                     case "5":
                         // LEFT
-                        console.log("LEFT MOVE");
+                        // console.log("LEFT MOVE");
                         
                         temp_move = "L";
                         
@@ -626,7 +626,7 @@ sketch1 = function (sketch) {
                         break;
                     case "6":
                         // FRONT
-                        console.log("FRONT MOVE");
+                        // console.log("FRONT MOVE");
                         
                         temp_move = "F";
                         
@@ -636,7 +636,7 @@ sketch1 = function (sketch) {
                         break;
                     case "7":
                         // BACK 
-                        console.log("BACK MOVE");
+                        // console.log("BACK MOVE");
                         
                         temp_move = "B";
                         
@@ -646,7 +646,7 @@ sketch1 = function (sketch) {
                         break;
                     case "8":
                         // E-SLICE 
-                        console.log("E-SLICE MOVE");
+                        // console.log("E-SLICE MOVE");
                         
                         temp_move = "E";
                         
@@ -656,7 +656,7 @@ sketch1 = function (sketch) {
                         break;
                     case "9":
                         // FRONT
-                        console.log("FRONT MOVE");
+                        // console.log("FRONT MOVE");
                         temp_move = "S";
                         move = moves[8];
                         move.start();
@@ -677,63 +677,63 @@ sketch1 = function (sketch) {
 
                     case "1":
                         // M SLICE INVERSE
-                        console.log("M-SLICE INVERTED MOVE");                        
+                        // console.log("M-SLICE INVERTED MOVE");                        
                         temp_move = "M\'";                        
                         move = moves[0];
                         move.start();
                         break;
                     case "2":
                         // UP INVERSE
-                        console.log("UP INVERTED MOVE");
+                        // console.log("UP INVERTED MOVE");
                         temp_move = "U\'";
                         move = moves[1];
                         move.start();
                         break;
                     case "3":
                         // DOWN INVERSE
-                        console.log("DOWN INVERTED MOVE");
+                        // console.log("DOWN INVERTED MOVE");
                         temp_move = "D\'";
                         move = moves[11];
                         move.start();
                         break;
                     case "4":
                         // RIGHT INVERSE
-                        console.log("RIGHT INVERTED MOVE");
+                        // console.log("RIGHT INVERTED MOVE");
                         temp_move = "R\'";
                         move = moves[12];
                         move.start();
                         break;
                     case "5":
                         // LEFT INVERSE
-                        console.log("LEFT INVERTED MOVE");
+                        // console.log("LEFT INVERTED MOVE");
                         temp_move = "L\'";
                         move = moves[4];
                         move.start();
                         break;
                     case "6":
                         // FRONT INVERSE 
-                        console.log("FRONT INVERTED MOVE");
+                        // console.log("FRONT INVERTED MOVE");
                         temp_move = "F\'";
                         move = moves[14];
                         move.start();
                         break;
                     case "7":
                         // BACK INVERSE
-                        console.log("BACK INVERTED MOVE");
+                        // console.log("BACK INVERTED MOVE");
                         temp_move = "B\'";
                         move = moves[6];
                         move.start();
                         break;
                     case "8":
                         // E-SLICE  INVERSE
-                        console.log("E-SLICE INVERTED MOVE");
+                        // console.log("E-SLICE INVERTED MOVE");
                         temp_move = "E\'";
                         move = moves[16];
                         move.start();
                         break;
                     case "9":
                         // S-SLICE INVERSE 
-                        console.log("S-SLICE INVERTED MOVE");
+                        // console.log("S-SLICE INVERTED MOVE");
                         temp_move = "S\'";
                         move = moves[17];
                         move.start();
@@ -757,7 +757,7 @@ sketch1 = function (sketch) {
 
            
 
-            console.log(`pit: ${curr_pit}`)
+            // console.log(`pit: ${curr_pit}`)
             start++; // go to next digit
             // check if move is any closer to solving a cube.
 
@@ -775,7 +775,7 @@ sketch1 = function (sketch) {
 
             if (start > get_pits.length) {
                 document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                console.log("STOPPED");
+                // console.log("STOPPED");
                 is_solving = false;
                 // scramble = false;
             }
