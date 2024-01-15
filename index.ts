@@ -73,3 +73,27 @@ function appendToFile(event: any): void {
     let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
     stream.write(temp);
 }
+
+
+
+
+// OLD 
+
+    // fetch('files/pi.txt').
+    // then((response) => {
+    //     const reader = response.body.getReader();
+    //     //read returns promise when value has been recieved
+    //     reader.read(1).then(function pump({done, value }){
+    //         if (done) {
+    //             // do something with LAST CHUNK
+    //             console.log('inside done:', value);
+    //             return;
+    //         }
+    //         // otherwise deal with chunk of data here
+    //         AddDigit(value);
+    //         console.log('chunk:', value);
+
+    //         return reader.read().then(pump);
+    //     });
+    // }).
+    // catch((err) => console.log('error ', err));

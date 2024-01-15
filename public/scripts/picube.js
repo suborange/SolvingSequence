@@ -82,7 +82,6 @@ const audio_path = [
     "audio/good_05.m4a",
     "audio/good_06.m4a",
     "audio/good_07.m4a",
-    "audio/good_08.m4a",
     "audio/good_09.m4a",
     "audio/good_10.m4a",
     "audio/okay_01.m4a",
@@ -90,20 +89,18 @@ const audio_path = [
     "audio/okay_03.m4a",
     "audio/okay_04.m4a",
     "audio/okay_05.m4a",
-    "audio/okay_06.m4a",
     "audio/okay_07.m4a",
     "audio/okay_08.m4a",
-    "audio/short_01.m4a",
     "audio/short_02.m4a",
-    "audio/short_03.m4a",
     "audio/short_04.m4a",
     "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
-let get_pits = '---------314159265358979323846264338327950288419716';
+let get_pits = '---------31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
-
+// let trya = numberWithCommas(1090000);
+// console.log("number with comma: ", trya)
 
 // FUNCTIONS
 function numberWithCommas(x) {
@@ -180,6 +177,14 @@ async function WriteToFile(event) {
     if (data.code != 0) {
         console.log('response returned bad value');
     }
+}
+
+function PlaySound() {
+           // need to start a sound here. i guess just start asap? last around half a second?
+           const r_index = Math.floor(Math.random() * (audio_path.length));
+           audio_file.src = audio_path[r_index];
+           audio_file.play();
+           console.log("audio: ", audio_path[r_index]);
 }
 
 
@@ -357,11 +362,7 @@ sketch1 = function (sketch) {
             start() {
                 this.animate = true;
                 this.angle = 0;
-                // need to start a sound here. i guess just start asap? last around half a second?
-                const r_index = Math.floor(Math.random() * (audio_path.length));
-                audio_file.src = audio_path[r_index];
-                audio_file.play();
-                console.log("audio: ", audio_path[r_index]);
+         
             }
 
             update() {
@@ -594,7 +595,7 @@ sketch1 = function (sketch) {
 
             curr_pit = get_pits.substring(start, start + 1);
 
-            // ReadDigit(); // read and append next digit
+            ReadDigit(); // read and append next digit
             displayPi(start, start + 1);
 
             // repeat last digit?
@@ -609,82 +610,66 @@ sketch1 = function (sketch) {
                     case "1":
                         // M SLICE 
                         // console.log("M-SLICE MOVE");
-
                         temp_move = "M";
-
                         move = moves[9];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "2":
                         // UP 
                         // console.log("UP MOVE");
-
                         temp_move = "U";
-
                         move = moves[10];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "3":
                         // DOWN 
                         // console.log("DOWN MOVE");
-
                         temp_move = "D";
-
                         move = moves[2];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "4":
                         // RIGHT
                         // console.log("RIGHT MOVE");
-
                         temp_move = "R";
-
                         move = moves[3];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "5":
                         // LEFT
                         // console.log("LEFT MOVE");
-
                         temp_move = "L";
-
                         move = moves[13];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "6":
                         // FRONT
                         // console.log("FRONT MOVE");
-
                         temp_move = "F";
-
                         move = moves[5];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "7":
                         // BACK 
                         // console.log("BACK MOVE");
-
                         temp_move = "B";
-
                         move = moves[15];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "8":
                         // E-SLICE 
                         // console.log("E-SLICE MOVE");
-
                         temp_move = "E";
-
                         move = moves[7];
                         move.start();
-
+                        PlaySound();
                         break;
                     case "9":
                         // FRONT
@@ -692,7 +677,7 @@ sketch1 = function (sketch) {
                         temp_move = "S";
                         move = moves[8];
                         move.start();
-
+                        PlaySound();
                         break;
                     default:
                         temp_move = "-";
@@ -713,6 +698,7 @@ sketch1 = function (sketch) {
                         temp_move = "M\'";
                         move = moves[0];
                         move.start();
+                        PlaySound();
                         break;
                     case "2":
                         // UP INVERSE
@@ -720,6 +706,7 @@ sketch1 = function (sketch) {
                         temp_move = "U\'";
                         move = moves[1];
                         move.start();
+                        PlaySound();
                         break;
                     case "3":
                         // DOWN INVERSE
@@ -727,6 +714,7 @@ sketch1 = function (sketch) {
                         temp_move = "D\'";
                         move = moves[11];
                         move.start();
+                        PlaySound();
                         break;
                     case "4":
                         // RIGHT INVERSE
@@ -734,6 +722,7 @@ sketch1 = function (sketch) {
                         temp_move = "R\'";
                         move = moves[12];
                         move.start();
+                        PlaySound();
                         break;
                     case "5":
                         // LEFT INVERSE
@@ -741,6 +730,7 @@ sketch1 = function (sketch) {
                         temp_move = "L\'";
                         move = moves[4];
                         move.start();
+                        PlaySound();
                         break;
                     case "6":
                         // FRONT INVERSE 
@@ -748,6 +738,7 @@ sketch1 = function (sketch) {
                         temp_move = "F\'";
                         move = moves[14];
                         move.start();
+                        PlaySound();
                         break;
                     case "7":
                         // BACK INVERSE
@@ -755,6 +746,7 @@ sketch1 = function (sketch) {
                         temp_move = "B\'";
                         move = moves[6];
                         move.start();
+                        PlaySound();
                         break;
                     case "8":
                         // E-SLICE  INVERSE
@@ -762,6 +754,7 @@ sketch1 = function (sketch) {
                         temp_move = "E\'";
                         move = moves[16];
                         move.start();
+                        PlaySound();
                         break;
                     case "9":
                         // S-SLICE INVERSE 
@@ -769,6 +762,7 @@ sketch1 = function (sketch) {
                         temp_move = "S\'";
                         move = moves[17];
                         move.start();
+                        PlaySound();
                         break;
                     default:
                         temp_move = "-";
