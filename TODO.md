@@ -1,3 +1,4 @@
+# MOVE ALL DONE TO TODONE.MD
 # Init
 + wireframe the website for 4 quadrants, for each canvas
 + make a quadrant for all the notation correctly aligned and designed to show each digit clearly. 
@@ -23,7 +24,7 @@
 - need a way to check if solved, or parts of it being solved? 
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
-- scramble the cube first, then have all canvases start solving
+( add a starting position, and can compare? maybe starting distances from one another. )
 
 - displaying number values needs to account for commas ( it might)
 
@@ -41,3 +42,7 @@
 - can i use the mouse move thing, find the values of the mouse movement, and copy his camera swivel?
 
 - maybe just make a file for each different canvas if nothing else works?
+
+
+# depricated
+- scramble the cube first, then have all canvases start solving 

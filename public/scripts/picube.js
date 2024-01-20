@@ -96,7 +96,7 @@ const audio_path = [
     "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
-let get_pits = '---------31415926535897932384626433832795028841971693993751058209749445923078164062862089986280348253421170679821';
+let get_pits = '---------3141592653589';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // let trya = numberWithCommas(1090000);
@@ -134,25 +134,6 @@ async function ReadDigit() {
     else {
         console.log('response returned bad value');
     }
-
-    // fetch('files/pi.txt').
-    // then((response) => {
-    //     const reader = response.body.getReader();
-    //     //read returns promise when value has been recieved
-    //     reader.read(1).then(function pump({done, value }){
-    //         if (done) {
-    //             // do something with LAST CHUNK
-    //             console.log('inside done:', value);
-    //             return;
-    //         }
-    //         // otherwise deal with chunk of data here
-    //         AddDigit(value);
-    //         console.log('chunk:', value);
-
-    //         return reader.read().then(pump);
-    //     });
-    // }).
-    // catch((err) => console.log('error ', err));
 }
 
 function AddDigit(new_digit) {
@@ -184,7 +165,7 @@ function PlaySound() {
            const r_index = Math.floor(Math.random() * (audio_path.length));
            audio_file.src = audio_path[r_index];
            audio_file.play();
-           console.log("audio: ", audio_path[r_index]);
+        //    console.log("audio: ", audio_path[r_index]);
 }
 
 
@@ -300,7 +281,7 @@ sketch1 = function (sketch) {
             show() {
                 sketch.noFill();
                 sketch.stroke(0);
-                sketch.strokeWeight(5);
+                sketch.strokeWeight(4);
 
                 sketch.push();
                 sketch.translate(this.matrix.x, this.matrix.y, this.matrix.z);

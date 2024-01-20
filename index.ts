@@ -11,27 +11,31 @@ app.get("/", (req: Request, res: Response): void => {
     res.render('index');
 });
 
-app.get("/pi", (req: Request, res: Response): void => {
-    let temp:number = -1;
-    var pi = {
+app.get("/pi",  (req: Request, res: Response): void => {
+    // let temp:number = -1;
+    let pi = {
         "digit": -1
     };
     console.log("getting digit... ");
     try {
-        var stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8'});
-        stream.on('readable', (temp:number )=> {
+        // need to make the "iterator" type thing forsaving file thing
+        let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8'});
+         stream.on('readable', (temp:number) => {
             temp = stream.read(1);
-            console.log("value:", temp);
             
-        });   
-      pi.digit = temp;
+            // console.log(":) ");
+            pi.digit = temp;
+            console.log("value:", pi.digit);
+            res.send(pi); 
+        });         
     }
     catch (err) {
         pi.digit = -1;
         console.log('something went wrong in get request', err);
-        res.send(temp);
+        // res.send(temp);
     }
-    res.send(pi);   
+    console.log("value:", pi.digit);
+      
 });
 
 app.get("/write/:move", (req: Request, res: Response): void => {

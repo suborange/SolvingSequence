@@ -14,25 +14,27 @@ app.get("/", (req, res) => {
     res.render('index');
 });
 app.get("/pi", (req, res) => {
-    let temp = -1;
-    var pi = {
+    // let temp:number = -1;
+    let pi = {
         "digit": -1
     };
     console.log("getting digit... ");
-    try {
-        var stream = fs_1.default.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
-        stream.on('readable', (temp) => {
-            temp = stream.read(1);
-            console.log("value:", temp);
-        });
+    // try {
+    let stream = fs_1.default.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
+    stream.on('readable', (temp) => {
+        temp = stream.read(1);
+        // console.log(":) ");
         pi.digit = temp;
-    }
-    catch (err) {
-        pi.digit = -1;
-        console.log('something went wrong in get request', err);
-        res.send(temp);
-    }
-    res.send(pi);
+        console.log("value:", pi.digit);
+        res.send(pi);
+    });
+    // }
+    // catch (err) {
+    //     pi.digit = -1;
+    //     console.log('something went wrong in get request', err);
+    //     // res.send(temp);
+    // }
+    console.log("value:", pi.digit);
 });
 app.get("/write/:move", (req, res) => {
     let temp = {
