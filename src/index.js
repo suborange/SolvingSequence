@@ -19,21 +19,22 @@ app.get("/pi", (req, res) => {
         "digit": -1
     };
     console.log("getting digit... ");
-    // try {
-    let stream = fs_1.default.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
-    stream.on('readable', (temp) => {
-        temp = stream.read(1);
-        // console.log(":) ");
-        pi.digit = temp;
-        console.log("value:", pi.digit);
-        res.send(pi);
-    });
-    // }
-    // catch (err) {
-    //     pi.digit = -1;
-    //     console.log('something went wrong in get request', err);
-    //     // res.send(temp);
-    // }
+    try {
+        // need to make the "iterator" type thing forsaving file thing
+        let stream = fs_1.default.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
+        stream.on('readable', (temp) => {
+            temp = stream.read(1);
+            // console.log(":) ");
+            pi.digit = temp;
+            console.log("value:", pi.digit);
+            res.send(pi);
+        });
+    }
+    catch (err) {
+        pi.digit = -1;
+        console.log('something went wrong in get request', err);
+        // res.send(temp);
+    }
     console.log("value:", pi.digit);
 });
 app.get("/write/:move", (req, res) => {

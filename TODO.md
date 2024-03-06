@@ -1,19 +1,12 @@
-# MOVE ALL DONE TO TODONE.MD
 # Init
-+ wireframe the website for 4 quadrants, for each canvas
-+ make a quadrant for all the notation correctly aligned and designed to show each digit clearly. 
-- need to redesign to show current scramble, 
-+ and then show all concurrent digits and moves ( which will be the same, against different scrambles)
-    + need to add another box below to show the current digits and moves
+
 
 # HTML
-+ i think it is just one home page, 
 - maybe a page on how it works and was built?
 - link to how it was built?
-+ add notations + templates
+
 
 # CSS
-+ find good color pallete, design, font, borders, etc. in relation to rubiks cube. 
 
 
 # JavaScript
@@ -30,19 +23,23 @@
 
 - write the moves to a file, every 100 moves or something new line.
 
-- maybe line ip the move, camera reset, on move ending, so it looks less choppy?
-
-- add sound effect for each turn, make it?
++ swap images every so often
+- smooth transition between images?
 
 # P5 
-+ make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
+
 ## not sure if posssible
 - when something is finished, snap to a camera that is fixed
 
-- can i use the mouse move thing, find the values of the mouse movement, and copy his camera swivel?
 
-- maybe just make a file for each different canvas if nothing else works?
+
+
 
 
 # depricated
 - scramble the cube first, then have all canvases start solving 
+
+- can i use the mouse move thing, find the values of the mouse movement, and copy his camera swivel?
+
+- maybe just make a file for each different canvas if nothing else works?
+- need to redesign to show current scramble, 

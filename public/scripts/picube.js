@@ -7,6 +7,8 @@ write_button.move = '';
 const read_button = document.getElementById('read_digit');
 read_button.addEventListener('click', ReadDigit);
 
+const img_swap = document.getElementById('notation_img');
+
 
 
 // test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
@@ -42,6 +44,7 @@ let cube;
 let move;
 let moves = [];
 let bool = true;
+let iswap = true;
 let start = 3;
 let curr_pit;
 // let end = 1;
@@ -391,13 +394,7 @@ sketch1 = function (sketch) {
         cam1 = sketch.createCamera();
         cam1.setPosition(0, 0, 230);
         // cam1.lookAt(0, 0, 0);
-
         sketch.setCamera(cam1);
-
-
-
-
-
         //  "canvastl"
         // canvas.parent(canvas_id[i]);
         sketch.frameRate(60);
@@ -531,10 +528,19 @@ sketch1 = function (sketch) {
         // camera controls for free rotation
         // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        if (sketch.frameCount % 2880 == 0) {
+        if (sketch.frameCount % 1440 == 0) {
             cam_move *= -1; // flip direction every once in a while
             cam1.setPosition(0, 0, 230);
             cam1.lookAt(0, 0, 0);
+            iswap = !iswap;
+
+            // swap images between clockwise and counter clockwise, can be timed here?
+            if (iswap) {
+                img_swap.src = "imgs/clockwise_notations.png";
+            }
+            else {
+                img_swap.src = "imgs/counterwise_notations.png";
+            }                        
         }
         sketch.rotateX(sketch.HALF_PI / 2);
         sketch.rotateZ(sketch.HALF_PI / 2);
@@ -576,8 +582,10 @@ sketch1 = function (sketch) {
 
             curr_pit = get_pits.substring(start, start + 1);
 
-            ReadDigit(); // read and append next digit
+            //ReadDigit(); // read and append next digit
             displayPi(start, start + 1);
+            
+            
 
             // repeat last digit?
             if (curr_pit == 0) {
