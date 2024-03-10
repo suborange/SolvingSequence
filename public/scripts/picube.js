@@ -41,6 +41,7 @@ const img_swap = document.getElementById('notation_img');
 // setup for the vectors and 3d array(matrix)
 let dim;
 let cube;
+let SOLVED_CUBE;
 let move;
 let moves = [];
 let bool = true;
@@ -171,7 +172,14 @@ function PlaySound() {
         //    console.log("audio: ", audio_path[r_index]);
 }
 
+function CubeIsSolved() {
+    //if not
+    return false;
+    // if so, then solved cube!
+    // skip cube 13?
 
+    
+}
 
 // SETUP AND DRAW
 // CREATE FACE AND CUBIE CLASSES TO DRAW
@@ -234,12 +242,13 @@ sketch1 = function (sketch) {
                 sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
                 sketch.rectMode(sketch.CENTER);
                 sketch.translate(trans_size * this.normal.x, trans_size * this.normal.y, trans_size * this.normal.z);
-                if (sketch.abs(this.normal.x)) {
-                    sketch.rotateY(sketch.HALF_PI);
-                }
-                else if (this.normal.y) {
-                    sketch.rotateX(sketch.HALF_PI);
-                }
+                // to debug
+                // if (sketch.abs(this.normal.x)) {
+                //     sketch.rotateY(sketch.HALF_PI);
+                // }
+                // else if (this.normal.y) {
+                //     sketch.rotateX(sketch.HALF_PI);
+                // }
                 // console.log(this.normal.x , this.normal.y, this.normal.z); seems to be working fine.. 
                 sketch.square(0, 0, cube_size);
                 sketch.pop();
@@ -261,6 +270,7 @@ sketch1 = function (sketch) {
             r = 255;
             g = 255;
             b = 255;
+            highlight = false; // for debugging each cubie and its face. woopie!
 
             // **** CONSTRUCTOR **** 
             constructor(m, l, x, y, z, p) {
@@ -274,10 +284,10 @@ sketch1 = function (sketch) {
                 // each cubie will have information for all 6 faces
                 this.faces[0] = new Face(sketch.createVector(0, 0, -1), 0, 0, 255); // BACK - pass a new vector? and blue
                 this.faces[1] = new Face(sketch.createVector(0, 0, 1), 0, 255, 0); // FRONT - green
-                this.faces[2] = new Face(sketch.createVector(0, 1, 0), 255, 255, 255); // UP - white
-                this.faces[3] = new Face(sketch.createVector(0, -1, 0), 255, 255, 0); // DOWN - yellow
-                this.faces[4] = new Face(sketch.createVector(1, 0, 0), 255, 140, 0); // LEFT - orange
-                this.faces[5] = new Face(sketch.createVector(-1, 0, 0), 255, 0, 0); // RIGHT - red      
+                this.faces[2] = new Face(sketch.createVector(0, 1, 0), 255, 255, 255); // DOWN - white
+                this.faces[3] = new Face(sketch.createVector(0, -1, 0), 255, 255, 0); // UP - yellow
+                this.faces[4] = new Face(sketch.createVector(1, 0, 0), 255, 140, 0); // RIGHT - orange
+                this.faces[5] = new Face(sketch.createVector(-1, 0, 0), 255, 0, 0); // LEFT - red      
             }
 
             // show the cubie, translate to center, and show face colors
@@ -285,12 +295,16 @@ sketch1 = function (sketch) {
                 sketch.noFill();
                 sketch.stroke(0);
                 sketch.strokeWeight(4);
+                // debugging test here. find all 54 things great.
+                if (this.highlight) {
+                    sketch.fill(255,0,0);
+                }
 
                 sketch.push();
                 sketch.translate(this.matrix.x, this.matrix.y, this.matrix.z);
                 sketch.box(this.length);
                 for (let f of this.faces) {
-                    f.showColor();
+                    // f.showColor();
                 }
                 sketch.pop();
             }
@@ -405,6 +419,7 @@ sketch1 = function (sketch) {
 
         dim = Number(3);
         cube = Array(dim * dim * dim).fill(); // 1D array of matrices
+        SOLVED_CUBE = Array(dim * dim * dim).fill(); // 1D array of matrices
         index = 0;
         // ATTEMPT 1
         // for every cubie, make a cube with correct length and offset to center
@@ -412,18 +427,22 @@ sketch1 = function (sketch) {
             for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
                 for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz++) {
                     let _len = cube_size;
-                    let offset = (dim - 1) * _len * 0.5;
+                    let offset = (dim - 1) * _len * 0.5; // can change this just to len? hmm
                     let x = _X * _len - offset;
                     let y = _Y * _len - offset;
                     let z = _Z * _len - offset;
                     let m = sketch.createVector(x, y, z);
 
                     cube[index] = new Cubie(m, _len, xx, yy, zz);
+                    SOLVED_CUBE[index] = new Cubie(m, _len, xx, yy, zz);
                     // console.log("x: ", cube[index].xi, "y: ", cube[index].yi, "z: ", cube[index].zi);
                     index++;
                 }
             }
         }
+        // debugging 
+        cube[26].highlight = true;
+
         index = 0;
         move = null;
         moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
@@ -526,29 +545,30 @@ sketch1 = function (sketch) {
         // sketch.background(34, 49, 78); // #22314E
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        if (sketch.frameCount % 1440 == 0) {
-            cam_move *= -1; // flip direction every once in a while
-            cam1.setPosition(0, 0, 230);
-            cam1.lookAt(0, 0, 0);
-            iswap = !iswap;
+        // if (sketch.frameCount % 1440 == 0) {
+        //     cam_move *= -1; // flip direction every once in a while
+        //     cam1.setPosition(0, 0, 230);
+        //     cam1.lookAt(0, 0, 0);
+        //     iswap = !iswap;
 
-            // swap images between clockwise and counter clockwise, can be timed here?
-            if (iswap) {
-                img_swap.src = "imgs/clockwise_notations.png";
-            }
-            else {
-                img_swap.src = "imgs/counterwise_notations.png";
-            }                        
-        }
-        sketch.rotateX(sketch.HALF_PI / 2);
-        sketch.rotateZ(sketch.HALF_PI / 2);
+        //     // swap images between clockwise and counter clockwise, can be timed here?
+        //     if (iswap) {
+        //         img_swap.src = "imgs/clockwise_notations.png";
+        //     }
+        //     else {
+        //         img_swap.src = "imgs/counterwise_notations.png";
+        //     }     
+        //     // add if {cube_is_solved} here
+        // }
+        // sketch.rotateX(sketch.HALF_PI / 2);
+        // sketch.rotateZ(sketch.HALF_PI / 2);
 
         sketch.push();
-        cam1.move(cam_move, 0, 0);
+        // cam1.move(cam_move, 0, 0);
 
-        cam1.lookAt(0, 0, 0);
+        // cam1.lookAt(0, 0, 0);
         sketch.pop();
 
 
@@ -579,13 +599,17 @@ sketch1 = function (sketch) {
         if (sketch.frameCount % 120 == 0 && is_solving) {
 
             let temp_move;
+           
+            // debugging
+            is_solving=false;
+         
 
             curr_pit = get_pits.substring(start, start + 1);
 
             //ReadDigit(); // read and append next digit
             displayPi(start, start + 1);
             
-            
+            console.log(cube);
 
             // repeat last digit?
             if (curr_pit == 0) {
@@ -794,6 +818,18 @@ sketch1 = function (sketch) {
                 is_solving = false;
                 // scramble = false;
             }
+
+            // ***************
+            // * SOLVED CUBE *
+            // ***************
+            if (CubeIsSolved) {
+                // what to do here when solved?
+                //document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                console.log("SOLVED!!!! WTF!!!");
+                is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
+                // scramble = false;
+            }
+            // else continue on for the next move
         }
 
 
