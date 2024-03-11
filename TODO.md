@@ -4,6 +4,7 @@
 # HTML
 - maybe a page on how it works and was built?
 - link to how it was built?
+- static current displays. so they dont move around so often.
 
 
 # CSS

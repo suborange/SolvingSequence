@@ -15,7 +15,7 @@ app.get("/", (req, res) => {
 });
 app.get("/pi", (req, res) => {
     // let temp:number = -1;
-    let pi = {
+    const pi = {
         "digit": -1
     };
     console.log("getting digit... ");
@@ -26,7 +26,13 @@ app.get("/pi", (req, res) => {
             temp = stream.read(1);
             // console.log(":) ");
             pi.digit = temp;
-            console.log("value:", pi.digit);
+            console.log("value INSIDE try:", pi.digit);
+            stream.close();
+            console.log("CLOSED AND READY TO SEND");
+            // res.send(pi); 
+        });
+        stream.on('closed', () => {
+            console.log("ending...");
             res.send(pi);
         });
     }
@@ -35,7 +41,7 @@ app.get("/pi", (req, res) => {
         console.log('something went wrong in get request', err);
         // res.send(temp);
     }
-    console.log("value:", pi.digit);
+    console.log("value OUTSIDE try:", pi.digit);
 });
 app.get("/write/:move", (req, res) => {
     let temp = {
