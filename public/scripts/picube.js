@@ -77,6 +77,15 @@ const X_PLANE = 0;
 const Y_PLANE = 1;
 const Z_PLANE = 2;
 
+// TODO add all the normals
+const FRONT_NORMAL = 1;
+const FRONT_FACES = [2, 11, 20, 5, 14, 23, 8, 17, 26];
+const RIGHT_FACES = [20, 19, 18, 23, 22, 21, 26, 25, 24];
+const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
+const BACK_FACES = [18, 9, 0, 21, 12, 3, 24, 15, 6];
+const LEFT_FACES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const DOWN_FACES = [8, 17, ,26, 7, 16, 25, 6, 15, 24];
+
 const audio_file = new Audio();
 const audio_path = [
     "audio/good_01.m4a",
@@ -100,7 +109,7 @@ const audio_path = [
     "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
-let get_pits = '---------3141592653589';
+let get_pits = '---------3820';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // let trya = numberWithCommas(1090000);
@@ -177,13 +186,15 @@ function CubeIsSolved() {
     // but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
     // for 6 potential orientations
 
-    const correct_index = [];
+    const cube_indexes = [];
+    const face_indexes =[];
 
     // check each block first, then check each face
-    let static_index = 0
+    let solve_i = 0;
+    // TODO check how this lines up with the cube cubes
     // dynamic - find all the positions, then just go around and check each aroundit. and find all the colors
     // check the center position and its color, then find and check the next position and its color
-    for (let solve_i = 0; static_index < cube.length-1; ) {
+    for (let static_index = 0; static_index < cube.length-1; ) {
         // with every iteration, find one position and its index, then reset to find the next position?
         // if none of the positions match, skip to next position
         if (cube[solve_i].xi != SOLVED_CUBE[static_index].xi) { solve_i++; continue;}
@@ -192,15 +203,48 @@ function CubeIsSolved() {
 
         // if it does match all three axis, then one correct position found for this index
         // somehow have to check if this was already added, or have two different indexs
-        correct_index.push(solve_i);
+        cube_indexes.push(solve_i);
         // console.log("one piece has been matched");
         solve_i=0; // start over with the cube
         static_index++; // go to the next static position
     }
-    static_index = 0;
+    
 
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
 
+    // the loopt goes through each colors, which color is facing the front? grab that index
+
+    // FRONT FACE CHECK - Z NORMAL = 1
+    let front_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9; ) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[static_face_index]].faces[front_i].normal.z != FRONT_NORMAL) {front_i++; continue;}
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(front_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        front_i=0;
+    }
+    // after this should have the first 9 faces in order, in relation to the correct order of indexes
+
+     // LEFT FACE CHECK - 
+
+    // BACK FACE CHECK - 
+
+     // RIGHT FACE CHECK - 
+     
+     // UP FACE CHECK - 
+
+     // DOWN FACE CHECK - 
+
+    // now having both the cubes in correct order, parellel to the correct faces
+    // check these cubes and their face index against the solved cube. 
+    // if the indexs are equal, then it is the same cube and color facing the right direction as the solved orientation
+    // but i think its better to check against itself, look up and down and left, right, and then all corners. 
+    // do all these first 9 cubes and the first 9 color faces match with eachother? if so then it should be a solved face
+    // MAYBE THIS ONE \/
+    //grab the centers, the first face is 0-8, so 4. then check 0-8 against the number at 4. this is a solved face
+    
     // then check if its solved. 
     // if not then return
     return false;
@@ -576,31 +620,31 @@ sketch1 = function (sketch) {
         // sketch.background(34, 49, 78); // #22314E
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        if (sketch.frameCount % 1440 == 0) {
-            cam_move *= -1; // flip direction every once in a while
-            cam1.setPosition(0, 0, 230);
-            cam1.lookAt(0, 0, 0);
-            iswap = !iswap;
+        // if (sketch.frameCount % 1440 == 0) {
+        //     cam_move *= -1; // flip direction every once in a while
+        //     cam1.setPosition(0, 0, 230);
+        //     cam1.lookAt(0, 0, 0);
+        //     iswap = !iswap;
 
-            // swap images between clockwise and counter clockwise, can be timed here?
-            if (iswap) {
-                img_swap.src = "imgs/clockwise_notations.png";
-            }
-            else {
-                img_swap.src = "imgs/counterwise_notations.png";
-            }
-            // add if {cube_is_solved} here
-        }
-        sketch.rotateX(sketch.HALF_PI / 2);
-        sketch.rotateZ(sketch.HALF_PI / 2);
+        //     // swap images between clockwise and counter clockwise, can be timed here?
+        //     if (iswap) {
+        //         img_swap.src = "imgs/clockwise_notations.png";
+        //     }
+        //     else {
+        //         img_swap.src = "imgs/counterwise_notations.png";
+        //     }
+        //     // add if {cube_is_solved} here
+        // }
+        // sketch.rotateX(sketch.HALF_PI / 2);
+        // sketch.rotateZ(sketch.HALF_PI / 2);
 
-        sketch.push();
-        cam1.move(cam_move, 0, 0);
+        // sketch.push();
+        // cam1.move(cam_move, 0, 0);
 
-        cam1.lookAt(0, 0, 0);
-        sketch.pop();
+        // cam1.lookAt(0, 0, 0);
+        // sketch.pop();
 
 
         if (move != null) {
@@ -643,7 +687,7 @@ sketch1 = function (sketch) {
             // console.log(cube);
 
             // repeat last digit?
-            if (curr_pit == 0) {
+            if (curr_pit === 0) {
                 curr_pit = prev_pit;
             }
 
@@ -853,15 +897,15 @@ sketch1 = function (sketch) {
             // ***************
             // * SOLVED CUBE *
             // ***************
-            if (start > 20) {                
+            // if (start > 20) {                
                 if (CubeIsSolved()) {
-                    // what to do here when solved?
-                    //document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                    // what to do here when solved?                    
                     console.log("SOLVED!!!! WTF!!!");
+                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
                     is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                    // scramble = false;
+                    
                 }
-            }
+            // }
             // else continue on for the next move
         }
 

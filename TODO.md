@@ -1,5 +1,7 @@
 # Init
 
+# dev
+- check how the cube_indexes line up with the cube cubes whats the order going for the 27 cubes, opposed to the faces (13 is nothingness)
 
 # HTML
 - maybe a page on how it works and was built?
@@ -11,6 +13,7 @@
 
 
 # JavaScript
+- add all the face normal constants
 - read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
     - maybe use await function? grab 10 numbers, complete the function awaiting for end, then grabs next ten numbers?
     - scrape data of web, to have newlines for each number? ( no thats like twice as big of a file)
