@@ -61,6 +61,11 @@ let cube_size = 40;
 let trans_size = cube_size / 2;
 let sketchs = [];
 let full_move;
+// for file positon and reading
+let file_position_counter = 0;
+// should be able to use this to start, reset, start in the middle, etc.
+// safety net for any reason
+
 // CONSTANTS 
 const BACK = -1;
 const FRONT = 1;
@@ -78,12 +83,17 @@ const Y_PLANE = 1;
 const Z_PLANE = 2;
 
 // TODO add all the normals
-const FRONT_NORMAL = 1;
+const FRONT_NORMAL = 1; // Z
 const FRONT_FACES = [2, 11, 20, 5, 14, 23, 8, 17, 26];
+const RIGHT_NORMAL = 1; // X
 const RIGHT_FACES = [20, 19, 18, 23, 22, 21, 26, 25, 24];
+const UP_NORMAL = -1; // Y
 const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
+const BACK_NORMAL = -1; // Z
 const BACK_FACES = [18, 9, 0, 21, 12, 3, 24, 15, 6];
+const LEFT_NORMAL = -1; // X
 const LEFT_FACES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const DOWN_NORMAL = 1; // Y
 const DOWN_FACES = [8, 17, ,26, 7, 16, 25, 6, 15, 24];
 
 const audio_file = new Audio();
@@ -133,7 +143,16 @@ async function ReadDigit() {
     let data;
     try {
         let url = `pi`;
-        let response = await fetch(url);
+        let response = await fetch(url, {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                position: file_position_counter 
+            })
+        });
         data = await response.json();
         // console.log("fetched data: ", data);
 
