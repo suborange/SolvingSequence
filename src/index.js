@@ -13,7 +13,8 @@ let start = 1;
 app.get("/", (req, res) => {
     res.render('index');
 });
-app.get("/pi", (req, res) => {
+app.post("/pi", (req, res) => {
+    var position = req.body.position;
     // let temp:number = -1;
     const pi = {
         "digit": -1

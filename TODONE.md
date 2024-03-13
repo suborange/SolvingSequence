@@ -19,5 +19,12 @@ d+ need to add another box below to show the current digits and moves
 
 + add sound effect for each turn, make it?
 
++ add all the face normal constants
+
++ need a way to check if solved, or parts of it being solved? 
+( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
+
++ swap images every so often
+
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around

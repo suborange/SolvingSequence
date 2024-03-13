@@ -81,20 +81,28 @@ const COUNTER_CLOCKWISE = -1;
 const X_PLANE = 0;
 const Y_PLANE = 1;
 const Z_PLANE = 2;
-
-// TODO add all the normals
+// NORMALS
 const FRONT_NORMAL = 1; // Z
 const FRONT_FACES = [2, 11, 20, 5, 14, 23, 8, 17, 26];
 const RIGHT_NORMAL = 1; // X
 const RIGHT_FACES = [20, 19, 18, 23, 22, 21, 26, 25, 24];
-const UP_NORMAL = -1; // Y
-const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
 const BACK_NORMAL = -1; // Z
 const BACK_FACES = [18, 9, 0, 21, 12, 3, 24, 15, 6];
 const LEFT_NORMAL = -1; // X
 const LEFT_FACES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const UP_NORMAL = -1; // Y
+const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
 const DOWN_NORMAL = 1; // Y
-const DOWN_FACES = [8, 17, ,26, 7, 16, 25, 6, 15, 24];
+const DOWN_FACES = [8, 17, 26, 7, 16, 25, 6, 15, 24];
+
+const FRONT_FLAG = 0;
+const LEFT_FLAG = 1;
+const BACK_FLAG = 2;
+const RIGHT_FLAG = 3;
+const UP_FLAG = 4;
+const DOWN_FLAG = 5;
+
+
 
 const audio_file = new Audio();
 const audio_path = [
@@ -150,7 +158,7 @@ async function ReadDigit() {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                position: file_position_counter 
+                position: file_position_counter
             })
         });
         data = await response.json();
@@ -206,28 +214,28 @@ function CubeIsSolved() {
     // for 6 potential orientations
 
     const cube_indexes = [];
-    const face_indexes =[];
+    const face_indexes = [];
 
     // check each block first, then check each face
     let solve_i = 0;
     // TODO check how this lines up with the cube cubes
     // dynamic - find all the positions, then just go around and check each aroundit. and find all the colors
     // check the center position and its color, then find and check the next position and its color
-    for (let static_index = 0; static_index < cube.length-1; ) {
+    for (let static_index = 0; static_index < cube.length;) {
         // with every iteration, find one position and its index, then reset to find the next position?
         // if none of the positions match, skip to next position
-        if (cube[solve_i].xi != SOLVED_CUBE[static_index].xi) { solve_i++; continue;}
-        if (cube[solve_i].yi != SOLVED_CUBE[static_index].yi) { solve_i++; continue;}
-        if (cube[solve_i].zi != SOLVED_CUBE[static_index].zi) { solve_i++; continue;}
+        if (cube[solve_i].xi != SOLVED_CUBE[static_index].xi) { solve_i++; continue; }
+        if (cube[solve_i].yi != SOLVED_CUBE[static_index].yi) { solve_i++; continue; }
+        if (cube[solve_i].zi != SOLVED_CUBE[static_index].zi) { solve_i++; continue; }
 
         // if it does match all three axis, then one correct position found for this index
         // somehow have to check if this was already added, or have two different indexs
         cube_indexes.push(solve_i);
         // console.log("one piece has been matched");
-        solve_i=0; // start over with the cube
+        solve_i = 0; // start over with the cube
         static_index++; // go to the next static position
     }
-    
+
 
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
 
@@ -236,25 +244,76 @@ function CubeIsSolved() {
     // FRONT FACE CHECK - Z NORMAL = 1
     let front_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9; ) {
+    for (let static_face_index = 0; static_face_index < 9;) {
         // if any of the faces normals do not match, then move on
-        if (cube[cube_indexes[static_face_index]].faces[front_i].normal.z != FRONT_NORMAL) {front_i++; continue;}
+        if (cube[cube_indexes[FRONT_FACES[static_face_index]]].faces[front_i].normal.z != FRONT_NORMAL) { front_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
         face_indexes.push(front_i); // at this index, compared to the cube is this color.
         static_face_index++;
-        front_i=0;
+        front_i = 0;
     }
     // after this should have the first 9 faces in order, in relation to the correct order of indexes
 
-     // LEFT FACE CHECK - 
 
-    // BACK FACE CHECK - 
+    // RIGHT FACE CHECK - X NORMAL = 1
+    let right_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9;) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[RIGHT_FACES[static_face_index]]].faces[right_i].normal.x != RIGHT_NORMAL) { right_i++; continue; }
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(right_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        right_i = 0;
+    }
 
-     // RIGHT FACE CHECK - 
-     
-     // UP FACE CHECK - 
+    // BACK FACE CHECK - Z NORMAL = -1
+    let back_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9;) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[BACK_FACES[static_face_index]]].faces[back_i].normal.z != BACK_NORMAL) { back_i++; continue; }
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(back_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        back_i = 0;
+    }
 
-     // DOWN FACE CHECK - 
+    // LEFT FACE CHECK - X NORMAL = -1
+    let left_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9;) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[LEFT_FACES[static_face_index]]].faces[left_i].normal.x != LEFT_NORMAL) { left_i++; continue; }
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(left_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        left_i = 0;
+    }
+
+    // UP FACE CHECK - Y NORMAL = -1
+    let up_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9;) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[UP_FACES[static_face_index]]].faces[up_i].normal.y != UP_NORMAL) { up_i++; continue; }
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(up_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        up_i = 0;
+    }
+
+    // DOWN FACE CHECK - Y NORMAL = 1
+    let down_i = 0;
+    // for the first 9 cubes, these should be in the order to match the front face.
+    for (let static_face_index = 0; static_face_index < 9;) {
+        // if any of the faces normals do not match, then move on
+        if (cube[cube_indexes[DOWN_FACES[static_face_index]]].faces[down_i].normal.y != DOWN_NORMAL) { down_i++; continue; }
+        // else, there is a match for the normal, grab this index which should match with the cube indexes.
+        face_indexes.push(down_i); // at this index, compared to the cube is this color.
+        static_face_index++;
+        down_i = 0;
+    }
 
     // now having both the cubes in correct order, parellel to the correct faces
     // check these cubes and their face index against the solved cube. 
@@ -263,16 +322,43 @@ function CubeIsSolved() {
     // do all these first 9 cubes and the first 9 color faces match with eachother? if so then it should be a solved face
     // MAYBE THIS ONE \/
     //grab the centers, the first face is 0-8, so 4. then check 0-8 against the number at 4. this is a solved face
-    
-    // then check if its solved. 
-    // if not then return
-    return false;
-    // if so, then solved cube!
-    // skip cube 13?
 
-    // after each move, reshuffle thecube to the correct positions. so one move, a few indexes change
+    // start at 4, and go around to every center and check around to see if there is a correct face, if not skip.
+    // flags for each face. front, right, back, left, up, down
+    let face_flags = new Map ([
+        [4,  false],  // front
+        [13, false],  // left
+        [22, false],  // back 
+        [31, false],  // right
+        [40, false],  // up
+        ]); // dont need the last face. 5 == solved - down 
+    let this_face_is_solved = false;
+    for (let center_index = 4; center_index <= 40; center_index += 9) {
+        let center_color = face_indexes[center_index]; // this should give the center color for the surrounding 8 faces
+        // go through the pieces all around the center piece and check against. if its different, then different color.
+        for (let add_index = 1; add_index <= 4; add_index++) {
+            if (face_indexes[center_index + add_index] != center_color) { this_face_is_solved = false; break;} // no match, not a solved side at all!
+            if (face_indexes[center_index - add_index] != center_color) { this_face_is_solved = false; break;} // no match, not a solved side at all!
+            // this means a piece was matched.. so now what?
+            this_face_is_solved = true;
+        }
 
-    // go through each color, find the middle piece 
+        if (this_face_is_solved) {
+            face_flags.set(center_index, true);
+            console.log(`THE ${center_color} FACE WAS SOLVED!`);
+            // enter some js here for showing if a face was solved or not
+        }
+
+    }
+    /**RETURNS**/
+    // SOLVED!
+    const cube_is_fully_solved = face_flags.get(4) && face_flags.get(13) && face_flags.get(22) && face_flags.get(31) && face_flags.get(40) ;
+    if (cube_is_fully_solved) {        
+        return true;
+    }
+    else { // if not solved then return false
+        return false;
+    }
 }
 
 // SETUP AND DRAW
@@ -687,6 +773,8 @@ sketch1 = function (sketch) {
             }
         }
 
+        
+
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         // do {
@@ -916,16 +1004,19 @@ sketch1 = function (sketch) {
             // ***************
             // * SOLVED CUBE *
             // ***************
-            // if (start > 20) {                
+            if (start > 10) {     // debug start is 9, otherwise large number is fine.           
                 if (CubeIsSolved()) {
                     // what to do here when solved?                    
                     console.log("SOLVED!!!! WTF!!!");
                     document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
                     is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                    
+                    start = 0; // to exit this solved state
+
                 }
-            // }
+            }
             // else continue on for the next move
+
+            
         }
 
 

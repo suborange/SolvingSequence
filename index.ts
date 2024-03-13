@@ -11,7 +11,8 @@ app.get("/", (req: Request, res: Response): void => {
     res.render('index');
 });
 
-app.get("/pi",  (req: Request, res: Response): void => {
+app.post("/pi",  (req: Request, res: Response): void => {
+    var position = req.body.position;
     // let temp:number = -1;
     const pi = {
         "digit": -1

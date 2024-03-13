@@ -13,13 +13,10 @@
 
 
 # JavaScript
-- add all the face normal constants
 - read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
     - maybe use await function? grab 10 numbers, complete the function awaiting for end, then grabs next ten numbers?
     - scrape data of web, to have newlines for each number? ( no thats like twice as big of a file)
-- make a canvas and redesign the cube for clarity, with animations
-- need a way to check if solved, or parts of it being solved? 
-( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
+- solving algorithm is one off. (if solved go back the one mover? fuck idk)
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
 ( add a starting position, and can compare? maybe starting distances from one another. )
 
@@ -27,7 +24,7 @@
 
 - write the moves to a file, every 100 moves or something new line.
 
-+ swap images every so often
+
 - smooth transition between images?
 
 # P5 
@@ -47,3 +44,5 @@
 
 - maybe just make a file for each different canvas if nothing else works?
 - need to redesign to show current scramble, 
+
+- make a canvas and redesign the cube for clarity, with animations
