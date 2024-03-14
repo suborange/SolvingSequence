@@ -7,7 +7,12 @@ write_button.move = '';
 const read_button = document.getElementById('read_digit');
 read_button.addEventListener('click', ReadDigit);
 
-const img_swap = document.getElementById('notation_img');
+const img_swap1 = document.getElementById('notation_img1');
+const img_swap2 = document.getElementById('notation_img2');
+
+// solved confetti
+const confetti_canvas = document.getElementById('SOLVED');
+const js_confetti = new JSConfetti();
 
 
 
@@ -45,12 +50,13 @@ let SOLVED_CUBE;
 let move;
 let moves = [];
 let bool = true;
-let iswap = true;
+let iswap = false;
 let start = 3;
 let curr_pit;
 // let end = 1;
 let is_solving = true;  // start as solving
 let prev_pit = 0;
+let is_fully_solved = false;
 // let scramble = false; // never scramble
 let cam1;
 let cam2;
@@ -65,6 +71,7 @@ let full_move;
 let file_position_counter = 0;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
+let fade = 1500;
 
 // CONSTANTS 
 const BACK = -1;
@@ -127,7 +134,7 @@ const audio_path = [
     "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
-let get_pits = '---------3820';
+let get_pits = '---------223333222265678';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // let trya = numberWithCommas(1090000);
@@ -325,20 +332,20 @@ function CubeIsSolved() {
 
     // start at 4, and go around to every center and check around to see if there is a correct face, if not skip.
     // flags for each face. front, right, back, left, up, down
-    let face_flags = new Map ([
-        [4,  false],  // front
+    let face_flags = new Map([
+        [4, false],  // front
         [13, false],  // left
         [22, false],  // back 
         [31, false],  // right
         [40, false],  // up
-        ]); // dont need the last face. 5 == solved - down 
+    ]); // dont need the last face. 5 == solved - down 
     let this_face_is_solved = false;
     for (let center_index = 4; center_index <= 40; center_index += 9) {
         let center_color = face_indexes[center_index]; // this should give the center color for the surrounding 8 faces
         // go through the pieces all around the center piece and check against. if its different, then different color.
         for (let add_index = 1; add_index <= 4; add_index++) {
-            if (face_indexes[center_index + add_index] != center_color) { this_face_is_solved = false; break;} // no match, not a solved side at all!
-            if (face_indexes[center_index - add_index] != center_color) { this_face_is_solved = false; break;} // no match, not a solved side at all!
+            if (face_indexes[center_index + add_index] != center_color) { this_face_is_solved = false; break; } // no match, not a solved side at all!
+            if (face_indexes[center_index - add_index] != center_color) { this_face_is_solved = false; break; } // no match, not a solved side at all!
             // this means a piece was matched.. so now what?
             this_face_is_solved = true;
         }
@@ -352,8 +359,8 @@ function CubeIsSolved() {
     }
     /**RETURNS**/
     // SOLVED!
-    const cube_is_fully_solved = face_flags.get(4) && face_flags.get(13) && face_flags.get(22) && face_flags.get(31) && face_flags.get(40) ;
-    if (cube_is_fully_solved) {        
+    const cube_is_fully_solved = face_flags.get(4) && face_flags.get(13) && face_flags.get(22) && face_flags.get(31) && face_flags.get(40);
+    if (cube_is_fully_solved) {
         return true;
     }
     else { // if not solved then return false
@@ -725,31 +732,37 @@ sketch1 = function (sketch) {
         // sketch.background(34, 49, 78); // #22314E
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
-        // if (sketch.frameCount % 1440 == 0) {
-        //     cam_move *= -1; // flip direction every once in a while
-        //     cam1.setPosition(0, 0, 230);
-        //     cam1.lookAt(0, 0, 0);
-        //     iswap = !iswap;
+        // 1440            
+        if (sketch.frameCount % 1440 == 0) {
+            cam_move *= -1; // flip direction every once in a while
+            cam1.setPosition(0, 0, 230);
+            cam1.lookAt(0, 0, 0);
+            iswap = !iswap;
 
-        //     // swap images between clockwise and counter clockwise, can be timed here?
-        //     if (iswap) {
-        //         img_swap.src = "imgs/clockwise_notations.png";
-        //     }
-        //     else {
-        //         img_swap.src = "imgs/counterwise_notations.png";
-        //     }
-        //     // add if {cube_is_solved} here
-        // }
-        // sketch.rotateX(sketch.HALF_PI / 2);
-        // sketch.rotateZ(sketch.HALF_PI / 2);
+            // swap images between clockwise and counter clockwise, can be timed here?
+            if (iswap) {
+                img_swap1.classList.remove('crossfade');
+                // img_swap1.src = "imgs/clockwise_notations.png";
+                img_swap2.classList.add('crossfade');
+            }
+            else {
+                img_swap2.classList.remove('crossfade');
+                // img_swap1.src = "imgs/counterwise_notations.png";
+                img_swap1.classList.add('crossfade');
+            }
+            // add if {cube_is_solved} here
+        }
 
-        // sketch.push();
-        // cam1.move(cam_move, 0, 0);
+        sketch.rotateX(sketch.HALF_PI / 2);
+        sketch.rotateZ(sketch.HALF_PI / 2);
 
-        // cam1.lookAt(0, 0, 0);
-        // sketch.pop();
+        sketch.push();
+        cam1.move(cam_move, 0, 0);
+
+        cam1.lookAt(0, 0, 0);
+        sketch.pop();
 
 
         if (move != null) {
@@ -773,250 +786,249 @@ sketch1 = function (sketch) {
             }
         }
 
-        
+        // confetti!!!
+        if (sketch.frameCount % 120 == 0 && is_fully_solved) {
+            js_confetti.addConfetti();
+            // console.log('confetti!');
+            is_fully_solved = false; // debugging
+        }
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         // do {
+
         if (sketch.frameCount % 120 == 0 && is_solving) {
 
-            let temp_move;
-
-            // debugging
-            // is_solving=false;
-
-
-            curr_pit = get_pits.substring(start, start + 1);
-
-            // ReadDigit(); // read and append next digit
-            displayPi(start, start + 1);
-
-            // console.log(cube);
-
-            // repeat last digit?
-            if (curr_pit === 0) {
-                curr_pit = prev_pit;
-            }
-
-
-            if (curr_pit >= prev_pit) {
-                switch (curr_pit) {
-                    // REGULAR CLOCKWISE MOVES
-                    case "1":
-                        // M SLICE 
-                        // console.log("M-SLICE MOVE");
-                        temp_move = "M";
-                        move = moves[9];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "2":
-                        // UP 
-                        // console.log("UP MOVE");
-                        temp_move = "U";
-                        move = moves[10];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "3":
-                        // DOWN 
-                        // console.log("DOWN MOVE");
-                        temp_move = "D";
-                        move = moves[2];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "4":
-                        // RIGHT
-                        // console.log("RIGHT MOVE");
-                        temp_move = "R";
-                        move = moves[3];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "5":
-                        // LEFT
-                        // console.log("LEFT MOVE");
-                        temp_move = "L";
-                        move = moves[13];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "6":
-                        // FRONT
-                        // console.log("FRONT MOVE");
-                        temp_move = "F";
-                        move = moves[5];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "7":
-                        // BACK 
-                        // console.log("BACK MOVE");
-                        temp_move = "B";
-                        move = moves[15];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "8":
-                        // E-SLICE 
-                        // console.log("E-SLICE MOVE");
-                        temp_move = "E";
-                        move = moves[7];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "9":
-                        // FRONT
-                        // console.log("FRONT MOVE");
-                        temp_move = "S";
-                        move = moves[8];
-                        move.start();
-                        PlaySound();
-                        break;
-                    default:
-                        temp_move = "-";
-                        move = moves[moves.length - 1];
-                        move.start();
-                        break;
-                }
-                // get ready for next move
-                prev_pit = curr_pit;
-            } // END CLOCKWISE
-            else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
-                switch (curr_pit) {
-                    // COUNTER CLOCKWISE - INVERSE ROTATIONS
-
-                    case "1":
-                        // M SLICE INVERSE
-                        // console.log("M-SLICE INVERTED MOVE");                        
-                        temp_move = "M\'";
-                        move = moves[0];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "2":
-                        // UP INVERSE
-                        // console.log("UP INVERTED MOVE");
-                        temp_move = "U\'";
-                        move = moves[1];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "3":
-                        // DOWN INVERSE
-                        // console.log("DOWN INVERTED MOVE");
-                        temp_move = "D\'";
-                        move = moves[11];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "4":
-                        // RIGHT INVERSE
-                        // console.log("RIGHT INVERTED MOVE");
-                        temp_move = "R\'";
-                        move = moves[12];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "5":
-                        // LEFT INVERSE
-                        // console.log("LEFT INVERTED MOVE");
-                        temp_move = "L\'";
-                        move = moves[4];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "6":
-                        // FRONT INVERSE 
-                        // console.log("FRONT INVERTED MOVE");
-                        temp_move = "F\'";
-                        move = moves[14];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "7":
-                        // BACK INVERSE
-                        // console.log("BACK INVERTED MOVE");
-                        temp_move = "B\'";
-                        move = moves[6];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "8":
-                        // E-SLICE  INVERSE
-                        // console.log("E-SLICE INVERTED MOVE");
-                        temp_move = "E\'";
-                        move = moves[16];
-                        move.start();
-                        PlaySound();
-                        break;
-                    case "9":
-                        // S-SLICE INVERSE 
-                        // console.log("S-SLICE INVERTED MOVE");
-                        temp_move = "S\'";
-                        move = moves[17];
-                        move.start();
-                        PlaySound();
-                        break;
-                    default:
-                        temp_move = "-";
-                        move = moves[moves.length - 1];
-                        move.start();
-                        break;
-                }
-                // get ready for next move
-                prev_pit = curr_pit;
-            }
-            // update the current move only once, instead of within switch
-            document.querySelector("#curr_move").innerHTML = temp_move;
-            write_button.move = temp_move;
-
-            // // ReadDigit();
-            write_button.click();
-
-
-
-
-            // console.log(`pit: ${curr_pit}`)
-            start++; // go to next digit
-            // check if move is any closer to solving a cube.
-
-            // get the next digit in line, append the string with new digits
-            // get digit
-            // get_pits = get_pits.concat(); // should append one character to new string
-            // if ((start - 8) % 100 == 0) {
-            //     write_button.spacer = '\n'; // pass newline for every hundred moves
-            // }
-            // else {
-            //     write_button.spacer = ' ';// pass a space for every new move
-            // }
-            // write_button.click();
-
-
-            if (start > get_pits.length) {
-                document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                // console.log("STOPPED");
-                is_solving = false;
-                // scramble = false;
-            }
 
             // ***************
             // * SOLVED CUBE *
-            // ***************
-            if (start > 10) {     // debug start is 9, otherwise large number is fine.           
-                if (CubeIsSolved()) {
-                    // what to do here when solved?                    
-                    console.log("SOLVED!!!! WTF!!!");
-                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                    is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                    start = 0; // to exit this solved state
+            // ***************                     
+            if (start > 12 && CubeIsSolved() ) {// debug start is 9, otherwise large number is fine.    
+                // what to do here when solved?                    
+                console.log("SOLVED!!!! WTF!!!");
+                
+                document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | ${get_pits.substring(start - 2, start - 1)} | <span class="current">${get_pits.substring(start - 1, start)}</span>  | ${get_pits.substring(start, start + 1)} | ${get_pits.substring(start + 1, start + 2)} | ${get_pits.substring(start + 2, start + 3)} |`;
+                is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
+                is_fully_solved = true;
 
-                }
             }
             // else continue on for the next move
+            else {
+                let temp_move;
+                curr_pit = get_pits.substring(start, start + 1);
 
-            
+                // ReadDigit(); // read and append next digit
+                displayPi(start, start + 1);
+
+                // repeat last digit?
+                if (curr_pit == '0') {
+                    curr_pit = prev_pit;
+                }
+
+                if (curr_pit >= prev_pit) {
+                    switch (curr_pit) {
+                        // REGULAR CLOCKWISE MOVES
+                        case "1":
+                            // M SLICE 
+                            // console.log("M-SLICE MOVE");
+                            temp_move = "M";
+                            move = moves[9];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "2":
+                            // UP 
+                            // console.log("UP MOVE");
+                            temp_move = "U";
+                            move = moves[10];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "3":
+                            // DOWN 
+                            // console.log("DOWN MOVE");
+                            temp_move = "D";
+                            move = moves[2];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "4":
+                            // RIGHT
+                            // console.log("RIGHT MOVE");
+                            temp_move = "R";
+                            move = moves[3];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "5":
+                            // LEFT
+                            // console.log("LEFT MOVE");
+                            temp_move = "L";
+                            move = moves[13];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "6":
+                            // FRONT
+                            // console.log("FRONT MOVE");
+                            temp_move = "F";
+                            move = moves[5];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "7":
+                            // BACK 
+                            // console.log("BACK MOVE");
+                            temp_move = "B";
+                            move = moves[15];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "8":
+                            // E-SLICE 
+                            // console.log("E-SLICE MOVE");
+                            temp_move = "E";
+                            move = moves[7];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "9":
+                            // FRONT
+                            // console.log("FRONT MOVE");
+                            temp_move = "S";
+                            move = moves[8];
+                            move.start();
+                            PlaySound();
+                            break;
+                        default:
+                            temp_move = "-";
+                            move = moves[moves.length - 1];
+                            move.start();
+                            break;
+                    }
+                    // get ready for next move
+                    prev_pit = curr_pit;
+                } // END CLOCKWISE
+                else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
+                    switch (curr_pit) {
+                        // COUNTER CLOCKWISE - INVERSE ROTATIONS
+
+                        case "1":
+                            // M SLICE INVERSE
+                            // console.log("M-SLICE INVERTED MOVE");                        
+                            temp_move = "M\'";
+                            move = moves[0];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "2":
+                            // UP INVERSE
+                            // console.log("UP INVERTED MOVE");
+                            temp_move = "U\'";
+                            move = moves[1];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "3":
+                            // DOWN INVERSE
+                            // console.log("DOWN INVERTED MOVE");
+                            temp_move = "D\'";
+                            move = moves[11];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "4":
+                            // RIGHT INVERSE
+                            // console.log("RIGHT INVERTED MOVE");
+                            temp_move = "R\'";
+                            move = moves[12];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "5":
+                            // LEFT INVERSE
+                            // console.log("LEFT INVERTED MOVE");
+                            temp_move = "L\'";
+                            move = moves[4];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "6":
+                            // FRONT INVERSE 
+                            // console.log("FRONT INVERTED MOVE");
+                            temp_move = "F\'";
+                            move = moves[14];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "7":
+                            // BACK INVERSE
+                            // console.log("BACK INVERTED MOVE");
+                            temp_move = "B\'";
+                            move = moves[6];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "8":
+                            // E-SLICE  INVERSE
+                            // console.log("E-SLICE INVERTED MOVE");
+                            temp_move = "E\'";
+                            move = moves[16];
+                            move.start();
+                            PlaySound();
+                            break;
+                        case "9":
+                            // S-SLICE INVERSE 
+                            // console.log("S-SLICE INVERTED MOVE");
+                            temp_move = "S\'";
+                            move = moves[17];
+                            move.start();
+                            PlaySound();
+                            break;
+                        default:
+                            temp_move = "-";
+                            move = moves[moves.length - 1];
+                            move.start();
+                            break;
+                    }
+                    // get ready for next move
+                    prev_pit = curr_pit;
+                }
+                // update the current move only once, instead of within switch
+                document.querySelector("#curr_move").innerHTML = temp_move;
+                write_button.move = temp_move;
+
+                // // ReadDigit();
+                write_button.click();
+
+
+
+
+                // console.log(`pit: ${curr_pit}`)
+                start++; // go to next digit
+                // check if move is any closer to solving a cube.
+
+                // get the next digit in line, append the string with new digits
+                // get digit
+                // get_pits = get_pits.concat(); // should append one character to new string
+                // if ((start - 8) % 100 == 0) {
+                //     write_button.spacer = '\n'; // pass newline for every hundred moves
+                // }
+                // else {
+                //     write_button.spacer = ' ';// pass a space for every new move
+                // }
+                // write_button.click();
+
+
+                if (start > get_pits.length) {
+                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                    // console.log("STOPPED");
+                    is_solving = false;
+                    // scramble = false;
+                }
+
+
+            }
         }
 
 

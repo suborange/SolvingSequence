@@ -3,6 +3,7 @@
 <%- include('partials/head.ejs') %>
 
     <body class="noselect noclick">
+        <canvas id="SOLVED" class="invis"></canvas>
 
         <div class="maincontainer icenter cols  ">
             <div class="titlecontainer jcenter icenter  ">
@@ -19,8 +20,11 @@
                     </div>
                     <div class="cubewrap nineheight cols  ">
                         <div class="cube icenter jleft sevheight  cols ">
-                            <br>
-                            <img id="notation_img" class="notation" src="imgs/clockwise_notations.png">                            
+                            <!-- <br> -->
+                            <div class="fade ">
+                            <img id="notation_img1" class="notation crossfade" src="imgs/clockwise_notations.png">    
+                            <img id="notation_img2" class="notation" src="imgs/counterwise_notations.png">
+                        </div>
                         </div>
                    
                     </div>                    
@@ -83,7 +87,7 @@
             </div>
        
         </div>
-        <script src="scripts/picube.js" async defer></script>
+        <script src="scripts/picube.js" async defer></script>        
     </body>
 
 

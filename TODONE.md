@@ -6,6 +6,9 @@
 + and then show all concurrent digits and moves ( which will be the same, against different scrambles)
 d+ need to add another box below to show the current digits and moves
 
+# dev
++ check how the cube_indexes line up with the cube cubes whats the order going for the 27 cubes, opposed to the faces (13 is nothingness)
+
 # HTML
 + i think it is just one home page, 
 + add notations + templates
@@ -25,6 +28,7 @@ d+ need to add another box below to show the current digits and moves
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
 
 + swap images every so often
++ smooth transition between images?
 
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around
