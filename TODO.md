@@ -22,6 +22,8 @@
 
 - mess with confetti numbers, make random? colors are the cube colors?
 
+- change title to pi SOLVED a rubiks cube!!
+
 # P5 
 
 
