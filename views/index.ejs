@@ -3,13 +3,13 @@
 <%- include('partials/head.ejs') %>
 
     <body class="noselect noclick">
-        <canvas id="SOLVED" class="invis"></canvas>
+        <canvas id="SOLVED" class="invis" style="width:90%; height:90%;"></canvas>
 
         <div class="maincontainer icenter cols  ">
             <div class="titlecontainer jcenter icenter  ">
-                <h1><span class="pi thicc">&pi;</span> Solves a 
-                    <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> 
-                    Cube</h1>
+                <h1 id="piheader">
+                    <span class="pi thicc">&pi;</span> Solves a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube
+                </h1>
             </div>
             <div class="bigcontainer rows   ">
                 <div class="container jcenter icenter cols  ">
@@ -49,9 +49,9 @@
                     <div class="movewrap fillbheight thalfbord ">
                         <div class="cube icenter jcenter fullw rows ">
                             <h2>Individual Pi Digits:&nbsp;</h2>
-                            <h2 id="digit_queue">| - | - | - | - | - | - | - |</h2>
+                            <h2 id="digit_queue">| - | - | - | <span class="current">-</span> | - | - | - |</h2>
                         </div>
-                    </div>
+                    </div>                    
                     <!-- how to have default space away, to keep it from shifting around -->
                     <div class="movewrap fillbheight bhalfbord ">
                         <div class="cube icenter jcenter fullw  rows  ">

@@ -10,6 +10,7 @@ read_button.addEventListener('click', ReadDigit);
 const ele_current_move = document.getElementById('curr_move');
 const ele_current_digit = document.getElementById('curr_digit');
 const ele_digit_queue = document.getElementById('digit_queue');
+const ele_pi_header = document.getElementById('piheader');
 
 const img_swap1 = document.getElementById('notation_img1');
 const img_swap2 = document.getElementById('notation_img2');
@@ -138,7 +139,7 @@ const audio_path = [
     "audio/short_06.m4a"];
 
 // GET PI NUMBERS 
-let get_pits = '---------223333222265678';
+let get_pits = '---------22333322224569';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 
 // let trya = numberWithCommas(1090000);
@@ -153,8 +154,8 @@ function displayPi(start, end) {
     // find the pi digit, and adjust it as it runs. 
     let current_digit = numberWithCommas(start - 8); // convert with commas
 
-    document.querySelector("#curr_digit").innerHTML = `${current_digit}`;
-    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
+    ele_current_digit.innerHTML = `${current_digit}`;
+    ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
 
 }
 // fetch from https://pi.delivery/#apifetch
@@ -816,6 +817,7 @@ sketch1 = function (sketch) {
                 ele_current_move.classList.add('solved');
                 ele_current_digit.classList.remove('current');
                 ele_current_digit.classList.add('solved');
+                ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${start-9}</span>! `;
                 is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
                 is_fully_solved = true;
 
