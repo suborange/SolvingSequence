@@ -8,6 +8,7 @@ d+ need to add another box below to show the current digits and moves
 
 # dev
 + check how the cube_indexes line up with the cube cubes whats the order going for the 27 cubes, opposed to the faces (13 is nothingness)
++ add confetti when its solved. occurs every so often.
 
 # HTML
 + i think it is just one home page, 
@@ -26,6 +27,7 @@ d+ need to add another box below to show the current digits and moves
 
 + need a way to check if solved, or parts of it being solved? 
 ( the matrix has another value corresponding to its correct order, then check if it is that order after every move)
++ solving algorithm is one off. (if solved go back the one mover? fuck idk)
 
 + swap images every so often
 + smooth transition between images?

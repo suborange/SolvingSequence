@@ -7,6 +7,10 @@ write_button.move = '';
 const read_button = document.getElementById('read_digit');
 read_button.addEventListener('click', ReadDigit);
 
+const ele_current_move = document.getElementById('curr_move');
+const ele_current_digit = document.getElementById('curr_digit');
+const ele_digit_queue = document.getElementById('digit_queue');
+
 const img_swap1 = document.getElementById('notation_img1');
 const img_swap2 = document.getElementById('notation_img2');
 
@@ -807,7 +811,11 @@ sketch1 = function (sketch) {
                 // what to do here when solved?                    
                 console.log("SOLVED!!!! WTF!!!");
                 
-                document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | ${get_pits.substring(start - 2, start - 1)} | <span class="current">${get_pits.substring(start - 1, start)}</span>  | ${get_pits.substring(start, start + 1)} | ${get_pits.substring(start + 1, start + 2)} | ${get_pits.substring(start + 2, start + 3)} |`;
+                ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | ${get_pits.substring(start - 2, start - 1)} | <span class="solved">${get_pits.substring(start - 1, start)}</span>  | ${get_pits.substring(start, start + 1)} | ${get_pits.substring(start + 1, start + 2)} | ${get_pits.substring(start + 2, start + 3)} |`;
+                ele_current_move.classList.remove('current');
+                ele_current_move.classList.add('solved');
+                ele_current_digit.classList.remove('current');
+                ele_current_digit.classList.add('solved');
                 is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
                 is_fully_solved = true;
 
