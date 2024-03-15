@@ -52,9 +52,9 @@ app.get("/status", (_, res) => {
 });
 app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const fd = fs_1.default.openSync('public/files/pi.txt', 'r'); // file descriptor for read
-    console.log("BODY: ", req.body);
+    // console.log("BODY: ", req.body);
     let position = req.body.position;
-    console.log("getting digit... ");
+    // console.log("getting digit... ");
     try {
         const get_digit = yield GetPieDigit(fd, position);
         res.send(get_digit); // success
@@ -81,7 +81,7 @@ app.get("/write/:move", (req, res) => {
     start++;
     try {
         var stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
-        console.log("GET: appending move: ", full_move);
+        // console.log("GET: appending move: ", full_move);
         stream.write(full_move);
         temp.code = 0;
     }
@@ -103,7 +103,7 @@ function GetPieDigit(fd, position) {
                 console.log('READ ERROR', err);
                 throw err;
             }
-            console.log('position: ', position, 'READING DATA=> ', buffer_read.toString());
+            // console.log('position: ', position,'READING DATA=> ', buffer_read.toString());
             resolve(buffer_read.toString());
         });
     });

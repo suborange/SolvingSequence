@@ -1,3 +1,5 @@
+// const { get } = require("http");
+
 // CONSTANT ELEMENTS
 const write_button = document.getElementById('write_digit');
 write_button.addEventListener('click', WriteToFile);
@@ -51,6 +53,7 @@ let file_position_counter = 0;
 
 
 // CONSTANT VARIABLES
+const hundred_million = 100000000;
 const BACK = -1;
 const FRONT = 1;
 const LEFT = -1;
@@ -116,7 +119,7 @@ const audio_solved = [
 ];
 
 // GET PI NUMBERS 
-let get_pits = '---------22331111113322224569';
+let get_pits = '---------';
 // 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
 // testing solve - 223311113322224569
 
@@ -126,9 +129,9 @@ function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
-function displayPi(start, end) {
+function displayPi(total, start, end) {
     // find the pi digit, and adjust it as it runs. 
-    let current_digit = numberWithCommas(start - 8); // convert with commas
+    let current_digit = numberWithCommas(total - 8); // convert with commas
 
     ele_current_digit.innerHTML = `${current_digit}`;
     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 3, end - 3)} | ${get_pits.substring(start - 2, end - 2)} | ${get_pits.substring(start - 1, end - 1)} | <span class="current">${get_pits.substring(start, end)}</span> | ${get_pits.substring(start + 1, end + 1)} | ${get_pits.substring(start + 2, end + 2)} | ${get_pits.substring(start + 3, end + 3)} |`;
@@ -152,10 +155,10 @@ async function ReadDigit() {
         });
         data = await response.json();
         file_position_counter++; // increment to next file chunk
-        // console.log("fetched data=> ", data);
-        // console.log("response", response.status);
+
 
         if (response.status == 200 ) {
+            // console.log(`right data in here: ${data}`);
             FixDigitChunk(data);
         }
         else {            
@@ -169,10 +172,13 @@ async function ReadDigit() {
     
 }
 // TOFIX TODO
-function FixDigitChunk(new_digits) {
+function FixDigitChunk(new_digit) {
     // find the next digit, then return it to be added to the line. 
+    // console.log(`BEFORE appendage => ${get_pits}`);
     get_pits = get_pits.concat(new_digit);
-    // console.log('added new digit:', get_pits);
+    get_pits = get_pits.substring(1, get_pits.length);
+    // console.log(`AFTER appendage => ${get_pits}`);
+    
 
 }
 
@@ -790,7 +796,7 @@ sketch1 = function (sketch) {
                 // what to do here when solved?                    
                 console.log("SOLVED!!!! WTF!!!");
 
-                ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | ${get_pits.substring(start - 2, start - 1)} | <span class="solved">${get_pits.substring(start - 1, start)}</span>  | ${get_pits.substring(start, start + 1)} | ${get_pits.substring(start + 1, start + 2)} | ${get_pits.substring(start + 2, start + 3)} |`;
+                ele_digit_queue.innerHTML = `| ${get_pits.substring(0, 1)} | ${get_pits.substring(1, 2)} | ${get_pits.substring(2, 3)} | <span class="solved">${get_pits.substring(3, 4)}</span>  | ${get_pits.substring(4, 5)} | ${get_pits.substring(5, 6)} | ${get_pits.substring(6,7)} |`;
                 ele_current_move.classList.remove('current');
                 ele_current_move.classList.add('solved');
                 ele_current_digit.classList.remove('current');
@@ -806,11 +812,10 @@ sketch1 = function (sketch) {
             // **************** 
             else {
                 let temp_move;
-                curr_pit = get_pits.substring(start, start + 1);
+                curr_pit = get_pits.substring(3, 4);
 
-                //  TOFIX TODO  
-                ReadDigit(); // read and append next digit
-                displayPi(start, start + 1);
+                //  TOFIX TODO                  
+                displayPi(start, 3, 4);
 
                 // repeat last digit?
                 if (curr_pit == 0) {
@@ -990,31 +995,18 @@ sketch1 = function (sketch) {
                 write_button.move = temp_move;
 
                 write_button.click();
-
-
-
-
                 // console.log(`pit: ${curr_pit}`)
                 start++; // go to next digit
-                // check if move is any closer to solving a cube.
+             
 
-                // get the next digit in line, append the string with new digits
-                // get digit
-                // get_pits = get_pits.concat(); // should append one character to new string
-                // if ((start - 8) % 100 == 0) {
-                //     write_button.spacer = '\n'; // pass newline for every hundred moves
-                // }
-                // else {
-                //     write_button.spacer = ' ';// pass a space for every new move
-                // }
-                // write_button.click();
-
-
-                if (start > get_pits.length) {
-                    document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                if (start > hundred_million) {
+                    ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
                     console.log("WENT THROUGH 100 MILLION DIGITS");
                     is_solving = false;
+                    is_fully_solved = true; // incase? should stop reading the file stream.
                 }
+
+                ReadDigit(); // read and append next digit
             }
         }
     }

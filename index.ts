@@ -48,10 +48,9 @@ app.post("/pi", async (req: Request, res: Response): Promise<void> => {
     const fd: number = fileo.openSync('public/files/pi.txt', 'r'); // file descriptor for read
 
     // console.log("BODY: ", req.body);
-    let position: fileo.ReadPosition = req.body.position;
-    
+    let position: fileo.ReadPosition = req.body.position;   
  
-    console.log("getting digit... ");
+    // console.log("getting digit... ");
     try {
         const get_digit = await GetPieDigit(fd, position);
         res.send(get_digit); // success
@@ -79,7 +78,7 @@ app.get("/write/:move", (req: Request, res: Response): void => {
     start++;
     try {
         var stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
-        console.log("GET: appending move: ", full_move);
+        // console.log("GET: appending move: ", full_move);
         stream.write(full_move);
         temp.code = 0;
     }
@@ -106,7 +105,7 @@ function GetPieDigit(fd: number, position: fileo.ReadPosition): Promise<string> 
                 throw err;
             }
 
-            console.log('position: ', position,'READING DATA=> ', buffer_read.toString());
+            // console.log('position: ', position,'READING DATA=> ', buffer_read.toString());
             resolve(buffer_read.toString());
         });
 
