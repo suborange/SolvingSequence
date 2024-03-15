@@ -1,5 +1,4 @@
-// const fileo = requiure ('fs');
-// get random digits to relate to the random scramble moves? or have a certain scramble?
+// CONSTANT ELEMENTS
 const write_button = document.getElementById('write_digit');
 write_button.addEventListener('click', WriteToFile);
 write_button.move = '';
@@ -19,34 +18,8 @@ const img_swap2 = document.getElementById('notation_img2');
 const confetti_canvas = document.getElementById('SOLVED');
 const js_confetti = new JSConfetti();
 
-
-
 // test WR - STATIC CONST: D U F2 L2 U' B2 F2 D L2 U R' F' D R' F' U L D' F' D R2
 // const wr_scramble = [3, -1, 2, 6, 6, 5, 5, 2, 7, 7, 6, 6, -1, 3, 5, 5, -1, 2, 10, 4, 10, 6, -1, 3, 10, 4, 10, 6, -1, 2, 5, 3, 10, 6, -1, 3, 4, 4];
-
-
-// var rand_scramble1 = ['-', '-', '-']; // 6 seconds delay to start
-// for (let iran = 0; iran < 2; iran++) {
-//     var r = Math.floor(Math.random() * (9) + 1);
-//     if (r != rand_scramble1[iran - 1] && r != rand_scramble1[iran - 2]) { // if not duplicate to last number
-//         rand_scramble1.push(r);
-//     }
-// }
-// // rand_scramble1 = wr_scramble;
-// console.log("random: ", rand_scramble1);
-
-// var rand_scramble2 = ['-', '-', '-']; // 6 seconds delay to start
-// for (let iran = 0; iran < 2; iran++) {
-//     var r = Math.floor(Math.random() * (9) + 1);
-//     if (r != rand_scramble2[iran - 1] && r != rand_scramble2[iran - 2]) { // if not duplicate to last number
-//         rand_scramble2.push(r);
-//     }
-// }
-// // rand_scramble1 = wr_scramble;
-// console.log("random: ", rand_scramble2);
-
-
-
 
 // setup for the vectors and 3d array(matrix)
 let dim;
@@ -58,11 +31,9 @@ let bool = true;
 let iswap = false;
 let start = 3;
 let curr_pit;
-// let end = 1;
 let is_solving = true;  // start as solving
 let prev_pit = 0;
 let is_fully_solved = false;
-// let scramble = false; // never scramble
 let cam1;
 let cam2;
 let cam3;
@@ -76,9 +47,9 @@ let full_move;
 let file_position_counter = 0;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
-let fade = 1500;
 
-// CONSTANTS 
+
+// CONSTANT VARIABLES
 const BACK = -1;
 const FRONT = 1;
 const LEFT = -1;
@@ -106,13 +77,13 @@ const UP_NORMAL = -1; // Y
 const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
 const DOWN_NORMAL = 1; // Y
 const DOWN_FACES = [8, 17, 26, 7, 16, 25, 6, 15, 24];
+// FLAG POSITIONS
+const FRONT_FLAG = 4;
+const LEFT_FLAG = 13;
+const BACK_FLAG = 22;
+const RIGHT_FLAG = 31;
+const UP_FLAG = 40;
 
-const FRONT_FLAG = 0;
-const LEFT_FLAG = 1;
-const BACK_FLAG = 2;
-const RIGHT_FLAG = 3;
-const UP_FLAG = 4;
-const DOWN_FLAG = 5;
 
 
 
@@ -138,12 +109,16 @@ const audio_path = [
     "audio/short_04.m4a",
     "audio/short_06.m4a"];
 
-// GET PI NUMBERS 
-let get_pits = '---------22333322224569';
-// 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
+const audio_solved = [
+    "audio/Confetti.mp3",
+    "audio/YAY.mp3"
+];
 
-// let trya = numberWithCommas(1090000);
-// console.log("number with comma: ", trya)
+// GET PI NUMBERS 
+let get_pits = '---------22331111113322224569';
+// 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
+// testing solve - 223311113322224569
+
 
 // FUNCTIONS
 function numberWithCommas(x) {
@@ -162,6 +137,7 @@ function displayPi(start, end) {
 async function ReadDigit() {
     let data;
     try {
+        // TOFIX TODO
         let url = `pi`;
         let response = await fetch(url, {
             method: "post",
@@ -187,7 +163,7 @@ async function ReadDigit() {
         console.log('response returned bad value');
     }
 }
-
+// TOFIX TODO
 function AddDigit(new_digit) {
     // find the next digit, then return it to be added to the line. 
     get_pits = get_pits.concat(new_digit);
@@ -217,31 +193,37 @@ function PlaySound() {
     const r_index = Math.floor(Math.random() * (audio_path.length));
     audio_file.src = audio_path[r_index];
     audio_file.play();
-    //    console.log("audio: ", audio_path[r_index]);
+    
 }
-
+function PlaySolvedSound() {
+    // need to start a sound here. 
+    const r_index = Math.floor(Math.random() * (audio_solved.length));
+    audio_file.src = audio_solved[r_index];
+    audio_file.play();
+    
+}
+// but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
 function CubeIsSolved() {
     console.log('checking solve');
-    // but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
-    // for 6 potential orientations
+    
 
     const cube_indexes = [];
     const face_indexes = [];
 
     // check each block first, then check each face
     let solve_i = 0;
-    // TODO check how this lines up with the cube cubes
+   
     // dynamic - find all the positions, then just go around and check each aroundit. and find all the colors
-    // check the center position and its color, then find and check the next position and its color
+    
     for (let static_index = 0; static_index < cube.length;) {
-        // with every iteration, find one position and its index, then reset to find the next position?
+        // with every iteration, find one position and its index, then reset to find the next position
         // if none of the positions match, skip to next position
         if (cube[solve_i].xi != SOLVED_CUBE[static_index].xi) { solve_i++; continue; }
         if (cube[solve_i].yi != SOLVED_CUBE[static_index].yi) { solve_i++; continue; }
         if (cube[solve_i].zi != SOLVED_CUBE[static_index].zi) { solve_i++; continue; }
 
         // if it does match all three axis, then one correct position found for this index
-        // somehow have to check if this was already added, or have two different indexs
+        
         cube_indexes.push(solve_i);
         // console.log("one piece has been matched");
         solve_i = 0; // start over with the cube
@@ -250,7 +232,7 @@ function CubeIsSolved() {
 
 
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
-
+// check the center position and its color, then find and check the next position and its color
     // the loopt goes through each colors, which color is facing the front? grab that index
 
     // FRONT FACE CHECK - Z NORMAL = 1
@@ -264,9 +246,7 @@ function CubeIsSolved() {
         static_face_index++;
         front_i = 0;
     }
-    // after this should have the first 9 faces in order, in relation to the correct order of indexes
-
-
+    
     // RIGHT FACE CHECK - X NORMAL = 1
     let right_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
@@ -326,24 +306,17 @@ function CubeIsSolved() {
         static_face_index++;
         down_i = 0;
     }
-
-    // now having both the cubes in correct order, parellel to the correct faces
-    // check these cubes and their face index against the solved cube. 
-    // if the indexs are equal, then it is the same cube and color facing the right direction as the solved orientation
-    // but i think its better to check against itself, look up and down and left, right, and then all corners. 
-    // do all these first 9 cubes and the first 9 color faces match with eachother? if so then it should be a solved face
-    // MAYBE THIS ONE \/
-    //grab the centers, the first face is 0-8, so 4. then check 0-8 against the number at 4. this is a solved face
-
+    // after this should have the first 9 faces in order, in relation to the correct order of indexes
+    // grab the centers, the first face is 0-8, so 4. then check 0-8 against the number at 4. this is a solved face
     // start at 4, and go around to every center and check around to see if there is a correct face, if not skip.
-    // flags for each face. front, right, back, left, up, down
+    // flags for each face. front, right, back, left, up, -- down
     let face_flags = new Map([
         [4, false],  // front
         [13, false],  // left
         [22, false],  // back 
         [31, false],  // right
         [40, false],  // up
-    ]); // dont need the last face. 5 == solved - down 
+    ]); // dont need the last face. 5 == solved -- down 
     let this_face_is_solved = false;
     for (let center_index = 4; center_index <= 40; center_index += 9) {
         let center_color = face_indexes[center_index]; // this should give the center color for the surrounding 8 faces
@@ -364,7 +337,7 @@ function CubeIsSolved() {
     }
     /**RETURNS**/
     // SOLVED!
-    const cube_is_fully_solved = face_flags.get(4) && face_flags.get(13) && face_flags.get(22) && face_flags.get(31) && face_flags.get(40);
+    const cube_is_fully_solved = face_flags.get(FRONT_FLAG) && face_flags.get(LEFT_FLAG) && face_flags.get(BACK_FLAG) && face_flags.get(RIGHT_FLAG) && face_flags.get(UP_FLAG);
     if (cube_is_fully_solved) {
         return true;
     }
@@ -378,7 +351,6 @@ function CubeIsSolved() {
 // CREATE TURNING FUNCTIONS FOR EACH FACE
 
 const canvas_id = ['canvastl', 'canvastr', 'canvasbl', 'canvasbr'];
-// const scramble_id = ['scramble1', 'scramble2', 'scramble3', 'scramble4']; // make an object?
 let canvases = [];
 
 
@@ -434,7 +406,7 @@ sketch1 = function (sketch) {
                 sketch.fill(Number(this.red), Number(this.green), Number(this.blue));
                 sketch.rectMode(sketch.CENTER);
                 sketch.translate(trans_size * this.normal.x, trans_size * this.normal.y, trans_size * this.normal.z);
-                // to debug
+                // to debug - oddly enough this works for somereason?
                 if (sketch.abs(this.normal.x)) {
                     sketch.rotateY(sketch.HALF_PI);
                 }
@@ -449,7 +421,7 @@ sketch1 = function (sketch) {
 
         // *** CUBIE ***
         class Cubie {
-            // vector3; // to store vector positions hopefully
+
             matrix; // to store transformation matrix
             matrix_next;
             // index of each axis
@@ -487,7 +459,7 @@ sketch1 = function (sketch) {
                 sketch.noFill();
                 sketch.stroke(0);
                 sketch.strokeWeight(4);
-                // debugging test here. find all 54 things great.
+                
                 if (this.highlight) {
                     sketch.fill(255, 0, 0);
                 }
@@ -558,10 +530,6 @@ sketch1 = function (sketch) {
             update() {
                 if (this.animate) {
                     this.angle += this.dir * 0.06;
-                    // console.log("animating", this.angle);
-
-
-
                     // after animation, change positions.
                     if (sketch.abs(this.angle) > sketch.HALF_PI) {
                         this.angle = 0;
@@ -570,20 +538,13 @@ sketch1 = function (sketch) {
                         // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
                         if (this.plane == Z_PLANE) { // Z axis animation
                             rotateZaxis(this.dir * sketch.HALF_PI, this.z);
-                            // console.log("current framecount: ", sketch.frameCount);
-                            // console.log("dir:", this.dir, "z-animation", this.z);
                         }
                         else if (this.plane == X_PLANE) { // X axis animation
                             rotateXaxis(this.dir * sketch.HALF_PI, this.x);
-                            // console.log("current framecount: ", sketch.frameCount);
-                            // console.log("dir:", this.dir, "x-animation", this.x);
                         }
                         else if (this.plane == Y_PLANE) { // Y axis animation
                             rotateYaxis(this.dir * -1 * sketch.HALF_PI, this.y);
-                            // console.log("current framecount: ", sketch.frameCount);
-                            // console.log("dir:", this.dir, "y-animation", this.y);
                         }
-
                     }
                 }
             }
@@ -599,16 +560,10 @@ sketch1 = function (sketch) {
         canvas.parent(canvas_id[0]);
         cam1 = sketch.createCamera();
         cam1.setPosition(0, 0, 230);
-        // cam1.lookAt(0, 0, 0);
-        sketch.setCamera(cam1);
-        //  "canvastl"
-        // canvas.parent(canvas_id[i]);
+        sketch.setCamera(cam1);        
         sketch.frameRate(60);
 
-
-
         // SETUP VARIABLES 
-
         dim = Number(3);
         cube = Array(dim * dim * dim).fill(); // 1D array of matrices
         SOLVED_CUBE = Array(dim * dim * dim).fill(); // 1D array of matrices
@@ -632,9 +587,7 @@ sketch1 = function (sketch) {
                 }
             }
         }
-        // debugging 
-        // cube[26].highlight = true;
-
+        // setting up all the differnt moves
         index = 0;
         move = null;
         moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
@@ -664,7 +617,7 @@ sketch1 = function (sketch) {
     function rotateXaxis(angle, axis_index) {
 
         for (let i = 0; i < cube.length; i++) {
-            // in z axis plane, the front?  
+            // in x axis plane, the front?  
             qb = cube[i];
             if (qb.xi == axis_index) { // 0 == back, 1 = middle, 2 == front 
 
@@ -689,7 +642,7 @@ sketch1 = function (sketch) {
     function rotateYaxis(angle, axis_index) {
 
         for (let i = 0; i < cube.length; i++) {
-            // in z axis plane, the front?  
+            // in y axis plane, the front?  
             qb = cube[i];
             if (qb.yi == axis_index) { // 0 == back, 1 = middle, 2 == front 
 
@@ -728,13 +681,9 @@ sketch1 = function (sketch) {
     } // end Z turn
 
 
-
-
     // **** DRAW ****
     sketch.draw = function () {
 
-
-        // sketch.background(34, 49, 78); // #22314E
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
         // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
@@ -749,15 +698,12 @@ sketch1 = function (sketch) {
             // swap images between clockwise and counter clockwise, can be timed here?
             if (iswap) {
                 img_swap1.classList.remove('crossfade');
-                // img_swap1.src = "imgs/clockwise_notations.png";
                 img_swap2.classList.add('crossfade');
             }
             else {
                 img_swap2.classList.remove('crossfade');
-                // img_swap1.src = "imgs/counterwise_notations.png";
                 img_swap1.classList.add('crossfade');
             }
-            // add if {cube_is_solved} here
         }
 
         sketch.rotateX(sketch.HALF_PI / 2);
@@ -765,7 +711,6 @@ sketch1 = function (sketch) {
 
         sketch.push();
         cam1.move(cam_move, 0, 0);
-
         cam1.lookAt(0, 0, 0);
         sketch.pop();
 
@@ -793,17 +738,20 @@ sketch1 = function (sketch) {
 
         // confetti!!!
         if (sketch.frameCount % 120 == 0 && is_fully_solved) {
-            js_confetti.addConfetti();
+            js_confetti.addConfetti({
+                confettiRadius: 10,
+                confettiNumber: 500,
+            });
             // console.log('confetti!');
-            is_fully_solved = false; // debugging
+            // is_fully_solved = false; // debugging
+            if (sketch.frameCount % 240 == 0) {
+            PlaySolvedSound();
+            }
         }
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
-        // do {
-
         if (sketch.frameCount % 120 == 0 && is_solving) {
-
 
             // ***************
             // * SOLVED CUBE *
@@ -817,21 +765,25 @@ sketch1 = function (sketch) {
                 ele_current_move.classList.add('solved');
                 ele_current_digit.classList.remove('current');
                 ele_current_digit.classList.add('solved');
-                ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${start-9}</span>! `;
+                const solved_digit = numberWithCommas(start-9);
+                ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
                 is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
                 is_fully_solved = true;
 
             }
-            // else continue on for the next move
+            // ****************
+            // * SOLVING CUBE *
+            // **************** 
             else {
                 let temp_move;
                 curr_pit = get_pits.substring(start, start + 1);
 
+                //  TOFIX TODO  
                 // ReadDigit(); // read and append next digit
                 displayPi(start, start + 1);
 
                 // repeat last digit?
-                if (curr_pit == '0') {
+                if (curr_pit == 0) {
                     curr_pit = prev_pit;
                 }
 
@@ -922,7 +874,6 @@ sketch1 = function (sketch) {
                 else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
                     switch (curr_pit) {
                         // COUNTER CLOCKWISE - INVERSE ROTATIONS
-
                         case "1":
                             // M SLICE INVERSE
                             // console.log("M-SLICE INVERTED MOVE");                        
@@ -1005,10 +956,9 @@ sketch1 = function (sketch) {
                     prev_pit = curr_pit;
                 }
                 // update the current move only once, instead of within switch
-                document.querySelector("#curr_move").innerHTML = temp_move;
+                ele_current_move.innerHTML = temp_move;
                 write_button.move = temp_move;
 
-                // // ReadDigit();
                 write_button.click();
 
 
@@ -1032,18 +982,13 @@ sketch1 = function (sketch) {
 
                 if (start > get_pits.length) {
                     document.querySelector('#digit_queue').innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                    // console.log("STOPPED");
+                    console.log("WENT THROUGH 100 MILLION DIGITS");
                     is_solving = false;
-                    // scramble = false;
                 }
-
-
             }
         }
-
-
     }
-
 }
 
+// create the p5.js canvas
 new p5(sketch1);

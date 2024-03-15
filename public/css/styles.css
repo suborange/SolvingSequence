@@ -91,6 +91,13 @@ h2 {
     padding: 0%;
 }
 
+h2.currentmove {
+    width: 280px;
+}
+h2.currentdigit {
+    width: 615px;
+}
+
 img.notation {
     position: relative;
     grid-area: 1 / 1;
@@ -312,6 +319,10 @@ div.cols {
 
 .tcenter {
     text-align: center;
+}
+
+.tright {
+    text-align: right;
 }
 
 .acenter {
