@@ -24,6 +24,8 @@ d+ need to add another box below to show the current digits and moves
 + maybe line up the move, camera reset, on move ending, so it looks less choppy?
 + add sound effect for each turn, make it?
 + add sound effects for solved, going with confetti
+
+- mess with confetti numbers, make random? colors are the cube colors?
 + add all the face normal constants
 + swap images every so often
 + smooth transition between images?

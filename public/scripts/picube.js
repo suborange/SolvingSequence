@@ -193,28 +193,28 @@ function PlaySound() {
     const r_index = Math.floor(Math.random() * (audio_path.length));
     audio_file.src = audio_path[r_index];
     audio_file.play();
-    
+
 }
 function PlaySolvedSound() {
     // need to start a sound here. 
     const r_index = Math.floor(Math.random() * (audio_solved.length));
     audio_file.src = audio_solved[r_index];
     audio_file.play();
-    
+
 }
 // but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
 function CubeIsSolved() {
     console.log('checking solve');
-    
+
 
     const cube_indexes = [];
     const face_indexes = [];
 
     // check each block first, then check each face
     let solve_i = 0;
-   
+
     // dynamic - find all the positions, then just go around and check each aroundit. and find all the colors
-    
+
     for (let static_index = 0; static_index < cube.length;) {
         // with every iteration, find one position and its index, then reset to find the next position
         // if none of the positions match, skip to next position
@@ -223,7 +223,7 @@ function CubeIsSolved() {
         if (cube[solve_i].zi != SOLVED_CUBE[static_index].zi) { solve_i++; continue; }
 
         // if it does match all three axis, then one correct position found for this index
-        
+
         cube_indexes.push(solve_i);
         // console.log("one piece has been matched");
         solve_i = 0; // start over with the cube
@@ -232,7 +232,7 @@ function CubeIsSolved() {
 
 
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
-// check the center position and its color, then find and check the next position and its color
+    // check the center position and its color, then find and check the next position and its color
     // the loopt goes through each colors, which color is facing the front? grab that index
 
     // FRONT FACE CHECK - Z NORMAL = 1
@@ -246,7 +246,7 @@ function CubeIsSolved() {
         static_face_index++;
         front_i = 0;
     }
-    
+
     // RIGHT FACE CHECK - X NORMAL = 1
     let right_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
@@ -459,7 +459,7 @@ sketch1 = function (sketch) {
                 sketch.noFill();
                 sketch.stroke(0);
                 sketch.strokeWeight(4);
-                
+
                 if (this.highlight) {
                     sketch.fill(255, 0, 0);
                 }
@@ -560,7 +560,7 @@ sketch1 = function (sketch) {
         canvas.parent(canvas_id[0]);
         cam1 = sketch.createCamera();
         cam1.setPosition(0, 0, 230);
-        sketch.setCamera(cam1);        
+        sketch.setCamera(cam1);
         sketch.frameRate(60);
 
         // SETUP VARIABLES 
@@ -745,7 +745,7 @@ sketch1 = function (sketch) {
             // console.log('confetti!');
             // is_fully_solved = false; // debugging
             if (sketch.frameCount % 240 == 0) {
-            PlaySolvedSound();
+                PlaySolvedSound();
             }
         }
 
@@ -756,16 +756,16 @@ sketch1 = function (sketch) {
             // ***************
             // * SOLVED CUBE *
             // ***************                     
-            if (start > 12 && CubeIsSolved() ) {// debug start is 9, otherwise large number is fine.    
+            if (start > 12 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.    
                 // what to do here when solved?                    
                 console.log("SOLVED!!!! WTF!!!");
-                
+
                 ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | ${get_pits.substring(start - 2, start - 1)} | <span class="solved">${get_pits.substring(start - 1, start)}</span>  | ${get_pits.substring(start, start + 1)} | ${get_pits.substring(start + 1, start + 2)} | ${get_pits.substring(start + 2, start + 3)} |`;
                 ele_current_move.classList.remove('current');
                 ele_current_move.classList.add('solved');
                 ele_current_digit.classList.remove('current');
                 ele_current_digit.classList.add('solved');
-                const solved_digit = numberWithCommas(start-9);
+                const solved_digit = numberWithCommas(start - 9);
                 ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
                 is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
                 is_fully_solved = true;

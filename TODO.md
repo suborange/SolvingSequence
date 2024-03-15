@@ -1,28 +1,23 @@
 # Init
 
 # dev
-- also maybe highlight the pi number it is at.
+
 
 # HTML
 
 # CSS
-- static current displays. so they dont move around so often.
+
 
 # JavaScript
 - read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
     - maybe use await function? grab 10 numbers, complete the function awaiting for end, then grabs next ten numbers?
     - scrape data of web, to have newlines for each number? ( no thats like twice as big of a file)
 
-
+### for later, once this works. can restart where i am at.
 - need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. 
 ( add a starting position, and can compare? maybe starting distances from one another. )
 
-- displaying number values needs to account for commas ( it might)
 
-
-- mess with confetti numbers, make random? colors are the cube colors?
-
-- change title to pi SOLVED a rubiks cube!!
 
 # P5 
 
