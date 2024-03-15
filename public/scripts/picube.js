@@ -45,6 +45,7 @@ let sketchs = [];
 let full_move;
 // for file positon and reading
 let file_position_counter = 0;
+
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 
@@ -150,21 +151,25 @@ async function ReadDigit() {
             })
         });
         data = await response.json();
-        // console.log("fetched data: ", data);
+        file_position_counter++; // increment to next file chunk
+        // console.log("fetched data=> ", data);
+        // console.log("response", response.status);
+
+        if (response.status == 200 ) {
+            FixDigitChunk(data);
+        }
+        else {            
+            throw new Error(response.body.message);
+        }
 
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
     }
-    if (data.digit >= 0) {
-        AddDigit(data.digit);
-    }
-    else {
-        console.log('response returned bad value');
-    }
+    
 }
 // TOFIX TODO
-function AddDigit(new_digit) {
+function FixDigitChunk(new_digits) {
     // find the next digit, then return it to be added to the line. 
     get_pits = get_pits.concat(new_digit);
     // console.log('added new digit:', get_pits);
@@ -186,6 +191,25 @@ async function WriteToFile(event) {
     if (data.code != 0) {
         console.log('response returned bad value');
     }
+}
+
+async function ReadStreamStatus() {
+    
+    try {
+        let url = `status`;
+        let response = await fetch(url);
+        data = await response.json();
+        // console.log(data);
+    }
+    catch (err) {
+        console.log('something went wrong fetching status', err.stack);
+    }
+    if (data.code != 0 ) {
+        is_solving = false; // stream went offline, stop solving
+        return;
+    }
+    is_solving = true;
+    return;
 }
 
 function PlaySound() {
@@ -739,7 +763,7 @@ sketch1 = function (sketch) {
         // confetti!!!
         if (sketch.frameCount % 120 == 0 && is_fully_solved) {
             js_confetti.addConfetti({
-                confettiRadius: 10,
+                confettiRadius: 12,
                 confettiNumber: 500,
             });
             // console.log('confetti!');
@@ -749,10 +773,16 @@ sketch1 = function (sketch) {
             }
         }
 
+        if (sketch.frameCount % 60 == 0 && !is_fully_solved) {
+            ReadStreamStatus(); // get status every second.
+            // console.log('trying to read stream status');
+        }
+
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         if (sketch.frameCount % 120 == 0 && is_solving) {
 
+            
             // ***************
             // * SOLVED CUBE *
             // ***************                     
@@ -779,7 +809,7 @@ sketch1 = function (sketch) {
                 curr_pit = get_pits.substring(start, start + 1);
 
                 //  TOFIX TODO  
-                // ReadDigit(); // read and append next digit
+                ReadDigit(); // read and append next digit
                 displayPi(start, start + 1);
 
                 // repeat last digit?

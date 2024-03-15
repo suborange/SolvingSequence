@@ -5,46 +5,64 @@ const port: number = 3000;
 const app: Express = express();
 app.set('view engine', 'ejs');
 app.use(express.static('public'));
+app.use(express.json());
 let start = 1;
 
-app.get("/", (req: Request, res: Response): void => {
+app.get("/", (_: Request, res: Response): void => {
     res.render('index');
 });
 
-app.post("/pi",  (req: Request, res: Response): void => {
-    var position = req.body.position;
-    // let temp:number = -1;
-    const pi = {
-        "digit": -1
-    };
-    console.log("getting digit... ");
-    try {
-        // need to make the "iterator" type thing forsaving file thing
-        let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8'});
-         stream.on('readable', (temp:number) => {
-            temp = stream.read(1);
-            
-            // console.log(":) ");
-            pi.digit = temp;
-            console.log("value INSIDE try:", pi.digit);
-            stream.close();
-            console.log("CLOSED AND READY TO SEND");
-            // res.send(pi); 
-        });     
-        stream.on('closed', () => {
-            console.log("ending...");
-           
-            res.send(pi); 
 
-        });    
+app.get("/status", (_: Request, res: Response): void => {
+    const status = {
+        "code": -1
+    }
+    
+    const stream_offline = "OFF";
+    const stream_on = "ON";
+    
+    try {
+        const status_string = fileo.readFileSync("public/files/stream.txt").toString();
+        // console.log("getting stream status: ", status_string);
+
+        // compare the upper casses
+       if(status_string.toUpperCase() === stream_offline.toUpperCase()) {
+        status.code = -1; // OFFLINE
+       }
+       else if(status_string.toUpperCase() === stream_on.toUpperCase()){
+        status.code = 0; // ONLINE - continue
+       }
+       else   {
+        // shouldnt happen hopefully
+        console.log('bad stream status. 404 ERROR ');
+       }
+       res.send(status);
     }
     catch (err) {
-        pi.digit = -1;
         console.log('something went wrong in get request', err);
-        // res.send(temp);
+        res.send(status); // should default to OFF, stopping it if bad read request
     }
-    console.log("value OUTSIDE try:", pi.digit);
-      
+});
+
+app.post("/pi", async (req: Request, res: Response): Promise<void> => {
+    const fd: number = fileo.openSync('public/files/pi.txt', 'r'); // file descriptor for read
+
+    // console.log("BODY: ", req.body);
+    let position: fileo.ReadPosition = req.body.position;
+    
+ 
+    console.log("getting digit... ");
+    try {
+        const get_digit = await GetPieDigit(fd, position);
+        res.send(get_digit); // success
+    }
+    catch (err) {
+        console.log('something went wrong in get request', err);
+        res.status(400).send({
+            status: 400, 
+            message: `BAD PI READ:: ${err}`
+        });
+    }
 });
 
 app.get("/write/:move", (req: Request, res: Response): void => {
@@ -79,6 +97,27 @@ app.listen(port, (): void => {
 
 
 // *** FUNCTIONS ***
+function GetPieDigit(fd: number, position: fileo.ReadPosition): Promise<string> {
+    return new Promise((resolve, reject) => {
+        const buffer = Buffer.alloc(1);
+        fileo.read(fd, buffer, 0, 1, position, function(err, bytes_read, buffer_read){
+            if (err){
+                console.log('READ ERROR', err);
+                throw err;
+            }
+
+            console.log('position: ', position,'READING DATA=> ', buffer_read.toString());
+            resolve(buffer_read.toString());
+        });
+
+    });
+
+
+}
+
+
+
+
 // should get the arguments from the event listener?
 function appendToFile(event: any): void {
     var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
@@ -90,23 +129,42 @@ function appendToFile(event: any): void {
 
 
 
-// OLD 
+// DEPRECATED
+// need to make the "iterator" type thing forsaving file thing
+// let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
+// stream.on('readable', (temp: number) => {
+//     temp = stream.read(1);
 
-    // fetch('files/pi.txt').
-    // then((response) => {
-    //     const reader = response.body.getReader();
-    //     //read returns promise when value has been recieved
-    //     reader.read(1).then(function pump({done, value }){
-    //         if (done) {
-    //             // do something with LAST CHUNK
-    //             console.log('inside done:', value);
-    //             return;
-    //         }
-    //         // otherwise deal with chunk of data here
-    //         AddDigit(value);
-    //         console.log('chunk:', value);
+//     // console.log(":) ");
+//     pi.digit = temp;
+//     console.log("value INSIDE try:", pi.digit);
+//     stream.close();
+//     console.log("CLOSED AND READY TO SEND");
+//     // res.send(pi); 
+// });
+// stream.on('closed', () => {
+//     console.log("ending...");
 
-    //         return reader.read().then(pump);
-    //     });
-    // }).
-    // catch((err) => console.log('error ', err));
+//     res.send(pi);
+
+// });
+
+
+// fetch('files/pi.txt').
+// then((response) => {
+//     const reader = response.body.getReader();
+//     //read returns promise when value has been recieved
+//     reader.read(1).then(function pump({done, value }){
+//         if (done) {
+//             // do something with LAST CHUNK
+//             console.log('inside done:', value);
+//             return;
+//         }
+//         // otherwise deal with chunk of data here
+//         AddDigit(value);
+//         console.log('chunk:', value);
+
+//         return reader.read().then(pump);
+//     });
+// }).
+// catch((err) => console.log('error ', err));
