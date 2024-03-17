@@ -21,13 +21,15 @@ app.get("/status", (_: Request, res: Response): void => {
     const stream_offline = "OFF";
     const stream_on = "ON";
     
-    try {
-        const status_string = fileo.readFileSync("public/files/stream.txt").toString().trim();
+    const fd = fileo.openSync('public/files/stream.txt', 'r');
+    try {        
+        const status_string = fileo.readFileSync(fd).toString().trim();
         // console.log("getting stream status: ", status_string);
 
         // compare the upper casses
        if(status_string.toUpperCase() === stream_offline.toUpperCase()) {
         status.code = -1; // OFFLINE
+        
         // console.log("offline");
        }
        else if(status_string.toUpperCase() === stream_on.toUpperCase()){
@@ -39,10 +41,12 @@ app.get("/status", (_: Request, res: Response): void => {
         status.code = -1; // pause if something went wrong anyway
         console.log('bad stream status. 404 ERROR ');
        }
+       fileo.close(fd);
        res.send(status);
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        fileo.close(fd);
         res.send(status); // should default to OFF, stopping it if bad read request
     }
 });
@@ -56,10 +60,12 @@ app.post("/pi", async (req: Request, res: Response): Promise<void> => {
     // console.log("getting digit... ");
     try {
         const get_digit = await GetPieDigit(fd, position);
+        fileo.close(fd); // close file, to reopen later
         res.send(get_digit); // success
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        fileo.close(fd);
         res.status(400).send({
             status: 400, 
             message: `BAD PI READ:: ${err}`
@@ -80,10 +86,12 @@ app.get("/write/:move", (req: Request, res: Response): void => {
     }
     start++;
     try {
-        var stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
+        
+        let stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
         // console.log("GET: appending move: ", full_move);
         stream.write(full_move);
         temp.code = 0;
+        stream.end(); // end stream. 
     }
     catch (err) {
         temp.code = 1;
