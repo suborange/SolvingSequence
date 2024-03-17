@@ -11,6 +11,7 @@ d+ need to add another box below to show the current digits and moves
 + add confetti when its solved. occurs every so often.
 + also maybe highlight the pi number it is at.
 + fix the graphics for 0==repeat
++ add couple more solved audio files.
 
 # HTML
 + i think it is just one home page, 
@@ -37,7 +38,8 @@ d+ need to add another box below to show the current digits and moves
 + displaying number values needs to account for commas ( it might)
 + read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
 + refix all the data using the new pi string
-
++ add a small notice at where a side was solved or not. what digit?
+- fixed up the last of the bugs?
 
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around

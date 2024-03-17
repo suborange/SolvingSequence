@@ -7,10 +7,13 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 ├── express@4.18.2
 ├── nodemon@3.0.2
 └── typescript@5.3.3
+
+- clean out move.txt before streaming
 # Init
 
 # dev
-- fix the graphics for 0==repeat
+
+
 
 # HTML
 
@@ -18,6 +21,7 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 
 
 # JavaScript
+
 
 
 ### for later, once this works. can restart where i am at.

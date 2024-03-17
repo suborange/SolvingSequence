@@ -30,17 +30,20 @@ app.get("/status", (_, res) => {
     const stream_offline = "OFF";
     const stream_on = "ON";
     try {
-        const status_string = fs_1.default.readFileSync("public/files/stream.txt").toString();
+        const status_string = fs_1.default.readFileSync("public/files/stream.txt").toString().trim();
         // console.log("getting stream status: ", status_string);
         // compare the upper casses
         if (status_string.toUpperCase() === stream_offline.toUpperCase()) {
             status.code = -1; // OFFLINE
+            // console.log("offline");
         }
         else if (status_string.toUpperCase() === stream_on.toUpperCase()) {
             status.code = 0; // ONLINE - continue
+            // console.log("online");
         }
         else {
             // shouldnt happen hopefully
+            status.code = -1; // pause if something went wrong anyway
             console.log('bad stream status. 404 ERROR ');
         }
         res.send(status);

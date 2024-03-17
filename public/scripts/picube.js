@@ -31,7 +31,7 @@ let move;
 let moves = [];
 let bool = true;
 let iswap = false;
-let start = 3;
+let start = 3; // cant remember why this starts at 3, to be adjusted later.. 
 let curr_pit;
 let is_solving = true;  // start as solving
 let prev_pit = 0;
@@ -50,10 +50,11 @@ let file_position_counter = 0;
 
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
+let streaming_check = 60;
 
 
 // CONSTANT VARIABLES
-const hundred_million = 100000000;
+const end_of_file = 1000000000; // 1 billion
 const BACK = -1;
 const FRONT = 1;
 const LEFT = -1;
@@ -115,7 +116,12 @@ const audio_path = [
 
 const audio_solved = [
     "audio/Confetti.mp3",
-    "audio/YAY.mp3"
+    "audio/YAY.mp3",
+    "audio/tada1.mp3",
+    "audio/tada2.mp3",
+    "audio/we_did_it1.mp3",
+    "audio/zelda.mp3",
+    "audio/yippee.mp3"
 ];
 
 // GET PI NUMBERS 
@@ -212,8 +218,11 @@ async function ReadStreamStatus() {
     }
     if (data.code != 0 ) {
         is_solving = false; // stream went offline, stop solving
+        streaming_check = 600; // check every 10 seconds. 
         return;
     }
+    // else {code === 0}, stream is online, continue
+    streaming_check = 60;
     is_solving = true;
     return;
 }
@@ -222,6 +231,7 @@ function PlaySound() {
     // need to start a sound here. i guess just start asap? last around half a second?
     const r_index = Math.floor(Math.random() * (audio_path.length));
     audio_file.src = audio_path[r_index];
+    audio_file.volume = 1;
     audio_file.play();
 
 }
@@ -229,14 +239,13 @@ function PlaySolvedSound() {
     // need to start a sound here. 
     const r_index = Math.floor(Math.random() * (audio_solved.length));
     audio_file.src = audio_solved[r_index];
+    audio_file.volume = 0.3;
     audio_file.play();
 
 }
 // but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
 function CubeIsSolved() {
-    console.log('checking solve');
-
-
+    // console.log('checking solve');
     const cube_indexes = [];
     const face_indexes = [];
 
@@ -253,18 +262,15 @@ function CubeIsSolved() {
         if (cube[solve_i].zi != SOLVED_CUBE[static_index].zi) { solve_i++; continue; }
 
         // if it does match all three axis, then one correct position found for this index
-
         cube_indexes.push(solve_i);
         // console.log("one piece has been matched");
         solve_i = 0; // start over with the cube
         static_index++; // go to the next static position
     }
 
-
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
     // check the center position and its color, then find and check the next position and its color
     // the loopt goes through each colors, which color is facing the front? grab that index
-
     // FRONT FACE CHECK - Z NORMAL = 1
     let front_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
@@ -360,8 +366,7 @@ function CubeIsSolved() {
 
         if (this_face_is_solved) {
             face_flags.set(center_index, true);
-            console.log(`THE ${center_color} FACE WAS SOLVED!`);
-            // enter some js here for showing if a face was solved or not
+            console.log(`THE ${center_color} FACE WAS SOLVED!, at digit ${start}`);            
         }
 
     }
@@ -767,32 +772,32 @@ sketch1 = function (sketch) {
         }
 
         // confetti!!!
-        if (sketch.frameCount % 120 == 0 && is_fully_solved) {
+        if (sketch.frameCount % 60 == 0 && is_fully_solved) {
             js_confetti.addConfetti({
                 confettiRadius: 12,
                 confettiNumber: 500,
+                
             });
             // console.log('confetti!');
             // is_fully_solved = false; // debugging
-            if (sketch.frameCount % 240 == 0) {
+            if (sketch.frameCount % 180 == 0) {
                 PlaySolvedSound();
             }
         }
 
-        if (sketch.frameCount % 60 == 0 && !is_fully_solved) {
+        if (sketch.frameCount % streaming_check == 0) {
             ReadStreamStatus(); // get status every second.
             // console.log('trying to read stream status');
         }
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
-        if (sketch.frameCount % 120 == 0 && is_solving) {
-
+        if (sketch.frameCount % 120 == 0 && !is_fully_solved && is_solving) {
             
             // ***************
             // * SOLVED CUBE *
             // ***************                     
-            if (start > 12 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.    
+            if (start > 20 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.                    
                 // what to do here when solved?                    
                 console.log("SOLVED!!!! WTF!!!");
 
@@ -804,8 +809,7 @@ sketch1 = function (sketch) {
                 const solved_digit = numberWithCommas(start - 9);
                 ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
                 is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                is_fully_solved = true;
-
+                is_fully_solved = true; // stop checking pi file and etc.    
             }
             // ****************
             // * SOLVING CUBE *
@@ -999,7 +1003,7 @@ sketch1 = function (sketch) {
                 start++; // go to next digit
              
 
-                if (start > hundred_million) {
+                if (start > end_of_file) {
                     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
                     console.log("WENT THROUGH 100 MILLION DIGITS");
                     is_solving = false;
