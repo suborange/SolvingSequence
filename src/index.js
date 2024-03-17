@@ -29,8 +29,9 @@ app.get("/status", (_, res) => {
     };
     const stream_offline = "OFF";
     const stream_on = "ON";
+    const fd = fs_1.default.openSync('public/files/stream.txt', 'r');
     try {
-        const status_string = fs_1.default.readFileSync("public/files/stream.txt").toString().trim();
+        const status_string = fs_1.default.readFileSync(fd).toString().trim();
         // console.log("getting stream status: ", status_string);
         // compare the upper casses
         if (status_string.toUpperCase() === stream_offline.toUpperCase()) {
@@ -46,10 +47,12 @@ app.get("/status", (_, res) => {
             status.code = -1; // pause if something went wrong anyway
             console.log('bad stream status. 404 ERROR ');
         }
+        fs_1.default.close(fd);
         res.send(status);
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        fs_1.default.close(fd);
         res.send(status); // should default to OFF, stopping it if bad read request
     }
 });
@@ -60,10 +63,12 @@ app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log("getting digit... ");
     try {
         const get_digit = yield GetPieDigit(fd, position);
+        fs_1.default.close(fd); // close file, to reopen later
         res.send(get_digit); // success
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        fs_1.default.close(fd);
         res.status(400).send({
             status: 400,
             message: `BAD PI READ:: ${err}`
@@ -83,10 +88,11 @@ app.get("/write/:move", (req, res) => {
     }
     start++;
     try {
-        var stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
+        let stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
         // console.log("GET: appending move: ", full_move);
         stream.write(full_move);
         temp.code = 0;
+        stream.end(); // end stream. 
     }
     catch (err) {
         temp.code = 1;
