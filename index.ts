@@ -39,13 +39,14 @@ app.get("/status", (_: Request, res: Response): void => {
        else   {
         // shouldnt happen hopefully
         status.code = -1; // pause if something went wrong anyway
-        console.log('bad stream status. 404 ERROR ');
+        // console.log('bad stream status. 404 ERROR ');
        }
        fileo.close(fd);
        res.send(status);
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        status.code = -1; 
         fileo.close(fd);
         res.send(status); // should default to OFF, stopping it if bad read request
     }
@@ -128,14 +129,6 @@ function GetPieDigit(fd: number, position: fileo.ReadPosition): Promise<string> 
 
 
 
-// should get the arguments from the event listener?
-function appendToFile(event: any): void {
-    var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
-    console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
-    let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
-    stream.write(temp);
-}
-
 
 
 
@@ -178,3 +171,13 @@ function appendToFile(event: any): void {
 //     });
 // }).
 // catch((err) => console.log('error ', err));
+
+
+
+// should get the arguments from the event listener?
+// function appendToFile(event: any): void {
+//     var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
+//     console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
+//     let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
+//     stream.write(temp);
+// }

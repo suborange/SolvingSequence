@@ -45,13 +45,14 @@ app.get("/status", (_, res) => {
         else {
             // shouldnt happen hopefully
             status.code = -1; // pause if something went wrong anyway
-            console.log('bad stream status. 404 ERROR ');
+            // console.log('bad stream status. 404 ERROR ');
         }
         fs_1.default.close(fd);
         res.send(status);
     }
     catch (err) {
         console.log('something went wrong in get request', err);
+        status.code = -1;
         fs_1.default.close(fd);
         res.send(status); // should default to OFF, stopping it if bad read request
     }
@@ -117,13 +118,6 @@ function GetPieDigit(fd, position) {
         });
     });
 }
-// should get the arguments from the event listener?
-function appendToFile(event) {
-    var stream = fs_1.default.createWriteStream("files/moves.txt", { flags: 'a' });
-    console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
-    let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
-    stream.write(temp);
-}
 // DEPRECATED
 // need to make the "iterator" type thing forsaving file thing
 // let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
@@ -157,3 +151,10 @@ function appendToFile(event) {
 //     });
 // }).
 // catch((err) => console.log('error ', err));
+// should get the arguments from the event listener?
+// function appendToFile(event: any): void {
+//     var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
+//     console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
+//     let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
+//     stream.write(temp);
+// }

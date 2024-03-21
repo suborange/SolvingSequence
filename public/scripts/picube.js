@@ -1,12 +1,12 @@
 // const { get } = require("http");
 
 // CONSTANT ELEMENTS
-const write_button = document.getElementById('write_digit');
-write_button.addEventListener('click', WriteToFile);
-write_button.move = '';
+// const write_button = document.getElementById('write_digit');
+// write_button.addEventListener('click', WriteToFile);
+// write_button.move = '';
 
-const read_button = document.getElementById('read_digit');
-read_button.addEventListener('click', ReadDigit);
+// const read_button = document.getElementById('read_digit');
+// read_button.addEventListener('click', ReadDigit);
 
 const ele_current_move = document.getElementById('curr_move');
 const ele_current_digit = document.getElementById('curr_digit');
@@ -188,22 +188,22 @@ function FixDigitChunk(new_digit) {
 
 }
 
-async function WriteToFile(event) {
-    let data;
-    // console.log("write:", event.currentTarget.move);
-    try {
-        let url = `write/${event.currentTarget.move}`;
-        let response = await fetch(url);
-        data = await response.json();
-        //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
-    }
-    catch (err) {
-        console.log('something went wrong at fetching', err.stack);
-    }
-    if (data.code != 0) {
-        console.log('response returned bad value');
-    }
-}
+// async function WriteToFile(event) {
+//     let data;
+//     // console.log("write:", event.currentTarget.move);
+//     try {
+//         let url = `write/${event.currentTarget.move}`;
+//         let response = await fetch(url);
+//         data = await response.json();
+//         //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
+//     }
+//     catch (err) {
+//         console.log('something went wrong at fetching', err.stack);
+//     }
+//     if (data.code != 0) {
+//         console.log('response returned bad value');
+//     }
+// }
 
 async function ReadStreamStatus() {
     
@@ -996,9 +996,9 @@ sketch1 = function (sketch) {
                 }
                 // update the current move only once, instead of within switch
                 ele_current_move.innerHTML = temp_move;
-                write_button.move = temp_move;
+                // write_button.move = temp_move;
 
-                write_button.click();
+                // write_button.click();
                 // console.log(`pit: ${curr_pit}`)
                 start++; // go to next digit
              
