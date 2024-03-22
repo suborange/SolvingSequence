@@ -113,10 +113,10 @@ app.post("/write", async (req: Request, res: Response): Promise<void> => {
     try {
         // write the position over the file
         fileo.writeFileSync('public/files/position.txt', position.toString(), {flag: 'w'});
-console.log(`wrote the position at: ${position}`);
+// console.log(`wrote the position at: ${position}`);
         // then append the file with the rest of the cube
         fileo.writeFileSync('public/files/state.json', cube_state, {flag: 'w'});
-        console.log(`wrote the state`);
+        // console.log(`wrote the state`);
         // resolve();
         res.status(200).send({
             status: 200, 
@@ -129,6 +129,26 @@ console.log(`wrote the position at: ${position}`);
             status: 400, 
             message: `BAD WRITE ERROR:: ${err}`
         });
+    }
+});
+
+
+app.get("/reset", (_: Request, res: Response): void => {
+    const reset_data = {
+        "position": "0",
+        "state": "F"
+    }
+    try {        
+        const reset_position = fileo.readFileSync('public/files/position.txt').toString().trim();
+        const state = fileo.readFileSync('public/files/state.json').toString();
+
+        reset_data.position = reset_position;
+        reset_data.state = state;
+    //    res.write(reset_position);
+       res.send(reset_data);   // try as as a string, for copy then json it?    
+    }
+    catch (err) {
+        console.log('something went wrong in get request', err);      
     }
 });
 

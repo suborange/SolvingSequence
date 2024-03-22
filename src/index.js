@@ -113,7 +113,7 @@ app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         console.log(`wrote the position at: ${position}`);
         // then append the file with the rest of the cube
         fs_1.default.writeFileSync('public/files/state.json', cube_state, { flag: 'w' });
-        console.log(`wrote the state`);
+        // console.log(`wrote the state`);
         // resolve();
         res.status(200).send({
             status: 200,
@@ -128,6 +128,23 @@ app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 }));
+app.get("/reset", (_, res) => {
+    const reset_data = {
+        "position": "0",
+        "state": "F"
+    };
+    try {
+        const reset_position = fs_1.default.readFileSync('public/files/position.txt').toString().trim();
+        const state = fs_1.default.readFileSync('public/files/state.json').toString();
+        reset_data.position = reset_position;
+        reset_data.state = state;
+        //    res.write(reset_position);
+        res.send(reset_data); // try as as a string, for copy then json it?    
+    }
+    catch (err) {
+        console.log('something went wrong in get request', err);
+    }
+});
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });

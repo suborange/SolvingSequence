@@ -51,7 +51,7 @@ let file_position_counter = 0;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-
+let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
 const end_of_file = 100000008; // 100 million
@@ -162,7 +162,7 @@ async function ReadDigit() {
         file_position_counter++; // increment to next file chunk
 
         if (response.status == 200) {
-            console.log(`right data in here: ${data} || at file position: ${file_position_counter}`);
+            // console.log(`right data in here: ${data} || at file position: ${file_position_counter}`);
             FixDigitChunk(data);
         }
         else {
@@ -243,6 +243,42 @@ async function ReadStreamStatus() {
     // else {code === 0}, stream is online, continue
     streaming_check = 60;
     is_solving = true;
+    return;
+}
+
+
+async function ReadForReset() {
+
+    try {
+        let url = `reset`;
+        let response = await fetch(url);
+        data = await response.json();
+        // console.log(`reading reset data: ${data.state}`);
+    }
+    catch (err) {
+        console.log('something went wrong fetching status', err.stack);
+    }
+ 
+    file_position_counter = Number(data.position);
+    const temp_cube = JSON.parse(data.state);
+    // replace all the values manually
+    for (let cube_index = 0; cube_index < cube.length; cube_index++) {
+        cube[cube_index].xi = temp_cube[cube_index].xi;
+        cube[cube_index].yi = temp_cube[cube_index].yi;
+        cube[cube_index].zi = temp_cube[cube_index].zi;
+        cube[cube_index].matrix.x = temp_cube[cube_index].matrix.x;
+        cube[cube_index].matrix.y = temp_cube[cube_index].matrix.y;
+        cube[cube_index].matrix.z = temp_cube[cube_index].matrix.z;
+        for(let face_i =0;  face_i < 6; face_i++) {
+            cube[cube_index].faces[face_i].normal.x = temp_cube[cube_index].faces[face_i].normal.x;
+            cube[cube_index].faces[face_i].normal.y = temp_cube[cube_index].faces[face_i].normal.y;
+            cube[cube_index].faces[face_i].normal.z = temp_cube[cube_index].faces[face_i].normal.z;
+        }
+
+
+    }
+    
+    // console.log(`reading reset data: ${cube}`);
     return;
 }
 
@@ -483,21 +519,19 @@ sketch1 = function (sketch) {
             yi;
             zi;
             length;
-            plane;
             faces = Array(6); // array for the 6 total faces
             r = 255;
             g = 255;
             b = 255;
-            highlight = false; // for debugging each cubie and its face. woopie!
+            // highlight = false; // for debugging each cubie and its face. woopie!
 
             // **** CONSTRUCTOR **** 
-            constructor(m, l, x, y, z, p) {
+            constructor(m, l, x, y, z) {
                 this.matrix = m;
                 this.length = l;
                 this.xi = x;
                 this.yi = y;
-                this.zi = z;
-                this.plane = p;
+                this.zi = z;                
 
                 // each cubie will have information for all 6 faces
                 this.faces[0] = new Face(sketch.createVector(0, 0, -1), 0, 0, 255); // BACK - pass a new vector? and blue
@@ -768,6 +802,11 @@ sketch1 = function (sketch) {
         cam1.lookAt(0, 0, 0);
         sketch.pop();
 
+        if (reset_cube) {
+            ReadForReset();
+            // start+=3;
+            reset_cube = !reset_cube;
+        }
 
         if (move != null) {
 
