@@ -54,7 +54,7 @@ let streaming_check = 60;
 
 
 // CONSTANT VARIABLES
-const end_of_file = 1000000000; // 1 billion
+const end_of_file = 100000008; // 100 million
 const BACK = -1;
 const FRONT = 1;
 const LEFT = -1;
@@ -147,7 +147,6 @@ function displayPi(total, start, end) {
 async function ReadDigit() {
     let data;
     try {
-        // TOFIX TODO
         let url = `pi`;
         let response = await fetch(url, {
             method: "post",
@@ -162,30 +161,23 @@ async function ReadDigit() {
         data = await response.json();
         file_position_counter++; // increment to next file chunk
 
-
-        if (response.status == 200 ) {
-            // console.log(`right data in here: ${data}`);
+        if (response.status == 200) {
+            console.log(`right data in here: ${data} || at file position: ${file_position_counter}`);
             FixDigitChunk(data);
         }
-        else {            
+        else {
             throw new Error(response.body.message);
         }
-
     }
     catch (err) {
         console.log('something went wrong at fetching', err.stack);
     }
-    
 }
-// TOFIX TODO
+
 function FixDigitChunk(new_digit) {
     // find the next digit, then return it to be added to the line. 
-    // console.log(`BEFORE appendage => ${get_pits}`);
     get_pits = get_pits.concat(new_digit);
     get_pits = get_pits.substring(1, get_pits.length);
-    // console.log(`AFTER appendage => ${get_pits}`);
-    
-
 }
 
 // async function WriteToFile(event) {
@@ -205,8 +197,35 @@ function FixDigitChunk(new_digit) {
 //     }
 // }
 
+async function WriteStateToFile() {
+    try {
+        let url = `write`;
+        let response = await fetch(url, {
+            method: "post",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                state: cube,
+                position: file_position_counter
+            })
+        });
+
+        if (response.status == 200) {
+            // console.log(`write data success! `);
+        }
+        else {
+            throw new Error(response.body.message);
+        }
+    }
+    catch (err) {
+        console.log('something went wrong at writing', err.stack);
+    }
+}
+
 async function ReadStreamStatus() {
-    
+
     try {
         let url = `status`;
         let response = await fetch(url);
@@ -216,7 +235,7 @@ async function ReadStreamStatus() {
     catch (err) {
         console.log('something went wrong fetching status', err.stack);
     }
-    if (data.code != 0 ) {
+    if (data.code != 0) {
         is_solving = false; // stream went offline, stop solving
         streaming_check = 600; // check every 10 seconds. 
         return;
@@ -366,7 +385,7 @@ function CubeIsSolved() {
 
         if (this_face_is_solved) {
             face_flags.set(center_index, true);
-            console.log(`THE ${center_color} FACE WAS SOLVED!, at digit ${start}`);            
+            console.log(`THE ${center_color} FACE WAS SOLVED!, at digit ${start}`);
         }
 
     }
@@ -776,7 +795,7 @@ sketch1 = function (sketch) {
             js_confetti.addConfetti({
                 confettiRadius: 12,
                 confettiNumber: 500,
-                
+
             });
             // console.log('confetti!');
             // is_fully_solved = false; // debugging
@@ -793,7 +812,7 @@ sketch1 = function (sketch) {
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         if (sketch.frameCount % 120 == 0 && !is_fully_solved && is_solving) {
-            
+
             // ***************
             // * SOLVED CUBE *
             // ***************                     
@@ -801,7 +820,7 @@ sketch1 = function (sketch) {
                 // what to do here when solved?                    
                 console.log("SOLVED!!!! WTF!!!");
 
-                ele_digit_queue.innerHTML = `| ${get_pits.substring(0, 1)} | ${get_pits.substring(1, 2)} | ${get_pits.substring(2, 3)} | <span class="solved">${get_pits.substring(3, 4)}</span>  | ${get_pits.substring(4, 5)} | ${get_pits.substring(5, 6)} | ${get_pits.substring(6,7)} |`;
+                ele_digit_queue.innerHTML = `| ${get_pits.substring(0, 1)} | ${get_pits.substring(1, 2)} | ${get_pits.substring(2, 3)} | <span class="solved">${get_pits.substring(3, 4)}</span>  | ${get_pits.substring(4, 5)} | ${get_pits.substring(5, 6)} | ${get_pits.substring(6, 7)} |`;
                 ele_current_move.classList.remove('current');
                 ele_current_move.classList.add('solved');
                 ele_current_digit.classList.remove('current');
@@ -818,7 +837,7 @@ sketch1 = function (sketch) {
                 let temp_move;
                 curr_pit = get_pits.substring(3, 4);
 
-                //  TOFIX TODO                  
+
                 displayPi(start, 3, 4);
 
                 // repeat last digit?
@@ -1001,16 +1020,23 @@ sketch1 = function (sketch) {
                 // write_button.click();
                 // console.log(`pit: ${curr_pit}`)
                 start++; // go to next digit
-             
+
 
                 if (start > end_of_file) {
                     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
                     console.log("WENT THROUGH 100 MILLION DIGITS");
                     is_solving = false;
-                    is_fully_solved = true; // incase? should stop reading the file stream.
+                    // is_fully_solved = true; // incase? should stop reading the file stream.
+                }
+                // debugging
+                // save the state of this cube now.
+                if (sketch.frameCount % 1200 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
+                    WriteStateToFile(); 
                 }
 
                 ReadDigit(); // read and append next digit
+
+
             }
         }
     }

@@ -76,31 +76,58 @@ app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
-app.get("/write/:move", (req, res) => {
-    let temp = {
-        "code": 1
-    };
-    let full_move;
-    if (start % 100 == 0) { // every 100 add a newline
-        full_move = req.params.move.concat('\n');
-    }
-    else {
-        full_move = req.params.move.concat(' ');
-    }
-    start++;
+// app.get("/write/:move", (req: Request, res: Response): void => {
+//     let temp = {
+//         "code": 1
+//     };
+//     let full_move;
+//     if (start % 100 == 0) { // every 100 add a newline
+//         full_move = req.params.move.concat('\n');
+//     }
+//     else {
+//         full_move = req.params.move.concat(' ');
+//     }
+//     start++;
+//     try {
+//         let stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
+//         // console.log("GET: appending move: ", full_move);
+//         stream.write(full_move);
+//         temp.code = 0;
+//         stream.end(); // end stream. 
+//     }
+//     catch (err) {
+//         temp.code = 1;
+//         console.log('something went wrong in get request', err);
+//     }
+//     res.send(temp);
+// });
+app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // console.log("BODY: ", req.body);
+    let position = req.body.position; // get the single position number. write this first   
+    let cube_state = JSON.stringify(req.body.state);
+    // console.log("STATE: ", req.body.state);
+    position = position - 6; // should align with the current state
     try {
-        let stream = fs_1.default.createWriteStream("public/files/moves.txt", { flags: 'a' });
-        // console.log("GET: appending move: ", full_move);
-        stream.write(full_move);
-        temp.code = 0;
-        stream.end(); // end stream. 
+        // write the position over the file
+        fs_1.default.writeFileSync('public/files/position.txt', position.toString(), { flag: 'w' });
+        console.log(`wrote the position at: ${position}`);
+        // then append the file with the rest of the cube
+        fs_1.default.writeFileSync('public/files/state.json', cube_state, { flag: 'w' });
+        console.log(`wrote the state`);
+        // resolve();
+        res.status(200).send({
+            status: 200,
+            message: `good work!`
+        });
     }
     catch (err) {
-        temp.code = 1;
         console.log('something went wrong in get request', err);
+        res.status(400).send({
+            status: 400,
+            message: `BAD WRITE ERROR:: ${err}`
+        });
     }
-    res.send(temp);
-});
+}));
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
