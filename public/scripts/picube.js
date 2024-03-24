@@ -52,7 +52,7 @@ let solve_pits;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
 const end_of_file = 100001815; // 100 million
