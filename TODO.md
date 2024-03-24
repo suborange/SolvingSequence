@@ -21,7 +21,7 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 
 
 # JavaScript
-- need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. use JSON file
+
 
 
 

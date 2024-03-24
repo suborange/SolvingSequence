@@ -39,7 +39,8 @@ d+ need to add another box below to show the current digits and moves
 + read the pi files in chunks. maybe just through streaming, can find the current starting chunk? (nah this is not efficient) 
 + refix all the data using the new pi string
 + add a small notice at where a side was solved or not. what digit?
-- fixed up the last of the bugs?
++ fixed up the last of the bugs?
++ need a way to save all states of the rubiks cube incase it resets or fucks up, can restore the cube values, and continue on with the same pi digit. use JSON file
 
 # P5 
 + make new camera, to point at cube from an angle, and rotate around the cube showing 3 sides at all times, and thus all 6 around

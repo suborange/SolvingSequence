@@ -58,7 +58,7 @@ app.get("/status", (_, res) => {
     }
 });
 app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const fd = fs_1.default.openSync('public/files/pi.txt', 'r'); // file descriptor for read
+    const fd = fs_1.default.openSync('public/files/test.txt', 'r'); // file descriptor for read
     // console.log("BODY: ", req.body);
     let position = req.body.position;
     // console.log("getting digit... ");

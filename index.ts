@@ -54,7 +54,7 @@ app.get("/status", (_: Request, res: Response): void => {
 });
 
 app.post("/pi", async (req: Request, res: Response): Promise<void> => {
-    const fd: number = fileo.openSync('public/files/pi.txt', 'r'); // file descriptor for read
+    const fd: number = fileo.openSync('public/files/test.txt', 'r'); // file descriptor for read
 
     // console.log("BODY: ", req.body);
     let position: fileo.ReadPosition = req.body.position;   

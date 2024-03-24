@@ -47,11 +47,12 @@ let sketchs = [];
 let full_move;
 // for file positon and reading
 let file_position_counter = 0;
+let solve_pits;
 
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
 const end_of_file = 100001815; // 100 million
@@ -178,23 +179,7 @@ function FixDigitChunk(new_digit) {
     get_pits = get_pits.substring(1, get_pits.length);
 }
 
-// async function WriteToFile(event) {
-//     let data;
-//     // console.log("write:", event.currentTarget.move);
-//     try {
-//         let url = `write/${event.currentTarget.move}`;
-//         let response = await fetch(url);
-//         data = await response.json();
-//         //  console.log("URL:",url, " | moves: ", event.currentTarget.move, "- || data:",data.code);
-//     }
-//     catch (err) {
-//         console.log('something went wrong at fetching', err.stack);
-//     }
-//     if (data.code != 0) {
-//         console.log('response returned bad value');
-//     }
-// }
-
+// gets the array and position, sends it to server to write state to json file, and the position and pi digits to text file for retrieval
 async function WriteStateToFile() {
     try {
         let url = `write`;
@@ -223,8 +208,8 @@ async function WriteStateToFile() {
     }
 }
 
+// reads a text file that contains ON or OFF status of live streaming
 async function ReadStreamStatus() {
-
     try {
         let url = `status`;
         let response = await fetch(url);
@@ -242,12 +227,10 @@ async function ReadStreamStatus() {
     // else {code === 0}, stream is online, continue
     streaming_check = 60;
     is_solving = true;
-    return;
 }
 
-
+// read the files to retrieve the cube state and the position and pi digits to restart at this state
 async function ReadForReset() {
-
     try {
         let url = `reset`;
         let response = await fetch(url);
@@ -257,7 +240,7 @@ async function ReadForReset() {
     catch (err) {
         console.log('something went wrong fetching resetting', err.stack);
     }
-    
+
     file_position_counter = Number(data.position);
     get_pits = data.pits;
     // console.log(`the new pits: ${get_pits}`)
@@ -270,19 +253,13 @@ async function ReadForReset() {
         cube[cube_index].matrix.x = temp_cube[cube_index].matrix.x;
         cube[cube_index].matrix.y = temp_cube[cube_index].matrix.y;
         cube[cube_index].matrix.z = temp_cube[cube_index].matrix.z;
-        for(let face_i =0;  face_i < 6; face_i++) {
+        for (let face_i = 0; face_i < 6; face_i++) {
             cube[cube_index].faces[face_i].normal.x = temp_cube[cube_index].faces[face_i].normal.x;
             cube[cube_index].faces[face_i].normal.y = temp_cube[cube_index].faces[face_i].normal.y;
             cube[cube_index].faces[face_i].normal.z = temp_cube[cube_index].faces[face_i].normal.z;
         }
-
-
     }
-    
     console.log(`reading reset data: `);
-    return new Promise((resolve, rej) => {
-        resolve();
-    });
 }
 
 function PlaySound() {
@@ -299,9 +276,8 @@ function PlaySolvedSound() {
     audio_file.src = audio_solved[r_index];
     audio_file.volume = 0.3;
     audio_file.play();
-
 }
-// but need to compare the cubes and the face normals for the correct colors for all 54 faces and normals..
+// does some extremely whacky logic to check if the cube is in a solved state.
 function CubeIsSolved() {
     // console.log('checking solve');
     const cube_indexes = [];
@@ -311,7 +287,6 @@ function CubeIsSolved() {
     let solve_i = 0;
 
     // dynamic - find all the positions, then just go around and check each aroundit. and find all the colors
-
     for (let static_index = 0; static_index < cube.length;) {
         // with every iteration, find one position and its index, then reset to find the next position
         // if none of the positions match, skip to next position
@@ -321,7 +296,6 @@ function CubeIsSolved() {
 
         // if it does match all three axis, then one correct position found for this index
         cube_indexes.push(solve_i);
-        // console.log("one piece has been matched");
         solve_i = 0; // start over with the cube
         static_index++; // go to the next static position
     }
@@ -426,7 +400,6 @@ function CubeIsSolved() {
             face_flags.set(center_index, true);
             console.log(`THE ${center_color} FACE WAS SOLVED!, at digit ${start}`);
         }
-
     }
     /**RETURNS**/
     // SOLVED!
@@ -442,13 +415,8 @@ function CubeIsSolved() {
 // SETUP AND DRAW
 // CREATE FACE AND CUBIE CLASSES TO DRAW
 // CREATE TURNING FUNCTIONS FOR EACH FACE
-
-const canvas_id = ['canvastl', 'canvastr', 'canvasbl', 'canvasbr'];
-let canvases = [];
-
-
-sketch1 = function (sketch) {
-    // console.log(canvases);
+const canvas_id = 'canvastl';
+sketch1 = function (sketch) {    
     sketch.setup = function () {
         // *** FACE ***
         class Face {
@@ -467,7 +435,7 @@ sketch1 = function (sketch) {
             }
 
             // **** FUNCTIONS *****  
-            // TURN FACES
+            // TURN THE FACES AND THEIR NORMAL VALUES
             turnZ(angle) {
                 let vz = sketch.createVector();
                 vz.x = sketch.round(this.normal.x * sketch.cos(angle) - this.normal.y * sketch.sin(angle));
@@ -514,7 +482,6 @@ sketch1 = function (sketch) {
 
         // *** CUBIE ***
         class Cubie {
-
             matrix; // to store transformation matrix
             matrix_next;
             // index of each axis
@@ -534,7 +501,7 @@ sketch1 = function (sketch) {
                 this.length = l;
                 this.xi = x;
                 this.yi = y;
-                this.zi = z;                
+                this.zi = z;
 
                 // each cubie will have information for all 6 faces
                 this.faces[0] = new Face(sketch.createVector(0, 0, -1), 0, 0, 255); // BACK - pass a new vector? and blue
@@ -545,7 +512,7 @@ sketch1 = function (sketch) {
                 this.faces[5] = new Face(sketch.createVector(-1, 0, 0), 255, 0, 0); // LEFT - red      
             }
 
-            // show the cubie, translate to center, and show face colors
+            // SHOW THE CUBIE, translate to center, and show face colors
             show() {
                 sketch.noFill();
                 sketch.stroke(0);
@@ -571,6 +538,7 @@ sketch1 = function (sketch) {
                 this.zi = newz;
             }
 
+            // TURN ALL OF THE FACES
             turnZfaces(angle) {
                 for (let f of this.faces) {
                     f.turnZ(angle);
@@ -641,14 +609,12 @@ sketch1 = function (sketch) {
             }
 
         }// END MOVE CLASS
-
         // *** END CLASSES  ****
 
         // **** START CANVAS AND SETUP ****
-
         let canvas = sketch.createCanvas(650, 450, sketch.WEBGL);
 
-        canvas.parent(canvas_id[0]);
+        canvas.parent(canvas_id);
         cam1 = sketch.createCamera();
         cam1.setPosition(0, 0, 230);
         sketch.setCamera(cam1);
@@ -659,7 +625,7 @@ sketch1 = function (sketch) {
         cube = Array(dim * dim * dim).fill(); // 1D array of matrices
         SOLVED_CUBE = Array(dim * dim * dim).fill(); // 1D array of matrices
         index = 0;
-        // ATTEMPT 1
+        
         // for every cubie, make a cube with correct length and offset to center
         for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
             for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
@@ -673,7 +639,6 @@ sketch1 = function (sketch) {
 
                     cube[index] = new Cubie(m, _len, xx, yy, zz);
                     SOLVED_CUBE[index] = new Cubie(m, _len, xx, yy, zz);
-                    // console.log("x: ", cube[index].xi, "y: ", cube[index].yi, "z: ", cube[index].zi);
                     index++;
                 }
             }
@@ -700,8 +665,6 @@ sketch1 = function (sketch) {
         moves.push(new Move(-2, E_SLICE, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 16
         moves.push(new Move(-2, -2, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
         moves.push(new Move(-2, -2, -2, -2, -2)); // temnp no move?
-
-
     } // end setup
 
     // X AXIS ONLY
@@ -711,8 +674,6 @@ sketch1 = function (sketch) {
             // in x axis plane, the front?  
             qb = cube[i];
             if (qb.xi == axis_index) { // 0 == back, 1 = middle, 2 == front 
-
-
                 qb.matrix_next = sketch.createVector();
                 // rotate?
                 qb.matrix_next.y = sketch.round(qb.matrix.y * sketch.cos(angle) - qb.matrix.z * sketch.sin(angle));
@@ -736,8 +697,6 @@ sketch1 = function (sketch) {
             // in y axis plane, the front?  
             qb = cube[i];
             if (qb.yi == axis_index) { // 0 == back, 1 = middle, 2 == front 
-
-
                 qb.matrix_next = sketch.createVector();
                 qb.matrix_next.x = sketch.round(qb.matrix.x * sketch.cos(angle) - qb.matrix.z * sketch.sin(angle));
                 qb.matrix_next.z = sketch.round(qb.matrix.x * sketch.sin(angle) + qb.matrix.z * sketch.cos(angle));
@@ -842,7 +801,7 @@ sketch1 = function (sketch) {
         }
 
         if (sketch.frameCount % streaming_check == 0) {
-            ReadStreamStatus(); // get status every second.
+            await ReadStreamStatus(); // get status every second.
             // console.log('trying to read stream status');
         }
 
@@ -850,236 +809,234 @@ sketch1 = function (sketch) {
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         if (sketch.frameCount % 120 == 0 && !is_fully_solved && is_solving) {
             // ReadForReset(); // debugging - it gets called here correctly.. 
-            
+
             // debugging
-        if (reset_cube) {
-            const resetted = await ReadForReset();
-            start = file_position_counter + 9;   
-            prev_pit = get_pits.substring(2, 3);
-            reset_cube = !reset_cube;
-        }
-            
-            // ***************
-            // * SOLVED CUBE *
-            // ***************                     
-            if (start > 20 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.                    
-                // what to do here when solved?                    
-                console.log("SOLVED!!!! WTF!!!");
-
-                ele_digit_queue.innerHTML = `| ${get_pits.substring(0, 1)} | ${get_pits.substring(1, 2)} | ${get_pits.substring(2, 3)} | <span class="solved">${get_pits.substring(3, 4)}</span>  | ${get_pits.substring(4, 5)} | ${get_pits.substring(5, 6)} | ${get_pits.substring(6, 7)} |`;
-                ele_current_move.classList.remove('current');
-                ele_current_move.classList.add('solved');
-                ele_current_digit.classList.remove('current');
-                ele_current_digit.classList.add('solved');
-                const solved_digit = numberWithCommas(start - 9);
-                ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
-                is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                is_fully_solved = true; // stop checking pi file and etc.    
+            if (reset_cube) {
+                await ReadForReset();
+                start = file_position_counter + 9;
+                file_position_counter += 6;
+                prev_pit = get_pits.substring(2, 3);
+                reset_cube = !reset_cube;
             }
-            // ****************
-            // * SOLVING CUBE *
-            // **************** 
             else {
-                let temp_move;
-                curr_pit = get_pits.substring(3, 4);
 
+                // ***************
+                // * SOLVED CUBE *
+                // ***************                     
+                if (start > 20 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.                    
+                    // what to do here when solved?                    
+                    console.log("SOLVED!!!! WTF!!!");
 
-                displayPi(start, 3, 4);
-
-                // repeat last digit?
-                if (curr_pit == 0) {
-                    curr_pit = prev_pit;
+                    ele_digit_queue.innerHTML = `| ${solve_pits.substring(0, 1)} | ${solve_pits.substring(1, 2)} | ${solve_pits.substring(2, 3)} | <span class="solved">${solve_pits.substring(3, 4)}</span>  | ${solve_pits.substring(4, 5)} | ${solve_pits.substring(5, 6)} | ${solve_pits.substring(6, 7)} |`;
+                    ele_current_move.classList.remove('current');
+                    ele_current_move.classList.add('solved');
+                    ele_current_digit.classList.remove('current');
+                    ele_current_digit.classList.add('solved');
+                    const solved_digit = numberWithCommas(start - 9);
+                    ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
+                    is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
+                    is_fully_solved = true; // stop checking pi file and etc.    
+                    // displayPi(start, 3, 4);
                 }
+                // ****************
+                // * SOLVING CUBE *
+                // **************** 
+                else {
+                    let temp_move;
+                    curr_pit = get_pits.substring(3, 4);
+                    displayPi(start, 3, 4);
 
-                if (curr_pit >= prev_pit) {
-                    switch (curr_pit) {
-                        // REGULAR CLOCKWISE MOVES
-                        case "1":
-                            // M SLICE 
-                            // console.log("M-SLICE MOVE");
-                            temp_move = "M";
-                            move = moves[9];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "2":
-                            // UP 
-                            // console.log("UP MOVE");
-                            temp_move = "U";
-                            move = moves[10];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "3":
-                            // DOWN 
-                            // console.log("DOWN MOVE");
-                            temp_move = "D";
-                            move = moves[2];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "4":
-                            // RIGHT
-                            // console.log("RIGHT MOVE");
-                            temp_move = "R";
-                            move = moves[3];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "5":
-                            // LEFT
-                            // console.log("LEFT MOVE");
-                            temp_move = "L";
-                            move = moves[13];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "6":
-                            // FRONT
-                            // console.log("FRONT MOVE");
-                            temp_move = "F";
-                            move = moves[5];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "7":
-                            // BACK 
-                            // console.log("BACK MOVE");
-                            temp_move = "B";
-                            move = moves[15];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "8":
-                            // E-SLICE 
-                            // console.log("E-SLICE MOVE");
-                            temp_move = "E";
-                            move = moves[7];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "9":
-                            // FRONT
-                            // console.log("FRONT MOVE");
-                            temp_move = "S";
-                            move = moves[8];
-                            move.start();
-                            PlaySound();
-                            break;
-                        default:
-                            temp_move = "-";
-                            move = moves[moves.length - 1];
-                            move.start();
-                            break;
+                    // repeat last digit?
+                    if (curr_pit == 0) {
+                        curr_pit = prev_pit;
                     }
-                    // get ready for next move
-                    prev_pit = curr_pit;
-                } // END CLOCKWISE
-                else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
-                    switch (curr_pit) {
-                        // COUNTER CLOCKWISE - INVERSE ROTATIONS
-                        case "1":
-                            // M SLICE INVERSE
-                            // console.log("M-SLICE INVERTED MOVE");                        
-                            temp_move = "M\'";
-                            move = moves[0];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "2":
-                            // UP INVERSE
-                            // console.log("UP INVERTED MOVE");
-                            temp_move = "U\'";
-                            move = moves[1];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "3":
-                            // DOWN INVERSE
-                            // console.log("DOWN INVERTED MOVE");
-                            temp_move = "D\'";
-                            move = moves[11];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "4":
-                            // RIGHT INVERSE
-                            // console.log("RIGHT INVERTED MOVE");
-                            temp_move = "R\'";
-                            move = moves[12];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "5":
-                            // LEFT INVERSE
-                            // console.log("LEFT INVERTED MOVE");
-                            temp_move = "L\'";
-                            move = moves[4];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "6":
-                            // FRONT INVERSE 
-                            // console.log("FRONT INVERTED MOVE");
-                            temp_move = "F\'";
-                            move = moves[14];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "7":
-                            // BACK INVERSE
-                            // console.log("BACK INVERTED MOVE");
-                            temp_move = "B\'";
-                            move = moves[6];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "8":
-                            // E-SLICE  INVERSE
-                            // console.log("E-SLICE INVERTED MOVE");
-                            temp_move = "E\'";
-                            move = moves[16];
-                            move.start();
-                            PlaySound();
-                            break;
-                        case "9":
-                            // S-SLICE INVERSE 
-                            // console.log("S-SLICE INVERTED MOVE");
-                            temp_move = "S\'";
-                            move = moves[17];
-                            move.start();
-                            PlaySound();
-                            break;
-                        default:
-                            temp_move = "-";
-                            move = moves[moves.length - 1];
-                            move.start();
-                            break;
+
+                    if (curr_pit >= prev_pit) {
+                        switch (curr_pit) {
+                            // REGULAR CLOCKWISE MOVES
+                            case "1":
+                                // M SLICE 
+                                // console.log("M-SLICE MOVE");
+                                temp_move = "M";
+                                move = moves[9];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "2":
+                                // UP 
+                                // console.log("UP MOVE");
+                                temp_move = "U";
+                                move = moves[10];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "3":
+                                // DOWN 
+                                // console.log("DOWN MOVE");
+                                temp_move = "D";
+                                move = moves[2];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "4":
+                                // RIGHT
+                                // console.log("RIGHT MOVE");
+                                temp_move = "R";
+                                move = moves[3];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "5":
+                                // LEFT
+                                // console.log("LEFT MOVE");
+                                temp_move = "L";
+                                move = moves[13];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "6":
+                                // FRONT
+                                // console.log("FRONT MOVE");
+                                temp_move = "F";
+                                move = moves[5];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "7":
+                                // BACK 
+                                // console.log("BACK MOVE");
+                                temp_move = "B";
+                                move = moves[15];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "8":
+                                // E-SLICE 
+                                // console.log("E-SLICE MOVE");
+                                temp_move = "E";
+                                move = moves[7];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "9":
+                                // FRONT
+                                // console.log("FRONT MOVE");
+                                temp_move = "S";
+                                move = moves[8];
+                                move.start();
+                                PlaySound();
+                                break;
+                            default:
+                                temp_move = "-";
+                                move = moves[moves.length - 1];
+                                move.start();
+                                break;
+                        }
+                        // get ready for next move
+                        prev_pit = curr_pit;
+                    } // END CLOCKWISE
+                    else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
+                        switch (curr_pit) {
+                            // COUNTER CLOCKWISE - INVERSE ROTATIONS
+                            case "1":
+                                // M SLICE INVERSE
+                                // console.log("M-SLICE INVERTED MOVE");                        
+                                temp_move = "M\'";
+                                move = moves[0];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "2":
+                                // UP INVERSE
+                                // console.log("UP INVERTED MOVE");
+                                temp_move = "U\'";
+                                move = moves[1];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "3":
+                                // DOWN INVERSE
+                                // console.log("DOWN INVERTED MOVE");
+                                temp_move = "D\'";
+                                move = moves[11];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "4":
+                                // RIGHT INVERSE
+                                // console.log("RIGHT INVERTED MOVE");
+                                temp_move = "R\'";
+                                move = moves[12];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "5":
+                                // LEFT INVERSE
+                                // console.log("LEFT INVERTED MOVE");
+                                temp_move = "L\'";
+                                move = moves[4];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "6":
+                                // FRONT INVERSE 
+                                // console.log("FRONT INVERTED MOVE");
+                                temp_move = "F\'";
+                                move = moves[14];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "7":
+                                // BACK INVERSE
+                                // console.log("BACK INVERTED MOVE");
+                                temp_move = "B\'";
+                                move = moves[6];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "8":
+                                // E-SLICE  INVERSE
+                                // console.log("E-SLICE INVERTED MOVE");
+                                temp_move = "E\'";
+                                move = moves[16];
+                                move.start();
+                                PlaySound();
+                                break;
+                            case "9":
+                                // S-SLICE INVERSE 
+                                // console.log("S-SLICE INVERTED MOVE");
+                                temp_move = "S\'";
+                                move = moves[17];
+                                move.start();
+                                PlaySound();
+                                break;
+                            default:
+                                temp_move = "-";
+                                move = moves[moves.length - 1];
+                                move.start();
+                                break;
+                        }
+                        // get ready for next move
+                        prev_pit = curr_pit;
                     }
-                    // get ready for next move
-                    prev_pit = curr_pit;
+                    // update the current move only once, instead of within switch
+                    ele_current_move.innerHTML = temp_move;
+                    start++; // go to next digit
+
+                    if (start > end_of_file) {
+                        ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                        console.log("WENT THROUGH 100 MILLION DIGITS");
+                        is_solving = false;
+                        // is_fully_solved = true; // incase? should stop reading the file stream.
+                    }
+                    
+                    // save the state of this cube now.
+                    if (sketch.frameCount % 3000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
+                        await WriteStateToFile();
+                    }
+                    solve_pits = get_pits;
+                    await ReadDigit(); // read and append next digit                    
                 }
-                // update the current move only once, instead of within switch
-                ele_current_move.innerHTML = temp_move;
-
-                start++; // go to next digit
-
-
-                if (start > end_of_file) {
-                    ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                    console.log("WENT THROUGH 100 MILLION DIGITS");
-                    is_solving = false;
-                    // is_fully_solved = true; // incase? should stop reading the file stream.
-                }
-                // debugging
-                // save the state of this cube now.
-                if (sketch.frameCount % 3000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
-                    WriteStateToFile(); 
-                }
-
-                ReadDigit(); // read and append next digit
-
-
             }
         }
     }
