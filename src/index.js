@@ -63,7 +63,7 @@ app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let position = req.body.position;
     // console.log("getting digit... ");
     try {
-        const get_digit = yield GetPieDigit(fd, position);
+        const get_digit = yield GetPiDigit(fd, position);
         fs_1.default.close(fd); // close file, to reopen later
         res.send(get_digit); // success
     }
@@ -76,41 +76,17 @@ app.post("/pi", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         });
     }
 }));
-// app.get("/write/:move", (req: Request, res: Response): void => {
-//     let temp = {
-//         "code": 1
-//     };
-//     let full_move;
-//     if (start % 100 == 0) { // every 100 add a newline
-//         full_move = req.params.move.concat('\n');
-//     }
-//     else {
-//         full_move = req.params.move.concat(' ');
-//     }
-//     start++;
-//     try {
-//         let stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
-//         // console.log("GET: appending move: ", full_move);
-//         stream.write(full_move);
-//         temp.code = 0;
-//         stream.end(); // end stream. 
-//     }
-//     catch (err) {
-//         temp.code = 1;
-//         console.log('something went wrong in get request', err);
-//     }
-//     res.send(temp);
-// });
 app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // console.log("BODY: ", req.body);
     let position = req.body.position; // get the single position number. write this first   
     let cube_state = JSON.stringify(req.body.state);
+    let pi_digits = req.body.pits;
     // console.log("STATE: ", req.body.state);
     position = position - 6; // should align with the current state
+    const new_positions = position.toString() + " " + pi_digits;
     try {
         // write the position over the file
-        fs_1.default.writeFileSync('public/files/position.txt', position.toString(), { flag: 'w' });
-        console.log(`wrote the position at: ${position}`);
+        fs_1.default.writeFileSync('public/files/position.txt', new_positions, { flag: 'w' });
         // then append the file with the rest of the cube
         fs_1.default.writeFileSync('public/files/state.json', cube_state, { flag: 'w' });
         // console.log(`wrote the state`);
@@ -128,28 +104,33 @@ app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 }));
-app.get("/reset", (_, res) => {
+app.get("/reset", (_, res) => __awaiter(void 0, void 0, void 0, function* () {
     const reset_data = {
         "position": "0",
-        "state": "F"
+        "state": "F",
+        "pits": "0"
     };
     try {
-        const reset_position = fs_1.default.readFileSync('public/files/position.txt').toString().trim();
-        const state = fs_1.default.readFileSync('public/files/state.json').toString();
-        reset_data.position = reset_position;
+        const reset_position = yield GetPosition();
+        const pos_pits = reset_position.split(" ");
+        const state = yield GetNewPiDigit();
+        // reset_data.position = reset_position;
+        reset_data.position = pos_pits[0];
+        reset_data.pits = pos_pits[1];
         reset_data.state = state;
+        // console.log(`someshit ${reset_data.pits}`);
         //    res.write(reset_position);
-        res.send(reset_data); // try as as a string, for copy then json it?    
+        res.send(reset_data); // try as as a string, for copy then json it? 
     }
     catch (err) {
-        console.log('something went wrong in get request', err);
+        console.log('something went wrong in get resetting', err);
     }
-});
+}));
 app.listen(port, () => {
     console.log(`listening on port ${port}`);
 });
 // *** FUNCTIONS ***
-function GetPieDigit(fd, position) {
+function GetPiDigit(fd, position) {
     return new Promise((resolve, reject) => {
         const buffer = Buffer.alloc(1);
         fs_1.default.read(fd, buffer, 0, 1, position, function (err, bytes_read, buffer_read) {
@@ -162,43 +143,98 @@ function GetPieDigit(fd, position) {
         });
     });
 }
+function GetPosition() {
+    return new Promise((resolve, rej) => {
+        const pos_pits = fs_1.default.readFileSync('public/files/position.txt').toString();
+        resolve(pos_pits);
+    });
+}
+function GetNewPiDigit() {
+    return new Promise((resolve, rej) => {
+        const new_pi = fs_1.default.readFileSync('public/files/state.json').toString();
+        resolve(new_pi);
+    });
+}
 // DEPRECATED
-// need to make the "iterator" type thing forsaving file thing
-// let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
-// stream.on('readable', (temp: number) => {
-//     temp = stream.read(1);
-//     // console.log(":) ");
-//     pi.digit = temp;
-//     console.log("value INSIDE try:", pi.digit);
-//     stream.close();
-//     console.log("CLOSED AND READY TO SEND");
-//     // res.send(pi); 
-// });
-// stream.on('closed', () => {
-//     console.log("ending...");
-//     res.send(pi);
-// });
-// fetch('files/pi.txt').
-// then((response) => {
-//     const reader = response.body.getReader();
-//     //read returns promise when value has been recieved
-//     reader.read(1).then(function pump({done, value }){
-//         if (done) {
-//             // do something with LAST CHUNK
-//             console.log('inside done:', value);
-//             return;
-//         }
-//         // otherwise deal with chunk of data here
-//         AddDigit(value);
-//         console.log('chunk:', value);
-//         return reader.read().then(pump);
-//     });
-// }).
-// catch((err) => console.log('error ', err));
-// should get the arguments from the event listener?
-// function appendToFile(event: any): void {
-//     var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
-//     console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
-//     let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
-//     stream.write(temp);
-// }
+/*
+need to make the "iterator" type thing forsaving file thing
+let stream = fileo.createReadStream("public/files/pi.txt", { flags: 'r', encoding: 'utf8' });
+stream.on('readable', (temp: number) => {
+    temp = stream.read(1);
+
+    // console.log(":) ");
+    pi.digit = temp;
+    console.log("value INSIDE try:", pi.digit);
+    stream.close();
+    console.log("CLOSED AND READY TO SEND");
+    // res.send(pi);
+});
+stream.on('closed', () => {
+    console.log("ending...");
+
+    res.send(pi);
+
+});
+
+
+fetch('files/pi.txt').
+then((response) => {
+    const reader = response.body.getReader();
+    //read returns promise when value has been recieved
+    reader.read(1).then(function pump({done, value }){
+        if (done) {
+            // do something with LAST CHUNK
+            console.log('inside done:', value);
+            return;
+        }
+        // otherwise deal with chunk of data here
+        AddDigit(value);
+        console.log('chunk:', value);
+
+        return reader.read().then(pump);
+    });
+}).
+catch((err) => console.log('error ', err));
+
+
+
+should get the arguments from the event listener?
+function appendToFile(event: any): void {
+    var stream = fileo.createWriteStream("files/moves.txt", { flags: 'a' });
+    console.log("appending move: ", event.currentTarget.move, "  | -", event.currentTarget.spacer, "- ");
+    let temp = event.currentTarget.move.concat(event.currentTarget.spacer);
+    stream.write(temp);
+}
+
+
+old move write
+
+app.get("/write/:move", (req: Request, res: Response): void => {
+    let temp = {
+        "code": 1
+    };
+    let full_move;
+    if (start % 100 == 0) { // every 100 add a newline
+        full_move = req.params.move.concat('\n');
+    }
+    else {
+        full_move = req.params.move.concat(' ');
+    }
+    start++;
+    try {
+        
+        let stream = fileo.createWriteStream("public/files/moves.txt", { flags: 'a' });
+        // console.log("GET: appending move: ", full_move);
+        stream.write(full_move);
+        temp.code = 0;
+        stream.end(); // end stream.
+    }
+    catch (err) {
+        temp.code = 1;
+        console.log('something went wrong in get request', err);
+    }
+
+    res.send(temp);
+});
+
+*/

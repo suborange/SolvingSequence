@@ -51,10 +51,10 @@ let file_position_counter = 0;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
-const end_of_file = 100000008; // 100 million
+const end_of_file = 100001815; // 100 million
 const BACK = -1;
 const FRONT = 1;
 const LEFT = -1;
@@ -126,8 +126,6 @@ const audio_solved = [
 
 // GET PI NUMBERS 
 let get_pits = '---------';
-// 314159265358979323846264338327950288419716939937510582097494459230781640628620899862803482534211706798214808651328230664709384460
-// testing solve - 223311113322224569
 
 
 // FUNCTIONS
@@ -208,7 +206,8 @@ async function WriteStateToFile() {
             },
             body: JSON.stringify({
                 state: cube,
-                position: file_position_counter
+                position: file_position_counter,
+                pits: get_pits
             })
         });
 
@@ -256,10 +255,12 @@ async function ReadForReset() {
         // console.log(`reading reset data: ${data.state}`);
     }
     catch (err) {
-        console.log('something went wrong fetching status', err.stack);
+        console.log('something went wrong fetching resetting', err.stack);
     }
- 
+    
     file_position_counter = Number(data.position);
+    get_pits = data.pits;
+    // console.log(`the new pits: ${get_pits}`)
     const temp_cube = JSON.parse(data.state);
     // replace all the values manually
     for (let cube_index = 0; cube_index < cube.length; cube_index++) {
@@ -278,8 +279,10 @@ async function ReadForReset() {
 
     }
     
-    // console.log(`reading reset data: ${cube}`);
-    return;
+    console.log(`reading reset data: `);
+    return new Promise((resolve, rej) => {
+        resolve();
+    });
 }
 
 function PlaySound() {
@@ -770,7 +773,7 @@ sketch1 = function (sketch) {
 
 
     // **** DRAW ****
-    sketch.draw = function () {
+    sketch.draw = async function () {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
@@ -802,11 +805,6 @@ sketch1 = function (sketch) {
         cam1.lookAt(0, 0, 0);
         sketch.pop();
 
-        if (reset_cube) {
-            ReadForReset();
-            // start+=3;
-            reset_cube = !reset_cube;
-        }
 
         if (move != null) {
 
@@ -851,7 +849,16 @@ sketch1 = function (sketch) {
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         if (sketch.frameCount % 120 == 0 && !is_fully_solved && is_solving) {
-
+            // ReadForReset(); // debugging - it gets called here correctly.. 
+            
+            // debugging
+        if (reset_cube) {
+            const resetted = await ReadForReset();
+            start = file_position_counter + 9;   
+            prev_pit = get_pits.substring(2, 3);
+            reset_cube = !reset_cube;
+        }
+            
             // ***************
             // * SOLVED CUBE *
             // ***************                     
@@ -1054,10 +1061,7 @@ sketch1 = function (sketch) {
                 }
                 // update the current move only once, instead of within switch
                 ele_current_move.innerHTML = temp_move;
-                // write_button.move = temp_move;
 
-                // write_button.click();
-                // console.log(`pit: ${curr_pit}`)
                 start++; // go to next digit
 
 
@@ -1069,7 +1073,7 @@ sketch1 = function (sketch) {
                 }
                 // debugging
                 // save the state of this cube now.
-                if (sketch.frameCount % 1200 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
+                if (sketch.frameCount % 3000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
                     WriteStateToFile(); 
                 }
 
