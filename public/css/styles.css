@@ -72,7 +72,7 @@ h1 {
 }
 
 h2.subtitle {
-    font-size: 2em;
+    font-size: 1.85em;
     font-family: 'Chakra Petch';
     /*
         font-family: 'Unispace';
@@ -207,7 +207,7 @@ div.bigcontainer {
     padding: 0%;
     margin: 0%;
     height: 100%;
-    width: 96%;
+    width: 98.5%;
 }
 
 div.titlecontainer {

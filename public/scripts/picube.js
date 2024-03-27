@@ -52,7 +52,7 @@ let solve_pits;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
 const end_of_file = 100001815; // 100 million
@@ -147,6 +147,7 @@ async function ReadDigit() {
     let data;
     try {
         let url = `pi`;
+        // console.log(`before fetch`);
         let response = await fetch(url, {
             method: "post",
             headers: {
@@ -157,6 +158,7 @@ async function ReadDigit() {
                 position: file_position_counter
             })
         });
+        // console.log(`after fetch`);
         data = await response.json();
         file_position_counter++; // increment to next file chunk
 
@@ -801,14 +803,16 @@ sketch1 = function (sketch) {
         }
 
         if (sketch.frameCount % streaming_check == 0) {
-            await ReadStreamStatus(); // get status every second.
+            ReadStreamStatus(); // get status every second.
+            // console.log(`inside solving: ${sketch.frameCount}`);
             // console.log('trying to read stream status');
         }
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
-        if (sketch.frameCount % 120 == 0 && !is_fully_solved && is_solving) {
+        if ((sketch.frameCount % 120 == 0) && !is_fully_solved && is_solving) {
             // ReadForReset(); // debugging - it gets called here correctly.. 
+            
 
             // debugging
             if (reset_cube) {
