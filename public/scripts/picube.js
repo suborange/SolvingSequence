@@ -861,74 +861,83 @@ sketch1 = function (sketch) {
                             case "1":
                                 // M SLICE 
                                 // console.log("M-SLICE MOVE");
+                                PlaySound();
                                 temp_move = "M";
                                 move = moves[9];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "2":
                                 // UP 
                                 // console.log("UP MOVE");
+                                PlaySound();
                                 temp_move = "U";
                                 move = moves[10];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "3":
                                 // DOWN 
                                 // console.log("DOWN MOVE");
+                                PlaySound();
                                 temp_move = "D";
                                 move = moves[2];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "4":
                                 // RIGHT
                                 // console.log("RIGHT MOVE");
+                                PlaySound();
                                 temp_move = "R";
                                 move = moves[3];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "5":
                                 // LEFT
                                 // console.log("LEFT MOVE");
+                                PlaySound();
                                 temp_move = "L";
                                 move = moves[13];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "6":
                                 // FRONT
                                 // console.log("FRONT MOVE");
+                                PlaySound();
                                 temp_move = "F";
                                 move = moves[5];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "7":
                                 // BACK 
                                 // console.log("BACK MOVE");
+                                PlaySound();
                                 temp_move = "B";
                                 move = moves[15];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "8":
                                 // E-SLICE 
                                 // console.log("E-SLICE MOVE");
+                                PlaySound();
                                 temp_move = "E";
                                 move = moves[7];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "9":
                                 // FRONT
                                 // console.log("FRONT MOVE");
+                                PlaySound();
                                 temp_move = "S";
                                 move = moves[8];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             default:
                                 temp_move = "-";
@@ -945,74 +954,83 @@ sketch1 = function (sketch) {
                             case "1":
                                 // M SLICE INVERSE
                                 // console.log("M-SLICE INVERTED MOVE");                        
+                                PlaySound();
                                 temp_move = "M\'";
                                 move = moves[0];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "2":
                                 // UP INVERSE
                                 // console.log("UP INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "U\'";
                                 move = moves[1];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "3":
                                 // DOWN INVERSE
                                 // console.log("DOWN INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "D\'";
                                 move = moves[11];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "4":
                                 // RIGHT INVERSE
                                 // console.log("RIGHT INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "R\'";
                                 move = moves[12];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "5":
                                 // LEFT INVERSE
                                 // console.log("LEFT INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "L\'";
                                 move = moves[4];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "6":
                                 // FRONT INVERSE 
                                 // console.log("FRONT INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "F\'";
                                 move = moves[14];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "7":
                                 // BACK INVERSE
                                 // console.log("BACK INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "B\'";
                                 move = moves[6];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "8":
                                 // E-SLICE  INVERSE
                                 // console.log("E-SLICE INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "E\'";
                                 move = moves[16];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             case "9":
                                 // S-SLICE INVERSE 
                                 // console.log("S-SLICE INVERTED MOVE");
+                                PlaySound();
                                 temp_move = "S\'";
                                 move = moves[17];
                                 move.start();
-                                PlaySound();
+                                
                                 break;
                             default:
                                 temp_move = "-";
