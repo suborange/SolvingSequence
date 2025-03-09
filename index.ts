@@ -1,6 +1,6 @@
 import express, { Express, Request, Response } from "express";
 import fileo from 'fs';
-import { resolve } from "path";
+
 
 const port: number = 3000;
 const app: Express = express();

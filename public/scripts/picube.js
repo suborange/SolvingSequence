@@ -597,7 +597,8 @@ sketch1 = function (sketch) {
                         this.animate = false;
 
                         // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
-                        if (this.plane == Z_PLANE) { // Z axis animation
+                      // 1 = middle ; remove the middle plane  
+                      if (this.plane == Z_PLANE) { // Z axis animation
                             rotateZaxis(this.dir * sketch.HALF_PI, this.z);
                         }
                         else if (this.plane == X_PLANE) { // X axis animation
@@ -623,7 +624,7 @@ sketch1 = function (sketch) {
         sketch.frameRate(60);
 
         // SETUP VARIABLES 
-        dim = Number(3);
+        dim = Number(2);
         cube = Array(dim * dim * dim).fill(); // 1D array of matrices
         SOLVED_CUBE = Array(dim * dim * dim).fill(); // 1D array of matrices
         index = 0;
@@ -646,8 +647,21 @@ sketch1 = function (sketch) {
             }
         }
         // setting up all the differnt moves
+        // need to change all these to new 2x2x2 postions
         index = 0;
-        move = null;
+        move = null;/*
+                      0 = NOOP
+                      1 = F
+                      2 = R
+                      3 = U
+                      4 = F2
+                      5 = R2
+                      6 = U2
+                      7 = F'
+                      8 = R'
+                      9 = U'
+                      */
+
         moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
         moves.push(new Move(-2, UP, -2, CLOCKWISE, Y_PLANE)); // 1
         moves.push(new Move(-2, DOWN, -2, CLOCKWISE, Y_PLANE)); // 2
@@ -845,7 +859,18 @@ sketch1 = function (sketch) {
                 // ****************
                 // * SOLVING CUBE *
                 // **************** 
-                else {
+                else { /*
+                      0 = NOOP
+                      1 = F
+                      2 = R
+                      3 = U
+                      4 = F2
+                      5 = R2
+                      6 = U2
+                      7 = F'
+                      8 = R'
+                      9 = U'
+                      */
                     let temp_move;
                     curr_pit = get_pits.substring(3, 4);
                     displayPi(start, 3, 4);
