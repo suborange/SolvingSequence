@@ -879,60 +879,16 @@ sketch1 = function (sketch) {
                     curr_pit = get_pits.substring(3, 4);
                     displayPi(start, 3, 4);
 
-                    // repeat last digit?
+                    // simply do nothing on 0
                     if (curr_pit == 0) {
-                        curr_pit = prev_pit;
+                        // curr_pit = prev_pit;
+                        prev_pit = curr_pit; // setup for next digit
+                        // do nothing go to next digit
                     }
-
-                    if (curr_pit >= prev_pit) {
+                    else {
                         switch (curr_pit) {
                             // REGULAR CLOCKWISE MOVES
                             case "1":
-                                // M SLICE 
-                                console.log("M-SLICE MOVE");
-                                PlaySound();
-                                temp_move = "M";
-                                move = moves[9];
-                                move.start();
-                                
-                                break;
-                            case "2":
-                                // UP 
-                                console.log("UP MOVE");
-                                PlaySound();
-                                temp_move = "U";
-                                move = moves[10];
-                                move.start();
-                                
-                                break;
-                            case "3":
-                                // DOWN 
-                                console.log("DOWN MOVE");
-                                PlaySound();
-                                temp_move = "D";
-                                move = moves[2];
-                                move.start();
-                                
-                                break;
-                            case "4":
-                                // RIGHT
-                                console.log("RIGHT MOVE");
-                                PlaySound();
-                                temp_move = "R";
-                                move = moves[2];
-                                move.start();
-                                
-                                break;
-                            case "5":
-                                // LEFT
-                                console.log("LEFT MOVE");
-                                PlaySound();
-                                temp_move = "L";
-                                move = moves[9]; // i think this works.
-                                move.start();
-                                
-                                break;
-                            case "6":
                                 // FRONT
                                 console.log("FRONT MOVE");
                                 PlaySound();
@@ -941,30 +897,81 @@ sketch1 = function (sketch) {
                                 move.start();
                                 
                                 break;
-                            case "7":
-                                // BACK 
-                                console.log("BACK MOVE");
+                            case "2":
+                                // RIGHT 
+                                console.log("RIGHT MOVE");
                                 PlaySound();
-                                temp_move = "B";
-                                move = moves[11];
+                                temp_move = "R";
+                                move = moves[2];
+                                move.start();
+                                
+                                break;
+                            case "3":
+                                // UP 
+                                console.log("UP MOVE");
+                                PlaySound();
+                                temp_move = "U";
+                                move = moves[0];
+                                move.start();
+                                
+                                break;
+                            case "4":
+                                // FRONT TWICE
+                                console.log("FRONT TWICE MOVE");
+                                PlaySound();
+                                temp_move = "F2";
+                                move = moves[4];
+                                move.start();
+                                move = moves[4];
+                                move.start();
+                                
+                                break;
+                            case "5":
+                                // RIGHT TWICE
+                                console.log("RIGHT MOVE");
+                                PlaySound();
+                                temp_move = "R2";
+                                move = moves[2]; // i think this works.
+                                move.start();
+                                move = moves[2]; // i think this works.
+                                move.start();
+                                
+                                break;
+                            case "6":
+                                // UP TWICE
+                                console.log("UP MOVE");
+                                PlaySound();
+                                temp_move = "U2";
+                                move = moves[0];
+                                move.start();
+                                move = moves[0];
+                                move.start();
+                                
+                                break;
+                            case "7":
+                                // FRONT INVERSE 
+                                console.log("FRONT INVERSE MOVE");
+                                PlaySound();
+                                temp_move = "F\'";
+                                move = moves[10];
                                 move.start();
                                 
                                 break;
                             case "8":
-                                // E-SLICE 
-                                console.log("E-SLICE MOVE");
+                                // RIGHT INVERSE 
+                                console.log("RIGHT INVERSE MOVE");
                                 PlaySound();
-                                temp_move = "E";
-                                move = moves[7];
+                                temp_move = "R\'";
+                                move = moves[8];
                                 move.start();
                                 
                                 break;
                             case "9":
-                                // S-SLICE
-                                console.log("S-SLICE MOVE");
+                                // UP INVERSE
+                                console.log("UP INVERSE MOVE");
                                 PlaySound();
-                                temp_move = "S";
-                                move = moves[8];
+                                temp_move = "U\'";
+                                move = moves[6];
                                 move.start();
                                 
                                 break;
@@ -977,112 +984,20 @@ sketch1 = function (sketch) {
                         // get ready for next move
                         prev_pit = curr_pit;
                     } // END CLOCKWISE
-                    else { // INVERSE, COUNTER-CLOCKWISE MOVES                   
-                        switch (curr_pit) {
-                            // COUNTER CLOCKWISE - INVERSE ROTATIONS
-                            case "1":
-                                // M SLICE INVERSE
-                                console.log("M-SLICE INVERTED MOVE");                        
-                                PlaySound();
-                                temp_move = "M\'";
-                                //move = moves[0];
-                                move.start();
-                                
-                                break;
-                            case "2":
-                                // UP INVERSE
-                                console.log("UP INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "U\'";
-                                move = moves[0];
-                                move.start();
-                                
-                                break;
-                            case "3":
-                                // DOWN INVERSE
-                                console.log("DOWN INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "D\'";
-                                move = moves[7];
-                                move.start();
-                                
-                                break;
-                            case "4":
-                                // RIGHT INVERSE
-                                console.log("RIGHT INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "R\'";
-                                move = moves[8];
-                                move.start();
-                                
-                                break;
-                            case "5":
-                                // LEFT INVERSE
-                                console.log("LEFT INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "L\'";
-                                move = moves[3];
-                                move.start();
-                                
-                                break;
-                            case "6":
-                                // FRONT INVERSE 
-                                console.log("FRONT INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "F\'";
-                                move = moves[14];
-                                move.start();
-                                
-                                break;
-                            case "7":
-                                // BACK INVERSE
-                                console.log("BACK INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "B\'";
-                                move = moves[6];
-                                move.start();
-                                
-                                break;
-                            case "8":
-                                // E-SLICE  INVERSE
-                                console.log("E-SLICE INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "E\'";
-                                move = moves[16];
-                                move.start();
-                                
-                                break;
-                            case "9":
-                                // S-SLICE INVERSE 
-                                console.log("S-SLICE INVERTED MOVE");
-                                PlaySound();
-                                temp_move = "S\'";
-                                move = moves[17];
-                                move.start();
-                                
-                                break;
-                            default:
-                                temp_move = "-";
-                                move = moves[moves.length - 1];
-                                move.start();
-                                break;
-                        }
-                        // get ready for next move
-                        prev_pit = curr_pit;
-                    }
+                    
                     // update the current move only once, instead of within switch
                     ele_current_move.innerHTML = temp_move;
                     start++; // go to next digit
 
-                    if (start > end_of_file) {
-                        ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                        console.log("WENT THROUGH 100 MILLION DIGITS");
-                        is_solving = false;
-                        // is_fully_solved = true; // incase? should stop reading the file stream.
-                    }
+                    // if (start > end_of_file) {
+                    //     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                    //     console.log("WENT THROUGH 12 MILLION DIGITS");
+                    //     is_solving = false;
+                    //     // is_fully_solved = true; // incase? should stop reading the file stream.
+                    // }
                     
                     // save the state of this cube now.
-                    if (sketch.frameCount % 3000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
+                    if (sketch.frameCount % 6000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
                         //await WriteStateToFile();
                     }
                     solve_pits = get_pits;
