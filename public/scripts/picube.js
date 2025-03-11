@@ -56,12 +56,12 @@ let reset_cube = false; // to reset cube when broken. will find saved position a
 
 // CONSTANT VARIABLES
 const end_of_file = 11999999; // 12 million
-const BACK = -1;
+const BACK = 0; // should be middle as back now
 const FRONT = 1;
 const LEFT = -1;
-const RIGHT = 1;
-const UP = -1;
-const DOWN = 1;
+const RIGHT = 0; // should be middle as right now
+const UP = -1; 
+const DOWN = 0; // should be middle as down now
 // const S_SLICE = 0;
 // const M_SLICE = 0;
 // const E_SLICE = 0;
