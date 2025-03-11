@@ -52,7 +52,7 @@ let solve_pits;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = true; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
 
 // CONSTANT VARIABLES
 const end_of_file = 100001815; // 100 million
@@ -305,10 +305,11 @@ function CubeIsSolved() {
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
     // check the center position and its color, then find and check the next position and its color
     // the loopt goes through each colors, which color is facing the front? grab that index
+    const max_faces = 9; // for 3x3x3, 9 per face
     // FRONT FACE CHECK - Z NORMAL = 1
     let front_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[FRONT_FACES[static_face_index]]].faces[front_i].normal.z != FRONT_NORMAL) { front_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -320,7 +321,7 @@ function CubeIsSolved() {
     // RIGHT FACE CHECK - X NORMAL = 1
     let right_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[RIGHT_FACES[static_face_index]]].faces[right_i].normal.x != RIGHT_NORMAL) { right_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -332,7 +333,7 @@ function CubeIsSolved() {
     // BACK FACE CHECK - Z NORMAL = -1
     let back_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[BACK_FACES[static_face_index]]].faces[back_i].normal.z != BACK_NORMAL) { back_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -344,7 +345,7 @@ function CubeIsSolved() {
     // LEFT FACE CHECK - X NORMAL = -1
     let left_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[LEFT_FACES[static_face_index]]].faces[left_i].normal.x != LEFT_NORMAL) { left_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -356,7 +357,7 @@ function CubeIsSolved() {
     // UP FACE CHECK - Y NORMAL = -1
     let up_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[UP_FACES[static_face_index]]].faces[up_i].normal.y != UP_NORMAL) { up_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -368,7 +369,7 @@ function CubeIsSolved() {
     // DOWN FACE CHECK - Y NORMAL = 1
     let down_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[DOWN_FACES[static_face_index]]].faces[down_i].normal.y != DOWN_NORMAL) { down_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -738,40 +739,41 @@ sketch1 = function (sketch) {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
         // 1440            
-        if (sketch.frameCount % 1440 == 0) {
-            cam_move *= -1; // flip direction every once in a while
-            cam1.setPosition(0, 0, 230);
-            cam1.lookAt(0, 0, 0);
-            iswap = !iswap;
+        // if (sketch.frameCount % 1440 == 0) {
+        //     cam_move *= -1; // flip direction every once in a while
+        //     cam1.setPosition(0, 0, 230);
+        //     cam1.lookAt(0, 0, 0);
+        //     iswap = !iswap;
 
-            // swap images between clockwise and counter clockwise, can be timed here?
-            if (iswap) {
-                img_swap1.classList.remove('crossfade');
-                img_swap2.classList.add('crossfade');
-            }
-            else {
-                img_swap2.classList.remove('crossfade');
-                img_swap1.classList.add('crossfade');
-            }
-        }
+        //     // swap images between clockwise and counter clockwise, can be timed here?
+        //     if (iswap) {
+        //         img_swap1.classList.remove('crossfade');
+        //         img_swap2.classList.add('crossfade');
+        //     }
+        //     else {
+        //         img_swap2.classList.remove('crossfade');
+        //         img_swap1.classList.add('crossfade');
+        //     }
+        // }
 
-        sketch.rotateX(sketch.HALF_PI / 2);
-        sketch.rotateZ(sketch.HALF_PI / 2);
+        // sketch.rotateX(sketch.HALF_PI / 2);
+        // sketch.rotateZ(sketch.HALF_PI / 2);
 
         sketch.push();
-        cam1.move(cam_move, 0, 0);
-        cam1.lookAt(0, 0, 0);
+        // cam1.move(cam_move, 0, 0);
+        // cam1.lookAt(0, 0, 0);
         sketch.pop();
 
 
         if (move != null) {
 
             move.update();
-
-            for (let i = 0; i < cube.length; i++) {
+            const testlength = cube.length;
+            // cube.length
+            for (let i = 0; i < testlength; i++) {
                 sketch.push();
                 // Z ANIMATION
                 if (sketch.abs(cube[i].zi) >= 0 && cube[i].zi == move.z) {
@@ -860,7 +862,7 @@ sketch1 = function (sketch) {
                             // REGULAR CLOCKWISE MOVES
                             case "1":
                                 // M SLICE 
-                                // console.log("M-SLICE MOVE");
+                                console.log("M-SLICE MOVE");
                                 PlaySound();
                                 temp_move = "M";
                                 move = moves[9];
@@ -869,7 +871,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "2":
                                 // UP 
-                                // console.log("UP MOVE");
+                                console.log("UP MOVE");
                                 PlaySound();
                                 temp_move = "U";
                                 move = moves[10];
@@ -878,7 +880,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "3":
                                 // DOWN 
-                                // console.log("DOWN MOVE");
+                                console.log("DOWN MOVE");
                                 PlaySound();
                                 temp_move = "D";
                                 move = moves[2];
@@ -887,7 +889,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "4":
                                 // RIGHT
-                                // console.log("RIGHT MOVE");
+                                console.log("RIGHT MOVE");
                                 PlaySound();
                                 temp_move = "R";
                                 move = moves[3];
@@ -896,7 +898,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "5":
                                 // LEFT
-                                // console.log("LEFT MOVE");
+                                console.log("LEFT MOVE");
                                 PlaySound();
                                 temp_move = "L";
                                 move = moves[13];
@@ -905,7 +907,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "6":
                                 // FRONT
-                                // console.log("FRONT MOVE");
+                                console.log("FRONT MOVE");
                                 PlaySound();
                                 temp_move = "F";
                                 move = moves[5];
@@ -914,7 +916,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "7":
                                 // BACK 
-                                // console.log("BACK MOVE");
+                                console.log("BACK MOVE");
                                 PlaySound();
                                 temp_move = "B";
                                 move = moves[15];
@@ -923,7 +925,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "8":
                                 // E-SLICE 
-                                // console.log("E-SLICE MOVE");
+                                console.log("E-SLICE MOVE");
                                 PlaySound();
                                 temp_move = "E";
                                 move = moves[7];
@@ -932,7 +934,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "9":
                                 // FRONT
-                                // console.log("FRONT MOVE");
+                                console.log("FRONT MOVE");
                                 PlaySound();
                                 temp_move = "S";
                                 move = moves[8];
@@ -953,7 +955,7 @@ sketch1 = function (sketch) {
                             // COUNTER CLOCKWISE - INVERSE ROTATIONS
                             case "1":
                                 // M SLICE INVERSE
-                                // console.log("M-SLICE INVERTED MOVE");                        
+                                console.log("M-SLICE INVERTED MOVE");                        
                                 PlaySound();
                                 temp_move = "M\'";
                                 move = moves[0];
@@ -962,7 +964,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "2":
                                 // UP INVERSE
-                                // console.log("UP INVERTED MOVE");
+                                console.log("UP INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "U\'";
                                 move = moves[1];
@@ -971,7 +973,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "3":
                                 // DOWN INVERSE
-                                // console.log("DOWN INVERTED MOVE");
+                                console.log("DOWN INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "D\'";
                                 move = moves[11];
@@ -980,7 +982,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "4":
                                 // RIGHT INVERSE
-                                // console.log("RIGHT INVERTED MOVE");
+                                console.log("RIGHT INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "R\'";
                                 move = moves[12];
@@ -989,7 +991,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "5":
                                 // LEFT INVERSE
-                                // console.log("LEFT INVERTED MOVE");
+                                console.log("LEFT INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "L\'";
                                 move = moves[4];
@@ -998,7 +1000,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "6":
                                 // FRONT INVERSE 
-                                // console.log("FRONT INVERTED MOVE");
+                                console.log("FRONT INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "F\'";
                                 move = moves[14];
@@ -1007,7 +1009,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "7":
                                 // BACK INVERSE
-                                // console.log("BACK INVERTED MOVE");
+                                console.log("BACK INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "B\'";
                                 move = moves[6];
@@ -1016,7 +1018,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "8":
                                 // E-SLICE  INVERSE
-                                // console.log("E-SLICE INVERTED MOVE");
+                                console.log("E-SLICE INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "E\'";
                                 move = moves[16];
@@ -1025,7 +1027,7 @@ sketch1 = function (sketch) {
                                 break;
                             case "9":
                                 // S-SLICE INVERSE 
-                                // console.log("S-SLICE INVERTED MOVE");
+                                console.log("S-SLICE INVERTED MOVE");
                                 PlaySound();
                                 temp_move = "S\'";
                                 move = moves[17];
