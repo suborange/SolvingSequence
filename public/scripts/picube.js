@@ -69,21 +69,21 @@ const CLOCKWISE = 1;
 const COUNTER_CLOCKWISE = -1;
 const X_PLANE = 0;
 const Y_PLANE = 1;
-const Z_PLANE = 2;
+const Z_PLANE = 2; // is this the third row? i think it is.
 // NORMALS
 const FRONT_NORMAL = 1; // Z
-const FRONT_FACES = [2, 11, 20, 5, 14, 23, 8, 17, 26];
+const FRONT_FACES = [1, 5, 3, 7];
 const RIGHT_NORMAL = 1; // X
-const RIGHT_FACES = [20, 19, 18, 23, 22, 21, 26, 25, 24];
+const RIGHT_FACES = [5, 4, 7, 6];
 const BACK_NORMAL = -1; // Z
-const BACK_FACES = [18, 9, 0, 21, 12, 3, 24, 15, 6];
+const BACK_FACES = [4, 0, 6,2];
 const LEFT_NORMAL = -1; // X
-const LEFT_FACES = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+const LEFT_FACES = [0, 1, 2, 3,];
 const UP_NORMAL = -1; // Y
-const UP_FACES = [0, 9, 18, 1, 10, 19, 2, 11, 20];
+const UP_FACES = [0, 4, 1, 5];
 const DOWN_NORMAL = 1; // Y
-const DOWN_FACES = [8, 17, 26, 7, 16, 25, 6, 15, 24];
-// FLAG POSITIONS
+const DOWN_FACES = [3,7,2,6];
+// FLAG POSITIONS -- this wont work? or might not work? (if the one corner doesnt move there should be a way to find its solved state. or just check whoel cube against all variations of solved cube? or only the one way since the one corner does not move.)
 const FRONT_FLAG = 4;
 const LEFT_FLAG = 13;
 const BACK_FLAG = 22;
@@ -305,10 +305,11 @@ function CubeIsSolved() {
     // i have the indexes for the correct order. now find the center pieces, and check the neighbors for their colors.
     // check the center position and its color, then find and check the next position and its color
     // the loopt goes through each colors, which color is facing the front? grab that index
+    const max_faces = 4;
     // FRONT FACE CHECK - Z NORMAL = 1
     let front_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[FRONT_FACES[static_face_index]]].faces[front_i].normal.z != FRONT_NORMAL) { front_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -320,7 +321,7 @@ function CubeIsSolved() {
     // RIGHT FACE CHECK - X NORMAL = 1
     let right_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[RIGHT_FACES[static_face_index]]].faces[right_i].normal.x != RIGHT_NORMAL) { right_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -332,7 +333,7 @@ function CubeIsSolved() {
     // BACK FACE CHECK - Z NORMAL = -1
     let back_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[BACK_FACES[static_face_index]]].faces[back_i].normal.z != BACK_NORMAL) { back_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -344,7 +345,7 @@ function CubeIsSolved() {
     // LEFT FACE CHECK - X NORMAL = -1
     let left_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[LEFT_FACES[static_face_index]]].faces[left_i].normal.x != LEFT_NORMAL) { left_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -356,7 +357,7 @@ function CubeIsSolved() {
     // UP FACE CHECK - Y NORMAL = -1
     let up_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[UP_FACES[static_face_index]]].faces[up_i].normal.y != UP_NORMAL) { up_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -368,7 +369,7 @@ function CubeIsSolved() {
     // DOWN FACE CHECK - Y NORMAL = 1
     let down_i = 0;
     // for the first 9 cubes, these should be in the order to match the front face.
-    for (let static_face_index = 0; static_face_index < 9;) {
+    for (let static_face_index = 0; static_face_index < max_faces;) {
         // if any of the faces normals do not match, then move on
         if (cube[cube_indexes[DOWN_FACES[static_face_index]]].faces[down_i].normal.y != DOWN_NORMAL) { down_i++; continue; }
         // else, there is a match for the normal, grab this index which should match with the cube indexes.
@@ -597,7 +598,7 @@ sketch1 = function (sketch) {
                         this.animate = false;
 
                         // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
-                      // 1 = middle ; remove the middle plane  
+                      //  remove the back, right, and down planes.. 
                       if (this.plane == Z_PLANE) { // Z axis animation
                             rotateZaxis(this.dir * sketch.HALF_PI, this.z);
                         }
@@ -629,6 +630,7 @@ sketch1 = function (sketch) {
         SOLVED_CUBE = Array(dim * dim).fill(); // 1D array of matrices
         index = 0;
         
+        // this creates the cube, starting from top left, 0,0,0, in a pattern, front to back, left to right. check whiteboard, order is wonky, and labeled correctly there
         // for every cubie, make a cube with correct length and offset to center
         for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
             for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
@@ -640,8 +642,8 @@ sketch1 = function (sketch) {
                     let z = _Z * _len - offset;
                     let m = sketch.createVector(x, y, z);
 
-                    cube[index] = new Cubie(m, _len, xx, yy, zz);
-                    SOLVED_CUBE[index] = new Cubie(m, _len, xx, yy, zz);
+                    cube[index] = new Cubie(m, _len, xx, yy, zz); // this creates all 8 cubies, 0-7
+                    SOLVED_CUBE[index] = new Cubie(m, _len, xx, yy, zz); // copy for solved state and comparison
                     index++;
                 }
             }
@@ -663,24 +665,25 @@ sketch1 = function (sketch) {
                       */
 
         //moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
-        moves[0] = new Move(-2, UP, -2, CLOCKWISE, Y_PLANE); // 0
-        moves.push(new Move(-2, DOWN, -2, CLOCKWISE, Y_PLANE)); // 1 2
-        moves.push(new Move(RIGHT, -2, -2, CLOCKWISE, X_PLANE)); // 2 3 - !
-        moves.push(new Move(LEFT, -2, -2, CLOCKWISE, X_PLANE)); // 3 4 - 
-        moves.push(new Move(-2, -2, FRONT, CLOCKWISE, Z_PLANE)); // 4 5
-        moves.push(new Move(-2, -2, BACK, CLOCKWISE, Z_PLANE)); // 5 6
-        //moves.push(new Move(-2, E_SLICE, -2, CLOCKWISE, Y_PLANE)); // 7
-        //moves.push(new Move(-2, -2, S_SLICE, CLOCKWISE, Z_PLANE)); // 8
-        //moves.push(new Move(M_SLICE, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 9 
-        moves.push(new Move(-2, UP, -2, COUNTER_CLOCKWISE, Y_PLANE)); //6  10 
-        moves.push(new Move(-2, DOWN, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 7 11
-        moves.push(new Move(RIGHT, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 8 12
-        moves.push(new Move(LEFT, -2, -2, COUNTER_CLOCKWISE, X_PLANE)); // 9 13
-        moves.push(new Move(-2, -2, FRONT, COUNTER_CLOCKWISE, Z_PLANE)); // 10 14
-        moves.push(new Move(-2, -2, BACK, COUNTER_CLOCKWISE, Z_PLANE)); // 11 15
-        //moves.push(new Move(-2, E_SLICE, -2, COUNTER_CLOCKWISE, Y_PLANE)); // 16
-        //moves.push(new Move(-2, -2, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
-        moves.push(new Move(-2, -2, -2, -2, -2)); // temnp no move?
+        const subdir = -2;
+        moves[0] = new Move(subdir, UP, subdir, CLOCKWISE, Y_PLANE); // 0
+        moves.push(new Move(subdir, DOWN, subdir, CLOCKWISE, Y_PLANE)); // 1 2
+        moves.push(new Move(RIGHT, subdir, subdir, CLOCKWISE, X_PLANE)); // 2 3 - !
+        moves.push(new Move(LEFT, subdir, subdir, CLOCKWISE, X_PLANE)); // 3 4 - 
+        moves.push(new Move(subdir, subdir, FRONT, CLOCKWISE, Z_PLANE)); // 4 5
+        moves.push(new Move(subdir, subdir, BACK, CLOCKWISE, Z_PLANE)); // 5 6
+        //moves.push(new Move(subdir, E_SLICE, subdir, CLOCKWISE, Y_PLANE)); // 7
+        //moves.push(new Move(subdir, subdir, S_SLICE, CLOCKWISE, Z_PLANE)); // 8
+        //moves.push(new Move(M_SLICE, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 9 
+        moves.push(new Move(subdir, UP, subdir, COUNTER_CLOCKWISE, Y_PLANE)); //6  10 
+        moves.push(new Move(subdir, DOWN, subdir, COUNTER_CLOCKWISE, Y_PLANE)); // 7 11
+        moves.push(new Move(RIGHT, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 8 12
+        moves.push(new Move(LEFT, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 9 13
+        moves.push(new Move(subdir, subdir, FRONT, COUNTER_CLOCKWISE, Z_PLANE)); // 10 14
+        moves.push(new Move(subdir, subdir, BACK, COUNTER_CLOCKWISE, Z_PLANE)); // 11 15
+        //moves.push(new Move(subdir, E_SLICE, subdir, COUNTER_CLOCKWISE, Y_PLANE)); // 16
+        //moves.push(new Move(subdir, subdir, S_SLICE, COUNTER_CLOCKWISE, Z_PLANE)); // 17
+        moves.push(new Move(subdir, subdir, subdir, subdir, subdir)); // temnp no move?
     } // end setup
 
     // X AXIS ONLY

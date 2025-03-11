@@ -44,3 +44,10 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 - link to how it was built?
 
 ## not sure if posssible
+
+
+
+## GOAL
+- to find the smallest number of Pi digits that solves a 2x2x2. 
+(literally could be as small as hundreds or less!)
+is a 3x3x3 or 4x4x4 possible at all? and maybe what lowest number of digits
