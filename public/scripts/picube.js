@@ -52,7 +52,7 @@ let solve_pits;
 // should be able to use this to start, reset, start in the middle, etc.
 // safety net for any reason
 let streaming_check = 60;
-let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at
+let reset_cube = false; // to reset cube when broken. will find saved position and state to reset at - ON TRUE
 
 // CONSTANT VARIABLES
 const end_of_file = 11999999; // 12 million
@@ -692,7 +692,7 @@ sketch1 = function (sketch) {
         for (let i = 0; i < cube.length; i++) {
             // in x axis plane, the front?  
             qb = cube[i];
-            if (qb.xi == axis_index) { // 0 == back, 1 = middle, 2 == front 
+            if (qb.xi == axis_index) { // axis_index: Up = -1, Down = 0
                 qb.matrix_next = sketch.createVector();
                 // rotate?
                 qb.matrix_next.y = sketch.round(qb.matrix.y * sketch.cos(angle) - qb.matrix.z * sketch.sin(angle));
@@ -715,7 +715,7 @@ sketch1 = function (sketch) {
         for (let i = 0; i < cube.length; i++) {
             // in y axis plane, the front?  
             qb = cube[i];
-            if (qb.yi == axis_index) { // 0 == back, 1 = middle, 2 == front 
+            if (qb.yi == axis_index) { // axis_index: Left = -1, Right = 0
                 qb.matrix_next = sketch.createVector();
                 qb.matrix_next.x = sketch.round(qb.matrix.x * sketch.cos(angle) - qb.matrix.z * sketch.sin(angle));
                 qb.matrix_next.z = sketch.round(qb.matrix.x * sketch.sin(angle) + qb.matrix.z * sketch.cos(angle));
@@ -735,7 +735,7 @@ sketch1 = function (sketch) {
         for (let i = 0; i < cube.length; i++) {
             // in z axis plane, the front?  
             qb = cube[i];
-            if (qb.zi == axis_index) { // 0 == back, 1 = middle, 2 == front 
+            if (qb.zi == axis_index) {  // axis_index: Front = 1, Back = 0
                 qb.matrix_next = sketch.createVector();
                 qb.matrix_next.x = sketch.round(qb.matrix.x * sketch.cos(angle) - qb.matrix.y * sketch.sin(angle));
                 qb.matrix_next.y = sketch.round(qb.matrix.x * sketch.sin(angle) + qb.matrix.y * sketch.cos(angle));
@@ -780,7 +780,7 @@ sketch1 = function (sketch) {
 
         sketch.push();
         //cam1.move(cam_move, 0, 0);
-        //cam1.lookAt(0, 0, 0);
+        cam1.lookAt(0, 0, 0);
         sketch.pop();
 
 
@@ -831,9 +831,9 @@ sketch1 = function (sketch) {
             // ReadForReset(); // debugging - it gets called here correctly.. 
             
 
-            // debugging
+            // this is manually set, after first run, this needs to be turned on to reset at the save state
             if (reset_cube) {
-                //await ReadForReset();
+                await ReadForReset();
                 start = file_position_counter + 9;
                 file_position_counter += 6;
                 prev_pit = get_pits.substring(2, 3);
@@ -1083,7 +1083,7 @@ sketch1 = function (sketch) {
                     
                     // save the state of this cube now.
                     if (sketch.frameCount % 3000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
-                        await WriteStateToFile();
+                        //await WriteStateToFile();
                     }
                     solve_pits = get_pits;
                     await ReadDigit(); // read and append next digit                    
