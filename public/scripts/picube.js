@@ -56,33 +56,33 @@ let reset_cube = false; // to reset cube when broken. will find saved position a
 
 // CONSTANT VARIABLES
 const end_of_file = 11999999; // 12 million
-const BACK = 0; // should be middle as back now
+const BACK = -1; // should be middle as back now
 const FRONT = 1;
 const LEFT = -1;
-const RIGHT = 0; // should be middle as right now
-const UP = -1; 
-const DOWN = 0; // should be middle as down now
-// const S_SLICE = 0;
-// const M_SLICE = 0;
-// const E_SLICE = 0;
+const RIGHT = 1; // should be middle as right now
+const UP = -1;
+const DOWN = 1; // should be middle as down now
+const S_SLICE = 0;
+const M_SLICE = 0;
+const E_SLICE = 0;
 const CLOCKWISE = 1;
 const COUNTER_CLOCKWISE = -1;
 const X_PLANE = 0;
 const Y_PLANE = 1;
-const Z_PLANE = 2; // is this the third row? i think it is.
+const Z_PLANE = 2; 
 // NORMALS
 const FRONT_NORMAL = 1; // Z
 const FRONT_FACES = [1, 5, 3, 7];
 const RIGHT_NORMAL = 1; // X
 const RIGHT_FACES = [5, 4, 7, 6];
 const BACK_NORMAL = -1; // Z
-const BACK_FACES = [4, 0, 6,2];
+const BACK_FACES = [4, 0, 6, 2];
 const LEFT_NORMAL = -1; // X
 const LEFT_FACES = [0, 1, 2, 3,];
 const UP_NORMAL = -1; // Y
 const UP_FACES = [0, 4, 1, 5];
 const DOWN_NORMAL = 1; // Y
-const DOWN_FACES = [3,7,2,6];
+const DOWN_FACES = [3, 7, 2, 6];
 // FLAG POSITIONS -- this wont work? or might not work? (if the one corner doesnt move there should be a way to find its solved state. or just check whoel cube against all variations of solved cube? or only the one way since the one corner does not move.)
 const FRONT_FLAG = 4;
 const LEFT_FLAG = 13;
@@ -419,7 +419,7 @@ function CubeIsSolved() {
 // CREATE FACE AND CUBIE CLASSES TO DRAW
 // CREATE TURNING FUNCTIONS FOR EACH FACE
 const canvas_id = 'canvastl';
-sketch1 = function (sketch) {    
+sketch1 = function (sketch) {
     sketch.setup = function () {
         // *** FACE ***
         class Face {
@@ -586,10 +586,11 @@ sketch1 = function (sketch) {
             start() {
                 this.animate = true;
                 this.angle = 0;
-
             }
 
-            update() {
+            update_animate() {
+                // wow i have to make thisturn on the center somehow...
+                // make a new cube in middle of cube? and have it follow that?
                 if (this.animate) {
                     this.angle += this.dir * 0.06;
                     // after animation, change positions.
@@ -598,8 +599,8 @@ sketch1 = function (sketch) {
                         this.animate = false;
 
                         // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
-                      //  remove the back, right, and down planes.. 
-                      if (this.plane == Z_PLANE) { // Z axis animation
+                        //  remove the back, right, and down planes.. 
+                        if (this.plane == Z_PLANE) { // Z axis animation
                             rotateZaxis(this.dir * sketch.HALF_PI, this.z);
                         }
                         else if (this.plane == X_PLANE) { // X axis animation
@@ -626,17 +627,17 @@ sketch1 = function (sketch) {
 
         // SETUP VARIABLES 
         dim = Number(2);
-        cube = Array(dim * dim ).fill(); // 1D array of matrices
+        cube = Array(dim * dim).fill(); // 1D array of matrices
         SOLVED_CUBE = Array(dim * dim).fill(); // 1D array of matrices
         index = 0;
-        
-        // this creates the cube, starting from top left, 0,0,0, in a pattern, front to back, left to right. check whiteboard, order is wonky, and labeled correctly there
+
+        // this creates the cube, starting from top left, -1,-1,-1, in a pattern, front to back, left to right. check whiteboard, order is wonky, and labeled correctly there
         // for every cubie, make a cube with correct length and offset to center
-        for (let _X = 0, xx = -1; _X < dim; _X++, xx++) {
-            for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy++) {
-                for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz++) {
+        for (let _X = 0, xx = -1; _X < dim; _X++, xx+=2) {
+            for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy+=2) {
+                for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz+=2) {
                     let _len = cube_size;
-                    let offset = (dim ) * _len * 0.5; // can change this just to len? hmm
+                    let offset = (dim) * _len * 0.5; // can change this just to len? hmm
                     let x = _X * _len - offset;
                     let y = _Y * _len - offset;
                     let z = _Z * _len - offset;
@@ -666,7 +667,7 @@ sketch1 = function (sketch) {
 
         //moves[0] = new Move(M_SLICE, -2, -2, CLOCKWISE, X_PLANE); //0
         const subdir = -2;
-        moves[0] = new Move(subdir, UP, subdir, CLOCKWISE, Y_PLANE); // 0
+        moves[0] = new Move(subdir, UP, subdir, CLOCKWISE, Y_PLANE); // 0 - UP INVERSE
         moves.push(new Move(subdir, DOWN, subdir, CLOCKWISE, Y_PLANE)); // 1 2
         moves.push(new Move(RIGHT, subdir, subdir, CLOCKWISE, X_PLANE)); // 2 3 - !
         moves.push(new Move(LEFT, subdir, subdir, CLOCKWISE, X_PLANE)); // 3 4 - 
@@ -675,7 +676,7 @@ sketch1 = function (sketch) {
         //moves.push(new Move(subdir, E_SLICE, subdir, CLOCKWISE, Y_PLANE)); // 7
         //moves.push(new Move(subdir, subdir, S_SLICE, CLOCKWISE, Z_PLANE)); // 8
         //moves.push(new Move(M_SLICE, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 9 
-        moves.push(new Move(subdir, UP, subdir, COUNTER_CLOCKWISE, Y_PLANE)); //6  10 
+        moves.push(new Move(subdir, UP, subdir, COUNTER_CLOCKWISE, Y_PLANE)); //6  10  - UP 
         moves.push(new Move(subdir, DOWN, subdir, COUNTER_CLOCKWISE, Y_PLANE)); // 7 11
         moves.push(new Move(RIGHT, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 8 12
         moves.push(new Move(LEFT, subdir, subdir, COUNTER_CLOCKWISE, X_PLANE)); // 9 13
@@ -786,21 +787,23 @@ sketch1 = function (sketch) {
 
         if (move != null) {
 
-            move.update();
-
-            for (let i = 0; i < cube.length; i++) {
+            move.update_animate(); // for the faces?
+            const testlength = 3;
+            // for the cubies?
+            for (let i = 0; i < testlength; i++) {
                 sketch.push();
+                qb = cube[i];
                 // Z ANIMATION
-                if (sketch.abs(cube[i].zi) >= 0 && cube[i].zi == move.z) {
+                if (sketch.abs(qb.zi) >= 0 && qb.zi == move.z) { // this and the absolute value?
                     sketch.rotateZ(move.angle);
                 } // X ANIMATION
-                else if (sketch.abs(cube[i].xi) >= 0 && cube[i].xi == move.x) {
+                else if (sketch.abs(qb.xi) >= 0 && qb.xi == move.x) {
                     sketch.rotateX(move.angle);
                 } // Y ANIMATION
-                else if (sketch.abs(cube[i].yi) >= 0 && cube[i].yi == move.y) {
+                else if (sketch.abs(qb.yi) >= 0 && qb.yi == move.y) {
                     sketch.rotateY(move.angle);
                 }
-                cube[i].show();
+                qb.show();
                 sketch.pop();
             }
         }
@@ -829,7 +832,7 @@ sketch1 = function (sketch) {
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
         if ((sketch.frameCount % 120 == 0) && !is_fully_solved && is_solving) {
             // ReadForReset(); // debugging - it gets called here correctly.. 
-            
+
 
             // this is manually set, after first run, this needs to be turned on to reset at the save state
             if (reset_cube) {
@@ -845,163 +848,163 @@ sketch1 = function (sketch) {
                 // * SOLVED CUBE *
                 // ***************                     
                 //if (start > 20 && CubeIsSolved()) {// debug start is 9, otherwise large number is fine.                    
-                    // what to do here when solved?                    
-                    /*console.log("SOLVED!!!! WTF!!!");
+                // what to do here when solved?                    
+                /*console.log("SOLVED!!!! WTF!!!");
 
-                    ele_digit_queue.innerHTML = `| ${solve_pits.substring(0, 1)} | ${solve_pits.substring(1, 2)} | ${solve_pits.substring(2, 3)} | <span class="solved">${solve_pits.substring(3, 4)}</span>  | ${solve_pits.substring(4, 5)} | ${solve_pits.substring(5, 6)} | ${solve_pits.substring(6, 7)} |`;
-                    ele_current_move.classList.remove('current');
-                    ele_current_move.classList.add('solved');
-                    ele_current_digit.classList.remove('current');
-                    ele_current_digit.classList.add('solved');
-                    const solved_digit = numberWithCommas(start - 9);
-                    ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
-                    is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
-                    is_fully_solved = true; // stop checking pi file and etc.    
-                    // displayPi(start, 3, 4);*/
+                ele_digit_queue.innerHTML = `| ${solve_pits.substring(0, 1)} | ${solve_pits.substring(1, 2)} | ${solve_pits.substring(2, 3)} | <span class="solved">${solve_pits.substring(3, 4)}</span>  | ${solve_pits.substring(4, 5)} | ${solve_pits.substring(5, 6)} | ${solve_pits.substring(6, 7)} |`;
+                ele_current_move.classList.remove('current');
+                ele_current_move.classList.add('solved');
+                ele_current_digit.classList.remove('current');
+                ele_current_digit.classList.add('solved');
+                const solved_digit = numberWithCommas(start - 9);
+                ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
+                is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
+                is_fully_solved = true; // stop checking pi file and etc.    
+                // displayPi(start, 3, 4);*/
                 //}
                 // ****************
                 // * SOLVING CUBE *
                 // **************** 
                 //else { 
-                    /*
-                      0 = NOOP
-                      1 = F
-                      2 = R
-                      3 = U
-                      4 = F2
-                      5 = R2
-                      6 = U2
-                      7 = F'
-                      8 = R'
-                      9 = U'
-                      */
-                    let temp_move;
-                    curr_pit = get_pits.substring(3, 4);
-                    displayPi(start, 3, 4);
+                /*
+                  0 = NOOP
+                  1 = F
+                  2 = R
+                  3 = U
+                  4 = F2
+                  5 = R2
+                  6 = U2
+                  7 = F'
+                  8 = R'
+                  9 = U'
+                  */
+                let temp_move;
+                curr_pit = get_pits.substring(3, 4);
+                displayPi(start, 3, 4);
 
-                    // simply do nothing on 0
-                    if (curr_pit == 0) {
-                        // curr_pit = prev_pit;
-                        prev_pit = curr_pit; // setup for next digit
-                        // do nothing go to next digit
-                    }
-                    else {
-                        switch (curr_pit) {
-                            // REGULAR CLOCKWISE MOVES
-                            case "1":
-                                // FRONT
-                                console.log("FRONT MOVE");
-                                PlaySound();
-                                temp_move = "F";
-                                move = moves[4];
-                                move.start();
-                                
-                                break;
-                            case "2":
-                                // RIGHT 
-                                console.log("RIGHT MOVE");
-                                PlaySound();
-                                temp_move = "R";
-                                move = moves[2];
-                                move.start();
-                                
-                                break;
-                            case "3":
-                                // UP 
-                                console.log("UP MOVE");
-                                PlaySound();
-                                temp_move = "U";
-                                move = moves[0];
-                                move.start();
-                                
-                                break;
-                            case "4":
-                                // FRONT TWICE
-                                console.log("FRONT TWICE MOVE");
-                                PlaySound();
-                                temp_move = "F2";
-                                move = moves[4];
-                                move.start();
-                                move = moves[4];
-                                move.start();
-                                
-                                break;
-                            case "5":
-                                // RIGHT TWICE
-                                console.log("RIGHT MOVE");
-                                PlaySound();
-                                temp_move = "R2";
-                                move = moves[2]; // i think this works.
-                                move.start();
-                                move = moves[2]; // i think this works.
-                                move.start();
-                                
-                                break;
-                            case "6":
-                                // UP TWICE
-                                console.log("UP MOVE");
-                                PlaySound();
-                                temp_move = "U2";
-                                move = moves[0];
-                                move.start();
-                                move = moves[0];
-                                move.start();
-                                
-                                break;
-                            case "7":
-                                // FRONT INVERSE 
-                                console.log("FRONT INVERSE MOVE");
-                                PlaySound();
-                                temp_move = "F\'";
-                                move = moves[10];
-                                move.start();
-                                
-                                break;
-                            case "8":
-                                // RIGHT INVERSE 
-                                console.log("RIGHT INVERSE MOVE");
-                                PlaySound();
-                                temp_move = "R\'";
-                                move = moves[8];
-                                move.start();
-                                
-                                break;
-                            case "9":
-                                // UP INVERSE
-                                console.log("UP INVERSE MOVE");
-                                PlaySound();
-                                temp_move = "U\'";
-                                move = moves[6];
-                                move.start();
-                                
-                                break;
-                            default:
-                                temp_move = "-";
-                                move = moves[moves.length - 1];
-                                move.start();
-                                break;
-                        }
-                        // get ready for next move
-                        prev_pit = curr_pit;
-                    } // END CLOCKWISE
-                    
-                    // update the current move only once, instead of within switch
-                    ele_current_move.innerHTML = temp_move;
-                    start++; // go to next digit
+                // simply do nothing on 0
+                if (curr_pit == 0) {
+                    // curr_pit = prev_pit;
+                    prev_pit = curr_pit; // setup for next digit
+                    // do nothing go to next digit
+                }
+                else {
+                    switch (curr_pit) {
+                        // REGULAR CLOCKWISE MOVES
+                        case "1":
+                            // FRONT
+                            console.log("FRONT MOVE");
+                            PlaySound();
+                            temp_move = "F";
+                            move = moves[4];
+                            move.start();
 
-                    // if (start > end_of_file) {
-                    //     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
-                    //     console.log("WENT THROUGH 12 MILLION DIGITS");
-                    //     is_solving = false;
-                    //     // is_fully_solved = true; // incase? should stop reading the file stream.
-                    // }
-                    
-                    // save the state of this cube now.
-                    if (sketch.frameCount % 6000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
-                        //await WriteStateToFile();
+                            break;
+                        case "2":
+                            // RIGHT 
+                            console.log("RIGHT MOVE");
+                            PlaySound();
+                            temp_move = "R";
+                            move = moves[2];
+                            move.start();
+
+                            break;
+                        case "3":
+                            // UP 
+                            console.log("UP MOVE");
+                            PlaySound();
+                            temp_move = "U";
+                            move = moves[6];
+                            move.start();
+
+                            break;
+                        case "4":
+                            // FRONT TWICE
+                            console.log("FRONT TWICE MOVE");
+                            PlaySound();
+                            temp_move = "F2";
+                            move = moves[4];
+                            move.start();
+                            move = moves[4];
+                            move.start();
+
+                            break;
+                        case "5":
+                            // RIGHT TWICE
+                            console.log("RIGHT MOVE");
+                            PlaySound();
+                            temp_move = "R2";
+                            move = moves[2]; // i think this works.
+                            move.start();
+                            move = moves[2]; // i think this works.
+                            move.start();
+
+                            break;
+                        case "6":
+                            // UP TWICE
+                            console.log("UP MOVE");
+                            PlaySound();
+                            temp_move = "U2";
+                            move = moves[6];
+                            move.start();
+                            move = moves[6];
+                            move.start();
+
+                            break;
+                        case "7":
+                            // FRONT INVERSE 
+                            console.log("FRONT INVERSE MOVE");
+                            PlaySound();
+                            temp_move = "F\'";
+                            move = moves[10];
+                            move.start();
+
+                            break;
+                        case "8":
+                            // RIGHT INVERSE 
+                            console.log("RIGHT INVERSE MOVE");
+                            PlaySound();
+                            temp_move = "R\'";
+                            move = moves[8];
+                            move.start();
+
+                            break;
+                        case "9":
+                            // UP INVERSE
+                            console.log("UP INVERSE MOVE");
+                            PlaySound();
+                            temp_move = "U\'";
+                            move = moves[0];
+                            move.start();
+
+                            break;
+                        default:
+                            temp_move = "-";
+                            move = moves[moves.length - 1];
+                            move.start();
+                            break;
                     }
-                    solve_pits = get_pits;
-                    await ReadDigit(); // read and append next digit                    
+                    // get ready for next move
+                    prev_pit = curr_pit;
+                } // END CLOCKWISE
+
+                // update the current move only once, instead of within switch
+                ele_current_move.innerHTML = temp_move;
+                start++; // go to next digit
+
+                // if (start > end_of_file) {
+                //     ele_digit_queue.innerHTML = `| ${get_pits.substring(start - 5, start - 4)} | ${get_pits.substring(start - 4, start - 3)} | ${get_pits.substring(start - 3, start - 2)} | <span class="current">${get_pits.substring(start - 2, start - 1)}</span> | - | - | - |`;
+                //     console.log("WENT THROUGH 12 MILLION DIGITS");
+                //     is_solving = false;
+                //     // is_fully_solved = true; // incase? should stop reading the file stream.
+                // }
+
+                // save the state of this cube now.
+                if (sketch.frameCount % 6000 == 0) { // every 50 seconds ~ 3000 ; 1200 for testing
+                    //await WriteStateToFile();
+                }
+                solve_pits = get_pits;
+                await ReadDigit(); // read and append next digit                    
                 //}
             }
         }

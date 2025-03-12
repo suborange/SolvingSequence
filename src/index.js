@@ -81,7 +81,7 @@ app.post("/write", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     let position = req.body.position; // get the single position number. write this first   
     let cube_state = JSON.stringify(req.body.state);
     let pi_digits = req.body.pits;
-    // console.log("STATE: ", req.body.state);
+    console.log("STATE: ", req.body.state);
     position = position - 6; // should align with the current state
     const new_positions = position.toString() + " " + pi_digits;
     try {
