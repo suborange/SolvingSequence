@@ -92,10 +92,12 @@ h2 {
 }
 
 h2.currentmove {
-    width: 280px;
+    width: 300px;
+    border: solid 1px black;
 }
 h2.currentdigit {
-    width: 615px;
+    width: 610px;
+    border: solid 1px blueviolet;
 }
 
 img.notation {
@@ -243,12 +245,12 @@ div.cubewrap {
 div.movewrap {
     display: flex;
     width: 100%;
-    padding-bottom: 3px;
+    /* padding-bottom: 3px; */
 }
 
 div.cube {
     display: flex;
-    padding: 0.15%;
+    padding: 0.7%;
     margin-left: 0.15%;
     margin-right: 0.15%;
 }
@@ -472,6 +474,7 @@ div.cols {
     border-right: 4px solid #192338;
     border-bottom: 1px#22314E;
     border-radius: 10px;
+    /* padding:px; */
     /* box-shadow: 2px 2px #37cd80; */
 }
 
@@ -480,8 +483,9 @@ div.cols {
     border-left: 4px solid #192338;
     border-right: 4px solid #192338;
     border-top: 1px#22314E;
-    margin-bottom: 0.3%;
+    /* margin-bottom: 0.3%; */
     border-radius: 10px;
+    /* padding:6px; */
     /* box-shadow: 2px 2px #37cd80; */
 }
 

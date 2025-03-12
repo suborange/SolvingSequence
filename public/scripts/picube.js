@@ -788,7 +788,7 @@ sketch1 = function (sketch) {
         if (move != null) {
 
             move.update_animate(); // for the faces?
-            const testlength = 3;
+            const testlength = 8;
             // for the cubies?
             for (let i = 0; i < testlength; i++) {
                 sketch.push();
@@ -925,9 +925,7 @@ sketch1 = function (sketch) {
                             temp_move = "F2";
                             move = moves[4];
                             move.start();
-                            move = moves[4];
-                            move.start();
-
+                            
                             break;
                         case "5":
                             // RIGHT TWICE
@@ -936,8 +934,7 @@ sketch1 = function (sketch) {
                             temp_move = "R2";
                             move = moves[2]; // i think this works.
                             move.start();
-                            move = moves[2]; // i think this works.
-                            move.start();
+                            
 
                             break;
                         case "6":
@@ -947,8 +944,7 @@ sketch1 = function (sketch) {
                             temp_move = "U2";
                             move = moves[6];
                             move.start();
-                            move = moves[6];
-                            move.start();
+                            
 
                             break;
                         case "7":
