@@ -93,11 +93,11 @@ h2 {
 
 h2.currentmove {
     width: 300px;
-    border: solid 1px black;
+    
 }
 h2.currentdigit {
     width: 610px;
-    border: solid 1px blueviolet;
+    
 }
 
 img.notation {

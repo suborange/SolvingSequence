@@ -41,7 +41,7 @@ let cam2;
 let cam3;
 let cam4;
 let cam_move = 1;
-let cube_size = 40;
+let cube_size = 50;
 let trans_size = cube_size / 2;
 let sketchs = [];
 let full_move;
@@ -588,7 +588,7 @@ sketch1 = function (sketch) {
                 this.angle = 0;
             }
 
-            update_animate() {
+            update_animation() {
                 // wow i have to make thisturn on the center somehow...
                 // make a new cube in middle of cube? and have it follow that?
                 if (this.animate) {
@@ -633,9 +633,9 @@ sketch1 = function (sketch) {
 
         // this creates the cube, starting from top left, -1,-1,-1, in a pattern, front to back, left to right. check whiteboard, order is wonky, and labeled correctly there
         // for every cubie, make a cube with correct length and offset to center
-        for (let _X = 0, xx = -1; _X < dim; _X++, xx+=2) {
-            for (let _Y = 0, yy = -1; _Y < dim; _Y++, yy+=2) {
-                for (let _Z = 0, zz = -1; _Z < dim; _Z++, zz+=2) {
+        for (let _X = 0.5, xx = -1; _X < dim+0.5; _X++, xx+=2) {
+            for (let _Y = 0.5, yy = -1; _Y < dim+0.5; _Y++, yy+=2) {
+                for (let _Z = 0.5, zz = -1; _Z < dim+0.5; _Z++, zz+=2) {
                     let _len = cube_size;
                     let offset = (dim) * _len * 0.5; // can change this just to len? hmm
                     let x = _X * _len - offset;
@@ -756,7 +756,7 @@ sketch1 = function (sketch) {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        sketch.orbitControl(3, 3, 3, { freeRotation: true }); //ez pz
 
         // 1440            
         if (sketch.frameCount % 1440 == 0) {
@@ -787,7 +787,7 @@ sketch1 = function (sketch) {
 
         if (move != null) {
 
-            move.update_animate(); // for the faces?
+            move.update_animation(); // for the faces?
             const testlength = 8;
             // for the cubies?
             for (let i = 0; i < testlength; i++) {
