@@ -12,11 +12,9 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 # Init
 
 # dev
-- figure out cube size ~ 620
-- should only need to be 2D array
-- also need to fix up the moves in switch ~ 850
-- also need to add switching every 12 moves, the way he found it solved. (so its forsure)
-- find out exactly what he ran for the 2x2x2. 
+- fix the solution part - has fixed corner, which needs to align for it to be solved.
+- over night run:
+
 
 # HTML
 
@@ -24,9 +22,6 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 
 
 # JavaScript
-
-
-
 
 ### for later, once this works. can restart where i am at.
 

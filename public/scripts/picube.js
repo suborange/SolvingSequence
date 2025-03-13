@@ -43,6 +43,7 @@ let cam4;
 let cam_move = 1;
 let cube_size = 50;
 let trans_size = cube_size / 2;
+let turn_angle = 0;
 let sketchs = [];
 let full_move;
 // for file positon and reading
@@ -62,9 +63,9 @@ const LEFT = -1;
 const RIGHT = 1; // should be middle as right now
 const UP = -1;
 const DOWN = 1; // should be middle as down now
-const S_SLICE = 0;
-const M_SLICE = 0;
-const E_SLICE = 0;
+// const S_SLICE = 0;
+// const M_SLICE = 0;
+// const E_SLICE = 0;
 const CLOCKWISE = 1;
 const COUNTER_CLOCKWISE = -1;
 const X_PLANE = 0;
@@ -594,22 +595,22 @@ sketch1 = function (sketch) {
                 // wow i have to make thisturn on the center somehow...
                 // make a new cube in middle of cube? and have it follow that?
                 if (this.animate) {
-                    this.angle += this.dir * 0.06;
+                    this.angle += this.dir * 0.5;
                     // after animation, change positions.
-                    if (sketch.abs(this.angle) > sketch.HALF_PI) {
+                    if (sketch.abs(this.angle) > turn_angle) { // make this a dynamic variable - half pi for U, pi for U2
                         this.angle = 0;
                         this.animate = false;
 
                         // fixed to work with slicing by making default -2 // maybe this is where to add the change to a posiiton?(for solved or not)
                         //  remove the back, right, and down planes.. 
                         if (this.plane == Z_PLANE) { // Z axis animation
-                            rotateZaxis(this.dir * sketch.HALF_PI, this.z);
+                            rotateZaxis(this.dir * turn_angle, this.z);
                         }
                         else if (this.plane == X_PLANE) { // X axis animation
-                            rotateXaxis(this.dir * sketch.HALF_PI, this.x);
+                            rotateXaxis(this.dir * turn_angle, this.x);
                         }
                         else if (this.plane == Y_PLANE) { // Y axis animation
-                            rotateYaxis(this.dir * -1 * sketch.HALF_PI, this.y);
+                            rotateYaxis(this.dir * -1 * turn_angle, this.y);
                         }
                     }
                 }
@@ -619,7 +620,7 @@ sketch1 = function (sketch) {
         // *** END CLASSES  ****
 
         // **** START CANVAS AND SETUP ****
-        let canvas = sketch.createCanvas(650, 450, sketch.WEBGL);
+        let canvas = sketch.createCanvas(650, 450, sketch.WEBGL); // TODO change canves height if want?
 
         canvas.parent(canvas_id);
         cam1 = sketch.createCamera();
@@ -632,6 +633,7 @@ sketch1 = function (sketch) {
         cube = Array(dim * dim).fill(); // 1D array of matrices
         SOLVED_CUBE = Array(dim * dim).fill(); // 1D array of matrices
         index = 0;
+        turn_angle = sketch.HALF_PI;
 
         // this creates the cube, starting from top left, -1,-1,-1, in a pattern, front to back, left to right. check whiteboard, order is wonky, and labeled correctly there
         // for every cubie, make a cube with correct length and offset to center
@@ -707,7 +709,6 @@ sketch1 = function (sketch) {
                 qb.update((qb.matrix.x / (cube_size/2)), (qb.matrix.y / (cube_size/2)), (qb.matrix.z / (cube_size/2)));
                 qb.turnXfaces(angle);
             } // end if axis    
-
         }
     } // end X turn  
 
@@ -728,7 +729,6 @@ sketch1 = function (sketch) {
                 qb.update((qb.matrix.x / (cube_size/2)), (qb.matrix.y / (cube_size/2)), (qb.matrix.z / (cube_size/2)));
                 qb.turnYfaces(angle);
             } // end if axis     
-
         }
     } // end Y turn
 
@@ -758,24 +758,13 @@ sketch1 = function (sketch) {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        //sketch.orbitControl(3, 3, 3, { freeRotation: true }); //ez pz
+        // sketch.orbitControl(3, 3, 3, { freeRotation: true }); //ez pz
 
         // 1440            
         if (sketch.frameCount % 1440 == 0) {
             cam_move *= -1; // flip direction every once in a while
             cam1.setPosition(0, 0, 230);
-            cam1.lookAt(0, 0, 0);
-            iswap = !iswap;
-
-            // swap images between clockwise and counter clockwise, can be timed here?
-            if (iswap) {
-                img_swap1.classList.remove('crossfade');
-                img_swap2.classList.add('crossfade');
-            }
-            else {
-                img_swap2.classList.remove('crossfade');
-                img_swap1.classList.add('crossfade');
-            }
+            cam1.lookAt(0, 0, 0);            
         }
 
         sketch.rotateX(sketch.HALF_PI / 2);
@@ -832,7 +821,7 @@ sketch1 = function (sketch) {
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
-        if ((sketch.frameCount % 120 == 0) && !is_fully_solved && is_solving) {
+        if ((sketch.frameCount % 6 == 0) && !is_fully_solved && is_solving) {
             // ReadForReset(); // debugging - it gets called here correctly.. 
 
 
@@ -890,6 +879,7 @@ sketch1 = function (sketch) {
                     prev_pit = curr_pit; // setup for next digit
                     temp_move = "-";
                     move = moves[12];
+                    turn_angle = sketch.HALF_PI;
                     move.start();
                     // do nothing go to next digit
                 }
@@ -899,7 +889,8 @@ sketch1 = function (sketch) {
                         case "1":
                             // FRONT
                             console.log("FRONT MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "F";
                             move = moves[4];
                             move.start();
@@ -908,7 +899,8 @@ sketch1 = function (sketch) {
                         case "2":
                             // RIGHT 
                             console.log("RIGHT MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "R";
                             move = moves[2];
                             move.start();
@@ -917,7 +909,8 @@ sketch1 = function (sketch) {
                         case "3":
                             // UP 
                             console.log("UP MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "U";
                             move = moves[6];
                             move.start();
@@ -926,7 +919,8 @@ sketch1 = function (sketch) {
                         case "4":
                             // FRONT TWICE
                             console.log("FRONT TWICE MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.PI;
                             temp_move = "F2";
                             move = moves[4];
                             move.start();
@@ -935,8 +929,9 @@ sketch1 = function (sketch) {
                         case "5":
                             // RIGHT TWICE
                             console.log("RIGHT MOVE");
-                            PlaySound();
+                            // PlaySound();
                             temp_move = "R2";
+                            turn_angle = sketch.PI;
                             move = moves[2]; // i think this works.
                             move.start();
                             
@@ -945,8 +940,9 @@ sketch1 = function (sketch) {
                         case "6":
                             // UP TWICE
                             console.log("UP MOVE");
-                            PlaySound();
-                            temp_move = "U2";
+                            // PlaySound();
+                            turn_angle = sketch.PI;
+                            temp_move = "U2";                            
                             move = moves[6];
                             move.start();
                             
@@ -955,7 +951,8 @@ sketch1 = function (sketch) {
                         case "7":
                             // FRONT INVERSE 
                             console.log("FRONT INVERSE MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "F\'";
                             move = moves[10];
                             move.start();
@@ -964,7 +961,8 @@ sketch1 = function (sketch) {
                         case "8":
                             // RIGHT INVERSE 
                             console.log("RIGHT INVERSE MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "R\'";
                             move = moves[8];
                             move.start();
@@ -973,7 +971,8 @@ sketch1 = function (sketch) {
                         case "9":
                             // UP INVERSE
                             console.log("UP INVERSE MOVE");
-                            PlaySound();
+                            // PlaySound();
+                            turn_angle = sketch.HALF_PI;
                             temp_move = "U\'";
                             move = moves[0];
                             move.start();

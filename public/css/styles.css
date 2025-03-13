@@ -102,10 +102,7 @@ h2.currentdigit {
 
 img.notation {
     position: relative;
-    grid-area: 1 / 1;
-    width: 100%;
-    transition: opacity 1s ease-in-out;
-    opacity: 0;    
+    width: 100%;    
 }
 
 img.crossfade {

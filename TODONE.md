@@ -12,6 +12,14 @@ d+ need to add another box below to show the current digits and moves
 + also maybe highlight the pi number it is at.
 + fix the graphics for 0==repeat
 + add couple more solved audio files.
++ version 2.0 - Rubik's cube 2x2x2 
+    + find out exactly what he ran for the 2x2x2. 
+    + figure out cube size ~ 630
+    + should only need to be 2D array
+    + cube is working with 2x2x2 size, turns correctly
+    + cube moves and notatin work and setup correctly.
+    + page lookes good, fixed and adjusted some sizing.
+    + also need to fix up the moves in switch ~ 890
 
 # HTML
 + i think it is just one home page, 
