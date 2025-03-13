@@ -702,7 +702,7 @@ sketch1 = function (sketch) {
                 // translate?
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
+                qb.update((qb.matrix.x / (cube_size/2)), (qb.matrix.y / (cube_size/2)), (qb.matrix.z / (cube_size/2)));
                 qb.turnXfaces(angle);
             } // end if axis    
 
@@ -723,7 +723,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.y = sketch.round(qb.matrix.y);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
+                qb.update((qb.matrix.x / (cube_size/2)), (qb.matrix.y / (cube_size/2)), (qb.matrix.z / (cube_size/2)));
                 qb.turnYfaces(angle);
             } // end if axis     
 
@@ -743,7 +743,7 @@ sketch1 = function (sketch) {
                 qb.matrix_next.z = sketch.round(qb.matrix.z);
                 qb.matrix = qb.matrix_next;
 
-                qb.update((qb.matrix.x / cube_size), (qb.matrix.y / cube_size), (qb.matrix.z / cube_size));
+                qb.update((qb.matrix.x / (cube_size/2)), (qb.matrix.y / (cube_size/2)), (qb.matrix.z / (cube_size/2)));
                 qb.turnZfaces(angle);
             } // end if axis
 
