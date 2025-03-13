@@ -281,6 +281,8 @@ function PlaySolvedSound() {
 }
 // does some extremely whacky logic to check if the cube is in a solved state.
 function CubeIsSolved() {
+
+    // 2x2x2 - cube[2] should be the one, that stays in place, and can check those faces against all other faces, and see.
     // console.log('checking solve');
     const cube_indexes = [];
     const face_indexes = [];
@@ -756,13 +758,13 @@ sketch1 = function (sketch) {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        sketch.orbitControl(3, 3, 3, { freeRotation: true }); //ez pz
+        //sketch.orbitControl(3, 3, 3, { freeRotation: true }); //ez pz
 
         // 1440            
         if (sketch.frameCount % 1440 == 0) {
-            //cam_move *= -1; // flip direction every once in a while
-            //cam1.setPosition(0, 0, 230);
-            //cam1.lookAt(0, 0, 0);
+            cam_move *= -1; // flip direction every once in a while
+            cam1.setPosition(0, 0, 230);
+            cam1.lookAt(0, 0, 0);
             iswap = !iswap;
 
             // swap images between clockwise and counter clockwise, can be timed here?
@@ -776,11 +778,11 @@ sketch1 = function (sketch) {
             }
         }
 
-        // sketch.rotateX(sketch.HALF_PI / 2);
-        // sketch.rotateZ(sketch.HALF_PI / 2);
+        sketch.rotateX(sketch.HALF_PI / 2);
+        sketch.rotateZ(sketch.HALF_PI / 2);
 
         sketch.push();
-        //cam1.move(cam_move, 0, 0);
+        cam1.move(cam_move, 0, 0);
         cam1.lookAt(0, 0, 0);
         sketch.pop();
 
@@ -886,6 +888,9 @@ sketch1 = function (sketch) {
                 if (curr_pit == 0) {
                     // curr_pit = prev_pit;
                     prev_pit = curr_pit; // setup for next digit
+                    temp_move = "-";
+                    move = moves[12];
+                    move.start();
                     // do nothing go to next digit
                 }
                 else {
