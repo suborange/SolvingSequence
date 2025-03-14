@@ -20,6 +20,10 @@ d+ need to add another box below to show the current digits and moves
     + cube moves and notatin work and setup correctly.
     + page lookes good, fixed and adjusted some sizing.
     + also need to fix up the moves in switch ~ 890
+    + make sure the position, and state file works correctly.
+    + looks good atm, needs more testing
+    + fix the solution part - has fixed corner, which needs to align for it to be solved.
+    + over night run:
 
 # HTML
 + i think it is just one home page, 

@@ -12,8 +12,8 @@ https://stuff.mit.edu/afs/sipb/contrib/pi/pi-billion.txt
 # Init
 
 # dev
-- fix the solution part - has fixed corner, which needs to align for it to be solved.
-- over night run:
+- add new 2x2x2 sounds, and add double move sounds
+
 
 
 # HTML
