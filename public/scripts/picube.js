@@ -708,7 +708,7 @@ sketch1 = function (sketch) {
                     ele_current_digit.classList.remove('current');
                     ele_current_digit.classList.add('solved');
                     const solved_digit = numberWithCommas(start - 9);
-                    ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
+                    ele_pi_header.innerHTML = `<span class="pi thicc">&pi;</span> Solved a 2x2x2 <span class="r thicc">R</span><span class="u thicc">u</span><span class="b thicc">b</span><span class="i thicc">i</span><span class="k thicc">k</span><span class="s thicc">'s</span> Cube at digit <span class="pi thicc">${solved_digit}</span>! `;
                     is_solving = false; // STOP ANY ROTATIONS AND STUFF. DREAM COMPLETE
                     is_fully_solved = true; // stop checking pi file and etc.    
                     /* displayPi(start, 3, 4); // ?no longer needed */
