@@ -685,7 +685,7 @@ sketch1 = function (sketch) {
 
         // sketch.frameCount
         // right now every 2 seconds. (offset to not move while camera potentially resets? - 120 default)
-        if ((sketch.frameCount % 120 == 0) && !is_fully_solved && is_solving) {
+        if ((sketch.frameCount % 60 == 0) && !is_fully_solved && is_solving) {
             // this is manually set, after first run, this needs to be turned on to reset at the save state
             if (reset_cube) {
                 await ReadForReset();
