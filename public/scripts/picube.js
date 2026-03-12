@@ -739,32 +739,32 @@ sketch1 = function (sketch) {
 
         sketch.background(62, 90, 142);// #3E5A8E
         // camera controls for free rotation
-        sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
+        // sketch.orbitControl(1.5, 1.5, 1, { freeRotation: true }); //ez pz
 
         // 1440            
-        // if (sketch.frameCount % 1440 == 0) {
-        //     cam_move *= -1; // flip direction every once in a while
-        //     cam1.setPosition(0, 0, 230);
-        //     cam1.lookAt(0, 0, 0);
-        //     iswap = !iswap;
+        if (sketch.frameCount % 1440 == 0) {
+            cam_move *= -1; // flip direction every once in a while
+            cam1.setPosition(0, 0, 230);
+            cam1.lookAt(0, 0, 0);
+            iswap = !iswap;
 
-        //     // swap images between clockwise and counter clockwise, can be timed here?
-        //     if (iswap) {
-        //         img_swap1.classList.remove('crossfade');
-        //         img_swap2.classList.add('crossfade');
-        //     }
-        //     else {
-        //         img_swap2.classList.remove('crossfade');
-        //         img_swap1.classList.add('crossfade');
-        //     }
-        // }
+            // swap images between clockwise and counter clockwise, can be timed here?
+            if (iswap) {
+                img_swap1.classList.remove('crossfade');
+                img_swap2.classList.add('crossfade');
+            }
+            else {
+                img_swap2.classList.remove('crossfade');
+                img_swap1.classList.add('crossfade');
+            }
+        }
 
-        // sketch.rotateX(sketch.HALF_PI / 2);
-        // sketch.rotateZ(sketch.HALF_PI / 2);
+        sketch.rotateX(sketch.HALF_PI / 2);
+        sketch.rotateZ(sketch.HALF_PI / 2);
 
         sketch.push();
-        // cam1.move(cam_move, 0, 0);
-        // cam1.lookAt(0, 0, 0);
+        cam1.move(cam_move, 0, 0);
+        cam1.lookAt(0, 0, 0);
         sketch.pop();
 
 
