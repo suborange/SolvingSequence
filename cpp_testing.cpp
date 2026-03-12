@@ -8,6 +8,9 @@ using std::cout;
 using std::endl;
 
 
+const bool UNSOVLED = false;
+const bool SOLVED = true;
+
 struct MasterCube {
     char red;
     char white;
@@ -28,23 +31,23 @@ YELLOW 16-19
 WHITE 20-23
 */
 
-void RightTurn(int* _cube) {
+void RightTurn(short int* _cube) {
     //top face square
-    int top = _cube[1];
+    short int top = _cube[1];
     _cube[1] = _cube[21];
     _cube[21] = _cube[10];
     _cube[10] = _cube[17];
     _cube[17] = top;
 
     // bottom face square
-    int bottom = _cube[3];
+    short int bottom = _cube[3];
     _cube[3] = _cube[23];
     _cube[23] = _cube[8];
     _cube[8] = _cube[19];
     _cube[19] = bottom;    
 
     // right side face
-    int right = _cube[4];
+    short int right = _cube[4];
     _cube[4] = _cube[6];
     _cube[6] = _cube[7];
     _cube[7] = _cube[5];
@@ -53,23 +56,23 @@ void RightTurn(int* _cube) {
     cout << endl << "RIGHT TURN,";
 }
 
-void LeftTurn(int* _cube) {
+void LeftTurn(short int* _cube) {
     //top face square
-    int top = _cube[0];
+    short int top = _cube[0];
     _cube[0] = _cube[16];
     _cube[16] = _cube[11];
     _cube[11] = _cube[20];
     _cube[20] = top;
 
     //bottom face square
-    int bottom = _cube[2];
+    short int bottom = _cube[2];
     _cube[2] = _cube[18];
     _cube[18] = _cube[9];
     _cube[9] = _cube[22];
     _cube[22] = bottom;    
 
     //left side face 
-    int left = _cube[12];
+    short int left = _cube[12];
     _cube[12] = _cube[14];
     _cube[14] = _cube[15];
     _cube[15] = _cube[13];
@@ -78,23 +81,23 @@ void LeftTurn(int* _cube) {
     cout << endl << "LEFT TURN,";
 }
 
-void UpTurn(int* _cube) {
+void UpTurn(short int* _cube) {
     // left face square
-    int left = _cube[0];
+    short int left = _cube[0];
     _cube[0] = _cube[4];
     _cube[4] = _cube[8];
     _cube[8] = _cube[12];
     _cube[12] = left;
 
     //right face square
-    int right = _cube[1];
+    short int right = _cube[1];
     _cube[1] = _cube[5];
     _cube[5] = _cube[9];
     _cube[9] = _cube[13];
     _cube[13] = right;
 
     // up side face
-    int up = _cube[16];
+    short int up = _cube[16];
     _cube[16] = _cube[18];
     _cube[18] = _cube[19];
     _cube[19] = _cube[17];
@@ -103,23 +106,23 @@ void UpTurn(int* _cube) {
     cout << endl << "UPTURN,";
 }
 
-void DownTurn(int* _cube) {
+void DownTurn(short int* _cube) {
     // left face square
-    int left = _cube[2];
+    short int left = _cube[2];
     _cube[2] = _cube[14];
     _cube[14] = _cube[10];
     _cube[10] = _cube[6];
     _cube[6] = left;
 
     //right face square
-    int right = _cube[3];
+    short int right = _cube[3];
     _cube[3] = _cube[15];
     _cube[15] = _cube[11];
     _cube[11] = _cube[7];
     _cube[7] = right;
 
     // down side face
-    int down = _cube[20];
+    short int down = _cube[20];
     _cube[20] = _cube[22];
     _cube[22] = _cube[23];
     _cube[23] = _cube[21];
@@ -128,23 +131,23 @@ void DownTurn(int* _cube) {
     cout << endl << "DOWN TURN,";
 }
 
-void FrontTurn(int* _cube) {
+void FrontTurn(short int* _cube) {
     // left face square
-    int left = _cube[18];
+    short int left = _cube[18];
     _cube[18] = _cube[15];
     _cube[15] = _cube[21];
     _cube[21] = _cube[4];
     _cube[4] = left;
 
     //right face square
-    int right = _cube[19];
+    short int right = _cube[19];
     _cube[19] = _cube[13];
     _cube[13] = _cube[20];
     _cube[20] = _cube[6];
     _cube[6] = right;
 
     // front side face
-    int front = _cube[0];
+    short int front = _cube[0];
     _cube[0] = _cube[2];
     _cube[2] = _cube[3];
     _cube[3] = _cube[1];
@@ -153,23 +156,23 @@ void FrontTurn(int* _cube) {
     cout << endl << "FRONT TURN,";
 }
 
-void BackTurn(int* _cube) {
+void BackTurn(short int* _cube) {
     // left face square
-    int left = _cube[16];
+    short int left = _cube[16];
     _cube[16] = _cube[5];
     _cube[5] = _cube[23];
     _cube[23] = _cube[14];
     _cube[14] = left;
 
     //right face square
-    int right = _cube[17];
+    short int right = _cube[17];
     _cube[17] = _cube[7];
     _cube[7] = _cube[22];
     _cube[22] = _cube[12];
     _cube[12] = right;
 
     // back side face
-    int back = _cube[8];
+    short int back = _cube[8];
     _cube[8] = _cube[10];
     _cube[10] = _cube[11];
     _cube[11] = _cube[9];
@@ -203,37 +206,19 @@ void BackTurn(int* _cube) {
 
 */
 
-int SolveCube(int* _cube) {
-    std::string cube_state;
-
-    for (int index = 0; index < 24; index++) {
-/*
-        GREEN 0-3
-        ORANGE 4-7
-        BLUE 8-11
-        RED 12-15
-        YELLOW 16-19
-        WHITE 20-23
-*/
-        cube_state += _cube[index];
-        cube_state += ", ";
-    }
-    
-    return 0; // success
-}
 
 int SetupCube() {
-    int cube[24];
+    short int cube[24];
 
     return 0;
 }
 
-void PrintCube(int* _cube) {
+void PrintCube(short int* _cube) {
     std::string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
     cout << endl << endl << "PRINTING CUBES STATE: ";
 
-    for (int index = 0, face = 0; index < 24; index++) {
+    for (short int index = 0, face = 0; index < 24; index++) {
         if (index % 4 == 0) {
             cout << endl << faces[face] << " face: ";
             face++; // go next face
@@ -243,99 +228,118 @@ void PrintCube(int* _cube) {
     cout << endl;
 }
 
+bool IsCubeSolved(short int* _cube) {
+    short int SolvedStates[24][24] = {
+        // GREEN FRONT
+        // Green Face Front, Yellow Face Up, Orange Face Right... - defualt green state
+        { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23},
+        // Green Face Front, Red Face Up, Yellow Face Right... 
+        { 2, 0, 3, 1, 18, 16, 19, 17, 9, 11, 8, 10, 22, 20, 23, 21, 14, 12, 15, 13, 6, 4, 7, 5},
+        // Green Face Front, White Face Up, Red Face Right... 
+        { 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 23, 22, 21, 20, 19, 18, 17, 16},
+        // Green Face Front, Orange Face Up, White Face Right... 
+        { 1, 3, 0, 2, 21, 23, 20, 22, 10, 8, 11, 9, 17, 19, 16, 18, 5, 7, 4, 6, 13, 15, 12, 14},
+        // ORANGE FRONT
+        // Orange Face Front, Yellow Face Up, Blue Face Right... - defualt orange state
+        { 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 18, 16, 19, 17, 21, 23, 20, 22},
+        // Orange Face Front, Green Face Up, Yellow Face Right... 
+        { 6, 4, 7, 5, 19, 18, 17, 16, 13, 15, 12, 14, 20, 21, 22, 23, 2, 0, 3, 1, 10, 8, 11, 9},
+        // Orange Face Front, White Face Up, Green Face Right... 
+        { 7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 11, 10, 9, 8, 22, 20, 23, 21, 17, 19, 16, 18},
+        // Orange Face Front, Blue Face Up, White Face Right... 
+        { 5, 7, 4, 6, 23, 22, 21, 20, 14, 12, 15, 13, 16, 17, 18, 19, 9, 11, 8, 10, 1, 3, 0, 2},
+        // BLUE FRONT
+        // Blue Face Front, Yellow Face Up, Red Face Right... - defualt blue state
+        { 8, 9, 10, 11, 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7, 19, 18, 17, 16, 23, 22, 21, 20},
+        // Blue Face Front, Orange Face Up, Yellow Face Right... 
+        { 10, 8, 11, 9, 17, 19, 16, 18, 1, 3, 0, 2, 21, 23, 20, 22, 6, 4, 7, 5, 14, 12, 15, 13},
+        // Blue Face Front, White Face Up, Orange Face Right... 
+        { 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 15, 14, 13, 12, 20, 21, 22, 23, 16, 17, 18, 19},
+        // Blue Face Front, Red Face Up, White Face Right... 
+        { 9, 11, 8, 10, 22, 20, 23, 21, 2, 0, 3, 1, 18, 16, 19, 17, 13, 15, 12, 14, 5, 7, 4, 6},
+        // RED FRONT
+        // Red Face Front, Yellow Face Up, Green Face Right... - defualt red state
+        { 12, 13, 14, 15, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 17, 19, 16, 18, 22, 20, 23, 21},
+        // Red Face Front, Blue Face Up, Yellow Face Right... 
+        { 14, 12, 15, 13, 16, 17, 18, 19, 5, 7, 4, 6, 23, 22, 21, 20, 10, 8, 11, 9, 2, 0, 3, 1},
+        // Red Face Front, White Face Up, Blue Face Right... 
+        { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0, 21, 23, 20, 22, 18, 16, 19, 17},
+        // Red Face Front, Green Face Up, White Face Right... 
+        { 13, 15, 12, 14, 20, 21, 22, 23, 6, 4, 7, 5, 19, 18, 17, 16, 1, 3, 0, 2, 9, 11, 8, 10},
+        // YELLOW FRONT
+        // Yellow Face Front, Blue Face Up, Orange Face Right... - defualt yellow state
+        { 16, 17, 18, 19, 5, 7, 4, 6, 23, 22, 21, 20, 14, 12, 15, 13, 11, 10, 9, 8, 0, 1, 2, 3},
+        // Yellow Face Front, Red Face Up, Blue Face Right... 
+        { 18, 16, 19, 17, 9, 11, 8, 10, 22, 20, 23, 21, 2, 0, 3, 1, 15, 14, 13, 12, 4, 5, 6, 7},
+        // Yellow Face Front, Green Face Up, Red Face Right... 
+        { 19, 18, 17, 16, 13, 15, 12, 14, 20, 21, 22, 23, 6, 4, 7, 5, 3, 2, 1, 0, 8, 9, 10, 11},
+        // Yellow Face Front, Orange Face Up, Green Face Right... 
+        { 17, 19, 16, 18, 1, 3, 0, 2, 21, 23, 20, 22, 10, 8, 11, 9, 7, 6, 5, 4, 12, 13, 14, 15},
+        // WHITE FRONT
+        // White Face Front, Green Face Up, Orange Face Right... - defualt yellow state
+        { 20, 21, 22, 23, 6, 4, 7, 5, 19, 18, 17, 16, 13, 15, 12, 14, 0, 1, 2, 3, 11, 10, 9, 8},
+        // White Face Front, Red Face Up, Green Face Right... 
+        { 22, 20, 23, 21, 2, 0, 3, 1, 18, 16, 19, 17, 9, 11, 8, 10, 12, 13, 14, 15, 7, 6, 5, 4},
+        // White Face Front, Blue Face Up, Red Face Right... 
+        { 23, 22, 21, 20, 14, 12, 15, 13, 16, 17, 18, 19, 5, 7, 4, 6, 8, 9, 10, 11, 3, 2, 1, 0},
+        // White Face Front, Orange Face Up, Blue Face Right... 
+        { 21, 23, 20, 22, 10, 8, 11, 9, 17, 19, 16, 18, 1, 3, 0, 2, 4, 5, 6, 7, 15, 14, 13, 12},
+    };
+
+    bool never_unsolved = true; // prove this to be wrong.
+    // go through each face state
+    for (int short state = 0; state < 24; state++)
+    {
+        // now go through each cube to check if its solved in this face state
+        for (short int qb = 0; qb < 24; qb++)
+            if (!(_cube[qb] == SolvedStates[state][qb])) {
+                never_unsolved = false;
+                return UNSOVLED;
+            }
+        if (never_unsolved) {
+            break;
+        }
+    }
+
+   // must be solved then, if no check failed.
+    cout << "HOLY CRAP SOMETHING HAPPENED";
+    return SOLVED;
+}
+
 int main()
 {
     cout << "STARTING CUBE POSITIONS: " << endl;
     std::string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
+    bool NotSolved = true;
 
-    int cube[24];
+    short int cube[24];
     // initialzie the solved cube state
-    for (int qb = 0, face = 0; qb < 24; qb++) {
+    for (short int qb = 0, face = 0; qb < 24; qb++) {
         if (qb % 4 == 0) {
-            cout <<endl << faces[face] << " face: " ;
+            cout << endl << faces[face] << " face: ";
             face++; // go next face
         }
         cube[qb] = qb;
         cout << qb << ", ";
-        
+
     }
     cout << endl;
 
-    // GODS MOVES w/ SETUP
-    //setup with green front and white on top (nice green front :p)
-    FrontTurn(cube);
-    FrontTurn(cube);
-    BackTurn(cube);
-    BackTurn(cube);
-    // Should be green in front, white on top
-    PrintCube(cube);
+    // With cube initialized, start doing moves and checking if it is solved or not
 
+    while (NotSolved) {
 
-    cout <<endl << "----GODS SCRAMBLE----" << endl;
-    LeftTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    BackTurn(cube);
-    BackTurn(cube);
-    RightTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    DownTurn(cube);
-    DownTurn(cube);
-    FrontTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    LeftTurn(cube);
-    FrontTurn(cube);
-    FrontTurn(cube);
-    BackTurn(cube);
-    RightTurn(cube);
-    RightTurn(cube);
-    RightTurn(cube);
-    UpTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
+        //read file, make 100 moves -> each move print out at first, after 100 moves read next chunk
+       
+        // continue solving
+        RightTurn(cube);
+        PrintCube(cube);
 
-    PrintCube(cube);
+        NotSolved = !IsCubeSolved(cube); // get wether or not it is solved or not. (flip it? shit idk...)
+    }
+       
 
-    cout <<endl << "----GODS SOLUTION----" << endl;
-    LeftTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    UpTurn(cube);
-    RightTurn(cube);
-    BackTurn(cube);
-    BackTurn(cube);
-    BackTurn(cube);
-    FrontTurn(cube);
-    FrontTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    UpTurn(cube);
-    FrontTurn(cube);
-    FrontTurn(cube);
-    FrontTurn(cube);
-    DownTurn(cube);
-    DownTurn(cube);
-    LeftTurn(cube);
-    RightTurn(cube);
-    RightTurn(cube);
-    RightTurn(cube);
-    BackTurn(cube);
-    BackTurn(cube);
-    UpTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-    LeftTurn(cube);
-
-    PrintCube(cube);
-
-    //read file, make 100 moves -> each move print out at first, after 100 moves read next chunk
+    
 
   
     cout << endl << "------------Final State-------------------- ";
@@ -352,6 +356,107 @@ int main()
 
 
 // TESTING STUFF BELOW
+
+// for getting all 24 solving states:
+////1
+//RightTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//
+//// white front
+////2
+////FrontTurn(cube);
+////BackTurn(cube);
+////BackTurn(cube);
+////BackTurn(cube);
+//
+////////3
+////FrontTurn(cube);
+////FrontTurn(cube);
+////BackTurn(cube);
+////BackTurn(cube);
+//
+//////4
+//FrontTurn(cube);
+//FrontTurn(cube);
+//FrontTurn(cube);
+//BackTurn(cube);
+
+
+// GODS MOVES w/ SETUP
+    //setup with green front and white on top (nice green front :p)
+//FrontTurn(cube);
+//FrontTurn(cube);
+//BackTurn(cube);
+//BackTurn(cube);
+//// Should be green in front, white on top
+//PrintCube(cube);
+//
+//
+//cout << endl << "----GODS SCRAMBLE----" << endl;
+//LeftTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//BackTurn(cube);
+//BackTurn(cube);
+//RightTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//DownTurn(cube);
+//DownTurn(cube);
+//FrontTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//LeftTurn(cube);
+//FrontTurn(cube);
+//FrontTurn(cube);
+//BackTurn(cube);
+//RightTurn(cube);
+//RightTurn(cube);
+//RightTurn(cube);
+//UpTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//
+//PrintCube(cube);
+//
+//cout << endl << "----GODS SOLUTION----" << endl;
+//LeftTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//UpTurn(cube);
+//RightTurn(cube);
+//BackTurn(cube);
+//BackTurn(cube);
+//BackTurn(cube);
+//FrontTurn(cube);
+//FrontTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//UpTurn(cube);
+//FrontTurn(cube);
+//FrontTurn(cube);
+//FrontTurn(cube);
+//DownTurn(cube);
+//DownTurn(cube);
+//LeftTurn(cube);
+//RightTurn(cube);
+//RightTurn(cube);
+//RightTurn(cube);
+//BackTurn(cube);
+//BackTurn(cube);
+//UpTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//LeftTurn(cube);
+//
+//PrintCube(cube);
 
 
 // some other random moves that should solve itself
@@ -433,4 +538,33 @@ int main()
 //    }
 //    cout << endl;
 
+//}
+
+
+// other crap
+//cout << endl << endl << "PRINTING CUBES STATE: ";
+//
+//for (short int index = 0, face = 0; index < 24; index++) {
+//    cout << cube[index] << ", ";
+//}
+//cout << endl;
+
+//
+//int SolveCube(short int* _cube) {
+//    std::string cube_state;
+//
+//    for (short int index = 0; index < 24; index++) {
+//        /*
+//                GREEN 0-3
+//                ORANGE 4-7
+//                BLUE 8-11
+//                RED 12-15
+//                YELLOW 16-19
+//                WHITE 20-23
+//        */
+//        cube_state += _cube[index];
+//        cube_state += ", ";
+//    }
+//
+//    return 0; // success
 //}
