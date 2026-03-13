@@ -2,7 +2,10 @@
 //
 
 #include <iostream>
-#include<string>
+#include <fstream>
+#include <vector>
+#include <string>
+#include "Moves.h"
 
 using std::cout;
 using std::endl;
@@ -10,17 +13,6 @@ using std::endl;
 
 const bool UNSOVLED = false;
 const bool SOLVED = true;
-
-struct MasterCube {
-    char red;
-    char white;
-    char blue;
-    char yellow;
-    char green;
-    char orange;
-
-};
-
 
 /*
 GREEN 0-3
@@ -31,155 +23,6 @@ YELLOW 16-19
 WHITE 20-23
 */
 
-void RightTurn(short int* _cube) {
-    //top face square
-    short int top = _cube[1];
-    _cube[1] = _cube[21];
-    _cube[21] = _cube[10];
-    _cube[10] = _cube[17];
-    _cube[17] = top;
-
-    // bottom face square
-    short int bottom = _cube[3];
-    _cube[3] = _cube[23];
-    _cube[23] = _cube[8];
-    _cube[8] = _cube[19];
-    _cube[19] = bottom;    
-
-    // right side face
-    short int right = _cube[4];
-    _cube[4] = _cube[6];
-    _cube[6] = _cube[7];
-    _cube[7] = _cube[5];
-    _cube[5] = right;
-    //print("right turn")
-    cout << endl << "RIGHT TURN,";
-}
-
-void LeftTurn(short int* _cube) {
-    //top face square
-    short int top = _cube[0];
-    _cube[0] = _cube[16];
-    _cube[16] = _cube[11];
-    _cube[11] = _cube[20];
-    _cube[20] = top;
-
-    //bottom face square
-    short int bottom = _cube[2];
-    _cube[2] = _cube[18];
-    _cube[18] = _cube[9];
-    _cube[9] = _cube[22];
-    _cube[22] = bottom;    
-
-    //left side face 
-    short int left = _cube[12];
-    _cube[12] = _cube[14];
-    _cube[14] = _cube[15];
-    _cube[15] = _cube[13];
-    _cube[13] = left;
-    //print("left turn")
-    cout << endl << "LEFT TURN,";
-}
-
-void UpTurn(short int* _cube) {
-    // left face square
-    short int left = _cube[0];
-    _cube[0] = _cube[4];
-    _cube[4] = _cube[8];
-    _cube[8] = _cube[12];
-    _cube[12] = left;
-
-    //right face square
-    short int right = _cube[1];
-    _cube[1] = _cube[5];
-    _cube[5] = _cube[9];
-    _cube[9] = _cube[13];
-    _cube[13] = right;
-
-    // up side face
-    short int up = _cube[16];
-    _cube[16] = _cube[18];
-    _cube[18] = _cube[19];
-    _cube[19] = _cube[17];
-    _cube[17] = up;
-    //print("up turn")
-    cout << endl << "UPTURN,";
-}
-
-void DownTurn(short int* _cube) {
-    // left face square
-    short int left = _cube[2];
-    _cube[2] = _cube[14];
-    _cube[14] = _cube[10];
-    _cube[10] = _cube[6];
-    _cube[6] = left;
-
-    //right face square
-    short int right = _cube[3];
-    _cube[3] = _cube[15];
-    _cube[15] = _cube[11];
-    _cube[11] = _cube[7];
-    _cube[7] = right;
-
-    // down side face
-    short int down = _cube[20];
-    _cube[20] = _cube[22];
-    _cube[22] = _cube[23];
-    _cube[23] = _cube[21];
-    _cube[21] = down;
-    //print("down turn")
-    cout << endl << "DOWN TURN,";
-}
-
-void FrontTurn(short int* _cube) {
-    // left face square
-    short int left = _cube[18];
-    _cube[18] = _cube[15];
-    _cube[15] = _cube[21];
-    _cube[21] = _cube[4];
-    _cube[4] = left;
-
-    //right face square
-    short int right = _cube[19];
-    _cube[19] = _cube[13];
-    _cube[13] = _cube[20];
-    _cube[20] = _cube[6];
-    _cube[6] = right;
-
-    // front side face
-    short int front = _cube[0];
-    _cube[0] = _cube[2];
-    _cube[2] = _cube[3];
-    _cube[3] = _cube[1];
-    _cube[1] = front;
-    //print("front turn")
-    cout << endl << "FRONT TURN,";
-}
-
-void BackTurn(short int* _cube) {
-    // left face square
-    short int left = _cube[16];
-    _cube[16] = _cube[5];
-    _cube[5] = _cube[23];
-    _cube[23] = _cube[14];
-    _cube[14] = left;
-
-    //right face square
-    short int right = _cube[17];
-    _cube[17] = _cube[7];
-    _cube[7] = _cube[22];
-    _cube[22] = _cube[12];
-    _cube[12] = right;
-
-    // back side face
-    short int back = _cube[8];
-    _cube[8] = _cube[10];
-    _cube[10] = _cube[11];
-    _cube[11] = _cube[9];
-    _cube[9] = back;
-    //print("back turn")
-    cout << endl << "BACK TURN,";
-}
 //CUBE NOTATION
 /* 
     center is *green*
@@ -213,6 +56,14 @@ int SetupCube() {
     return 0;
 }
 
+
+
+short int GetNextPiDigit() {
+    short int pi_digit;
+
+
+    return pi_digit;
+}
 void PrintCube(short int* _cube) {
     std::string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
@@ -302,9 +153,62 @@ bool IsCubeSolved(short int* _cube) {
     }
 
    // must be solved then, if no check failed.
-    cout << "HOLY CRAP SOMETHING HAPPENED";
+    cout << endl << endl << "*********HOLY CRAP SOMETHING HAPPENED************" << endl;
     return SOLVED;
 }
+
+
+bool DoMove(short int* _cube, short int _pi_digit) {
+
+    switch (_pi_digit)
+    {
+    case 0:
+        // do nothing? 
+        break;
+    case 1:
+        FrontTurn(_cube);
+        break;
+    case 2:
+        RightTurn(_cube);
+        break;
+    case 3:
+        UpTurn(_cube);
+        break;
+    case 4:
+        FrontTurn(_cube);
+        FrontTurn(_cube);
+        break;
+    case 5:
+        RightTurn(_cube);
+        RightTurn(_cube);
+        break;
+    case 6:
+        UpTurn(_cube);
+        UpTurn(_cube);
+        break;
+    case 7: // inverse (3 for now)
+        FrontTurn(_cube);
+        FrontTurn(_cube);
+        FrontTurn(_cube);
+        break;
+    case 8: // inverse (3 for now)
+        RightTurn(_cube);
+        RightTurn(_cube);
+        RightTurn(_cube);
+        break;
+    case 9: // inverse (3 for now)
+        UpTurn(_cube);
+        UpTurn(_cube);
+        UpTurn(_cube);
+        break;
+    }
+
+    PrintCube(_cube);
+
+    return !IsCubeSolved(_cube); // get wether or not it is solved or not. (flip it? shit idk...)
+}
+
+
 
 int main()
 {
@@ -325,17 +229,48 @@ int main()
     }
     cout << endl;
 
-    // With cube initialized, start doing moves and checking if it is solved or not
+    // setup file to start reading.
 
-    while (NotSolved) {
+    const size_t chunk_size = 100;
+    std::string filename = "pi_short.txt";
+    std::ifstream pi_file(filename);
+
+    if (!pi_file) {
+        std::cerr << "Failed to open " << filename;
+        return 1;
+    }
+
+    std::vector<char> buffer(chunk_size);
+
+    // read the chunk size
+    pi_file.read(buffer.data(), chunk_size);
+    std::streamsize bytes_read = pi_file.gcount();
+    // save postion
+    std::streampos saved_pos = pi_file.tellg(); 
+    short int pi_digit = 3;
+
+    // now operate
+    // With cube initialized, start doing moves and checking if it is solved or not
+    while (NotSolved) { 
 
         //read file, make 100 moves -> each move print out at first, after 100 moves read next chunk
        
-        // continue solving
-        RightTurn(cube);
-        PrintCube(cube);
-
-        NotSolved = !IsCubeSolved(cube); // get wether or not it is solved or not. (flip it? shit idk...)
+        for (std::streamsize index = 0; index < bytes_read; index++)
+        {
+            pi_digit = buffer[index]; // get next digit
+            NotSolved = DoMove(cube, pi_digit);
+            if (NotSolved) {
+                break; // if solved, break out of loop at this point.
+            }
+        }
+         
+        pi_file.seekg(saved_pos);
+        pi_file.read(buffer.data(), chunk_size);
+        bytes_read = pi_file.gcount();    
+        if (bytes_read <= 0) {
+            cout << endl << "~~~~~~~~~~~~~~~~   UNSOLVABLE   ~~~~~~~~~~~~~~~~";
+            break;
+        }
     }
        
 
@@ -568,3 +503,13 @@ int main()
 //
 //    return 0; // success
 //}
+//
+//struct MasterCube {
+//    char red;
+//    char white;
+//    char blue;
+//    char yellow;
+//    char green;
+//    char orange;
+//
+//};
