@@ -4,15 +4,22 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <unordered_map>
+#include <functional>
+#include <algorithm>
 #include <string>
 #include "Moves.h"
 
 using std::cout;
 using std::endl;
+using std::string;
 
-
-const bool UNSOVLED = false;
+const bool UNSOLVED = false;
 const bool SOLVED = true;
+const int _64KB = 65536;
+const short int test_bytes = 5;
+const int test_1000_bytes = 1000;
+
 
 /*
 GREEN 0-3
@@ -49,23 +56,19 @@ WHITE 20-23
 
 */
 
-
 int SetupCube() {
     short int cube[24];
 
     return 0;
 }
-
-
-
 short int GetNextPiDigit() {
-    short int pi_digit;
+    short int pi_digit=0;
 
 
     return pi_digit;
 }
 void PrintCube(short int* _cube) {
-    std::string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
+    string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
     cout << endl << endl << "PRINTING CUBES STATE: ";
 
@@ -137,84 +140,94 @@ bool IsCubeSolved(short int* _cube) {
         { 21, 23, 20, 22, 10, 8, 11, 9, 17, 19, 16, 18, 1, 3, 0, 2, 4, 5, 6, 7, 15, 14, 13, 12},
     };
 
-    bool never_unsolved = true; // prove this to be wrong.
-    // go through each face state
+    signed short int solved_qbs = 0; // prove this to be wrong.
+    // go through each orientation state
     for (int short state = 0; state < 24; state++)
     {
-        // now go through each cube to check if its solved in this face state
-        for (short int qb = 0; qb < 24; qb++)
-            if (!(_cube[qb] == SolvedStates[state][qb])) {
-                never_unsolved = false;
-                return UNSOVLED;
+        // now go through each cube to check if its solved in this orientation.
+        for (short int qb = 0; qb < 24; qb++) {
+            if (_cube[qb] == SolvedStates[state][qb]) {
+                solved_qbs++;
             }
-        if (never_unsolved) {
-            break;
         }
+        if (solved_qbs >=24) { // if all 24 faces have been account for, should be solved!
+            cout << endl << endl << "*********************************************************" << endl;
+            cout << endl << endl << "*********************************************************" << endl;
+            cout << endl << endl << "*********  HOLY CRAP SOMETHING HAPPENED  ************" << endl;
+            cout << endl << endl << "*********************************************************" << endl;
+            cout << endl << endl << "*********************************************************" << endl;
+            return SOLVED;
+        }
+        solved_qbs = 0; // RESET for next potential solve state.
     }
 
-   // must be solved then, if no check failed.
-    cout << endl << endl << "*********HOLY CRAP SOMETHING HAPPENED************" << endl;
-    return SOLVED;
+    return UNSOLVED;
 }
 
 
-bool DoMove(short int* _cube, short int _pi_digit) {
+bool DoMove(short int* _cube, char _pi_digit) {
 
     switch (_pi_digit)
     {
-    case 0:
+    case '0':
         // do nothing? 
+        //LeftTurn(_cube); //  testing purposes
         break;
-    case 1:
+    case '1':
         FrontTurn(_cube);
         break;
-    case 2:
+    case '2':
         RightTurn(_cube);
         break;
-    case 3:
+    case '3':
         UpTurn(_cube);
         break;
-    case 4:
-        FrontTurn(_cube);
-        FrontTurn(_cube);
-        break;
-    case 5:
-        RightTurn(_cube);
-        RightTurn(_cube);
-        break;
-    case 6:
-        UpTurn(_cube);
-        UpTurn(_cube);
-        break;
-    case 7: // inverse (3 for now)
-        FrontTurn(_cube);
+    case '4':
         FrontTurn(_cube);
         FrontTurn(_cube);
         break;
-    case 8: // inverse (3 for now)
+    case '5':
+        RightTurn(_cube);
+        RightTurn(_cube);
+        break;
+    case '6':
+        UpTurn(_cube);
+        UpTurn(_cube);
+        break;
+    case '7': // inverse (3 for now)
+        FrontTurn(_cube);
+        FrontTurn(_cube);
+        FrontTurn(_cube);
+        break;
+    case '8': // inverse (3 for now)
         RightTurn(_cube);
         RightTurn(_cube);
         RightTurn(_cube);
         break;
-    case 9: // inverse (3 for now)
+    case '9': // inverse (3 for now)
         UpTurn(_cube);
         UpTurn(_cube);
         UpTurn(_cube);
+        break;
+    default:
         break;
     }
+  
 
-    PrintCube(_cube);
+    //PrintCube(_cube);
 
-    return !IsCubeSolved(_cube); // get wether or not it is solved or not. (flip it? shit idk...)
+    return IsCubeSolved(_cube); // get wether or not it is solved or not. (flip it? shit idk...)
 }
 
-
+//std::unordered_map<std::string, std::function<void()>> MapFunctions() {
+//    return NULL;
+//}
 
 int main()
 {
+    // SETUP
     cout << "STARTING CUBE POSITIONS: " << endl;
-    std::string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
-    bool NotSolved = true;
+    string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
 
     short int cube[24];
     // initialzie the solved cube state
@@ -229,10 +242,81 @@ int main()
     }
     cout << endl;
 
+
+
+
+
+    return 0;
+
+    // MAPPING ALL MOVES - PERMUTATIONS OF ALL MOVES
+    std::vector<string> possible_moves_FRU = { "0", "F", "FF", "R", "RR", "U", "UU",  "f", "r", "u" };
+    std::vector<string> possible_moves_BLD = { "0", "B", "BB", "D", "DD", "L",  "LL", "b", "d",  "l" };
+    //std::vector<short int> possible_digits = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    std::unordered_map<string, std::function<void(short int*)>> function_mappings;
+    function_mappings["R"] = RightTurn;
+    function_mappings["RR"] = DoubleRightTurn;
+    function_mappings["r"] = InverseRightTurn;
+    function_mappings["F"] = FrontTurn;
+    function_mappings["FF"] = DoubleFrontTurn;
+    function_mappings["f"] = InverseFrontTurn;
+    function_mappings["U"] = UpTurn;
+    function_mappings["UU"] = DoubleUpTurn;
+    function_mappings["u"] = InverseUpTurn;
+    function_mappings["B"] = BackTurn;
+    function_mappings["BB"] = DoubleBackTurn;
+    function_mappings["b"] = InverseBackTurn;
+    function_mappings["D"] = DownTurn;
+    function_mappings["DD"] = DoubleDownTurn;
+    function_mappings["d"] = InverseDownTurn;
+    function_mappings["L"] = LeftTurn;
+    function_mappings["LL"] = DoubleLeftTurn;
+    function_mappings["l"] = InverseLeftTurn;
+
+
+    do {
+        // generate two parallel combinations
+        std::unordered_map<short int, string> move_mappings_FRU;
+        std::unordered_map<short int, string> move_mappings_BLD;
+        for (size_t index = 0; index < 10; index++) {
+            move_mappings_FRU[index] = possible_moves_FRU[index]; // for RIGHT FRONT AND UP
+            move_mappings_BLD[index] = possible_moves_BLD[index]; // for BACK LEFT AND DOWN
+        }
+
+        // now do shit. have the first mappings. [0] = R, [1] = L.. etc..
+        //function_mappings[move_mappings_FRU[]]
+
+
+
+
+
+
+
+
+
+
+
+    } while (std::next_permutation(possible_moves_FRU.begin(), possible_moves_FRU.end()) 
+          && std::next_permutation(possible_moves_BLD.begin(), possible_moves_BLD.end())); // go through all the permutations of the possible moves.
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+    // FILE HANDLING
     // setup file to start reading.
 
-    const size_t chunk_size = 100;
-    std::string filename = "pi_short.txt";
+    const size_t chunk_size = _64KB; // 5 or 64 kb?
+    string filename = "pi_2.5mil.txt";
     std::ifstream pi_file(filename);
 
     if (!pi_file) {
@@ -244,272 +328,51 @@ int main()
 
     // read the chunk size
     pi_file.read(buffer.data(), chunk_size);
-    std::streamsize bytes_read = pi_file.gcount();
+    std::streamsize bytes_read = pi_file.gcount(); // returns the count of bytes just read.
     // save postion
     std::streampos saved_pos = pi_file.tellg(); 
-    short int pi_digit = 3;
+    char pi_digit = 3;
+    bool Solved = false;
+    bool end_of_file = false;
+    std::streamsize index = 0;
+    long int number_of_moves = 0;
 
     // now operate
     // With cube initialized, start doing moves and checking if it is solved or not
-    while (NotSolved) { 
+    while (!Solved && !end_of_file) { // NotSolved
+        pi_digit = buffer[index]; // get the next digit
+        Solved = DoMove(cube, pi_digit);
+        number_of_moves++;
 
-        //read file, make 100 moves -> each move print out at first, after 100 moves read next chunk
-       
-        for (std::streamsize index = 0; index < bytes_read; index++)
-        {
-            pi_digit = buffer[index]; // get next digit
-            NotSolved = DoMove(cube, pi_digit);
-            if (NotSolved) {
-                break; // if solved, break out of loop at this point.
+        if (Solved) {
+            break; // if solved break?
+        }
+        
+        index++;// go to next buffer index
+        if (index >= bytes_read) { // after chunk of characters have been read
+            pi_file.seekg(saved_pos); // go back to the saved position?
+            pi_file.read(buffer.data(), chunk_size);
+            bytes_read = pi_file.gcount(); // something if bytes read is less than the chunk size.. end of file.
+            saved_pos = pi_file.tellg();
+            cout << "-- GONE THROUGH 64KB OF DIGITS --" << endl;
+            index = 0; // reset for going through next buffer.
+            if (bytes_read < chunk_size) {
+                cout << "-- nearing end of file- LAST CHUNK --" << endl;
+                end_of_file = true;
             }
         }
-         
-        pi_file.seekg(saved_pos);
-        pi_file.read(buffer.data(), chunk_size);
-        bytes_read = pi_file.gcount();    
-        if (bytes_read <= 0) {
-            cout << endl << "~~~~~~~~~~~~~~~~   UNSOLVABLE   ~~~~~~~~~~~~~~~~";
-            break;
-        }
-    }
        
+    }      
 
     
 
-  
-    cout << endl << "------------Final State-------------------- ";
-    PrintCube(cube);
+    cout << endl << "-------------------------------------------";
+    cout << endl << "--------------- Final State ---------------";
+    cout << endl << "-------------------------------------------";
+    cout << endl << "Number of total moves: " << number_of_moves << endl;
 
-
-
-
-
+    PrintCube(cube); // make a print result?
     return 0;
-    //SolveCube(cube);
 }
 
 
-
-// TESTING STUFF BELOW
-
-// for getting all 24 solving states:
-////1
-//RightTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//
-//// white front
-////2
-////FrontTurn(cube);
-////BackTurn(cube);
-////BackTurn(cube);
-////BackTurn(cube);
-//
-////////3
-////FrontTurn(cube);
-////FrontTurn(cube);
-////BackTurn(cube);
-////BackTurn(cube);
-//
-//////4
-//FrontTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//BackTurn(cube);
-
-
-// GODS MOVES w/ SETUP
-    //setup with green front and white on top (nice green front :p)
-//FrontTurn(cube);
-//FrontTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//// Should be green in front, white on top
-//PrintCube(cube);
-//
-//
-//cout << endl << "----GODS SCRAMBLE----" << endl;
-//LeftTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//RightTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//DownTurn(cube);
-//DownTurn(cube);
-//FrontTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//LeftTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//BackTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//UpTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//
-//PrintCube(cube);
-//
-//cout << endl << "----GODS SOLUTION----" << endl;
-//LeftTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//RightTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//UpTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//DownTurn(cube);
-//DownTurn(cube);
-//LeftTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//UpTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//
-//PrintCube(cube);
-
-
-// some other random moves that should solve itself
-//RightTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//LeftTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//DownTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//BackTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//LeftTurn(cube);
-//UpTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//for (int index = 0; index < 24; index++) {
-//    cout << cube[index] << ", ";
-//}
-//cout << endl;
-//RightTurn(cube);
-//FrontTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//UpTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//BackTurn(cube);
-//DownTurn(cube);
-//DownTurn(cube);
-//DownTurn(cube);
-//FrontTurn(cube);
-//FrontTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//LeftTurn(cube);
-//UpTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-//RightTurn(cube);
-
-// SEXY MOVE TEST (using 3 turns instead of inverted)
-//for (int times = 0; times < 6; times++) {
-//    RightTurn(cube);
-//    RightTurn(cube);
-//    RightTurn(cube);
-//    for (int index = 0; index < 24; index++) {
-//        cout << cube[index] << ", ";
-//    }
-//    cout << endl;
-//    // 3 for inverted for now
-//    DownTurn(cube);
-//    DownTurn(cube);
-//    DownTurn(cube);
-//    for (int index = 0; index < 24; index++) {
-//        cout << cube[index] << ", ";
-//    }
-//    cout << endl;
-//    // 3 for inverted fornow 
-//    RightTurn(cube);
-//    for (int index = 0; index < 24; index++) {
-//        cout << cube[index] << ", ";
-//    }
-//    cout << endl;
-//    DownTurn(cube);
-//    for (int index = 0; index < 24; index++) {
-//        cout << cube[index] << ", ";
-//    }
-//    cout << endl;
-
-//}
-
-
-// other crap
-//cout << endl << endl << "PRINTING CUBES STATE: ";
-//
-//for (short int index = 0, face = 0; index < 24; index++) {
-//    cout << cube[index] << ", ";
-//}
-//cout << endl;
-
-//
-//int SolveCube(short int* _cube) {
-//    std::string cube_state;
-//
-//    for (short int index = 0; index < 24; index++) {
-//        /*
-//                GREEN 0-3
-//                ORANGE 4-7
-//                BLUE 8-11
-//                RED 12-15
-//                YELLOW 16-19
-//                WHITE 20-23
-//        */
-//        cube_state += _cube[index];
-//        cube_state += ", ";
-//    }
-//
-//    return 0; // success
-//}
-//
-//struct MasterCube {
-//    char red;
-//    char white;
-//    char blue;
-//    char yellow;
-//    char green;
-//    char orange;
-//
-//};
