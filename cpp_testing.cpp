@@ -8,6 +8,7 @@
 #include <functional>
 #include <algorithm>
 #include <string>
+#include <locale>
 #include "Moves.h"
 
 using std::cout;
@@ -151,11 +152,11 @@ bool IsCubeSolved(short int* _cube) {
             }
         }
         if (solved_qbs >=24) { // if all 24 faces have been account for, should be solved!
-            cout << endl << endl << "*********************************************************" << endl;
-            cout << endl << endl << "*********************************************************" << endl;
-            cout << endl << endl << "*********  HOLY CRAP SOMETHING HAPPENED  ************" << endl;
-            cout << endl << endl << "*********************************************************" << endl;
-            cout << endl << endl << "*********************************************************" << endl;
+           /* cout << endl << "*********************************************************" << endl;
+            cout << "*********************************************************" << endl;
+            cout << "*********  HOLY CRAP SOMETHING HAPPENED  ************" << endl;
+            cout << "*********************************************************" << endl;
+            cout << "*********************************************************" << endl;*/
             return SOLVED;
         }
         solved_qbs = 0; // RESET for next potential solve state.
@@ -225,6 +226,8 @@ bool DoMove(short int* _cube, char _pi_digit) {
 
 int main()
 {
+    auto old_locale = cout.getloc();
+
     // SETUP
     cout << "STARTING CUBE POSITIONS: " << endl;
     string faces[6] = { "Front", "Right", "Back", "Left", "Up", "Down" };
@@ -241,12 +244,6 @@ int main()
 
     }
     cout << endl;
-
-
-
-
-
-    return 0;
 
     // MAPPING ALL MOVES - PERMUTATIONS OF ALL MOVES
     std::vector<string> possible_moves_FRU = { "0", "F", "FF", "R", "RR", "U", "UU",  "f", "r", "u" };
@@ -271,9 +268,15 @@ int main()
     function_mappings["L"] = LeftTurn;
     function_mappings["LL"] = DoubleLeftTurn;
     function_mappings["l"] = InverseLeftTurn;
+    function_mappings["0"] = DoNothing;
 
 
-    do {
+    // gotta fix as it stop at 2,490,368, and add something for when it does not solve? dont print when it doesnt solve?
+    
+    size_t number_of_attempts = 0;
+     // do one whole solve for one of the permutations
+    do {     
+        
         // generate two parallel combinations
         std::unordered_map<short int, string> move_mappings_FRU;
         std::unordered_map<short int, string> move_mappings_BLD;
@@ -282,96 +285,215 @@ int main()
             move_mappings_BLD[index] = possible_moves_BLD[index]; // for BACK LEFT AND DOWN
         }
 
-        // now do shit. have the first mappings. [0] = R, [1] = L.. etc..
-        //function_mappings[move_mappings_FRU[]]
-
-
-
-
-
-
-
-
-
-
-
-    } while (std::next_permutation(possible_moves_FRU.begin(), possible_moves_FRU.end()) 
-          && std::next_permutation(possible_moves_BLD.begin(), possible_moves_BLD.end())); // go through all the permutations of the possible moves.
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-
-    // FILE HANDLING
-    // setup file to start reading.
-
-    const size_t chunk_size = _64KB; // 5 or 64 kb?
-    string filename = "pi_2.5mil.txt";
-    std::ifstream pi_file(filename);
-
-    if (!pi_file) {
-        std::cerr << "Failed to open " << filename;
-        return 1;
-    }
-
-    std::vector<char> buffer(chunk_size);
-
-    // read the chunk size
-    pi_file.read(buffer.data(), chunk_size);
-    std::streamsize bytes_read = pi_file.gcount(); // returns the count of bytes just read.
-    // save postion
-    std::streampos saved_pos = pi_file.tellg(); 
-    char pi_digit = 3;
-    bool Solved = false;
-    bool end_of_file = false;
-    std::streamsize index = 0;
-    long int number_of_moves = 0;
-
-    // now operate
-    // With cube initialized, start doing moves and checking if it is solved or not
-    while (!Solved && !end_of_file) { // NotSolved
-        pi_digit = buffer[index]; // get the next digit
-        Solved = DoMove(cube, pi_digit);
-        number_of_moves++;
-
-        if (Solved) {
-            break; // if solved break?
+         // FILE HANDLING - setup file to start reading.
+        ///* TESTING ONLY */ string filename = "mappings.txt"; // TESTING ONLY
+        std::ifstream pi_file("pi.txt"); /// input file stream - named pi_file - opening file called filename - open(filename)
+        if (!pi_file) {
+            std::cerr << "Failed to open pi.txt";
+            return 1;
         }
-        
-        index++;// go to next buffer index
-        if (index >= bytes_read) { // after chunk of characters have been read
-            pi_file.seekg(saved_pos); // go back to the saved position?
-            pi_file.read(buffer.data(), chunk_size);
-            bytes_read = pi_file.gcount(); // something if bytes read is less than the chunk size.. end of file.
-            saved_pos = pi_file.tellg();
-            cout << "-- GONE THROUGH 64KB OF DIGITS --" << endl;
-            index = 0; // reset for going through next buffer.
-            if (bytes_read < chunk_size) {
-                cout << "-- nearing end of file- LAST CHUNK --" << endl;
-                end_of_file = true;
+
+        const size_t chunk_size = _64KB; // 5 or 64 kb?
+        std::vector<char> buffer(chunk_size);
+        // read the chunk size
+        pi_file.read(buffer.data(), chunk_size);
+        std::streamsize bytes_read = pi_file.gcount(); // returns the count of bytes just read.
+        // save postion
+        std::streampos saved_pos = pi_file.tellg();
+        char pi_digit = '0'; char prev_pi_digit = '0';
+        bool Solved = false;
+        bool end_of_file = false;
+        std::streamsize index = 0;
+        long int number_of_moves = 0;
+
+        // now operate
+        // With cube initialized, start doing moves and checking if it is solved or not
+        while (!Solved && !end_of_file) { // NotSolved
+            prev_pi_digit = pi_digit; // get previous digit, then..
+            pi_digit = buffer[index]; // get the next digit
+
+            if (pi_digit >= prev_pi_digit) {
+                // need to change digit into an integer. or change the indexes from ints to chars? or just the numbers for the ascii.. couple ways.
+                switch (pi_digit)
+                {
+                case '0': // do whatever is mapped to digit 0 at this moment.
+                    function_mappings[move_mappings_FRU[0]](cube);
+                    break;
+                case '1': // do whatever is mapped to digit 1 at this moment.
+                    function_mappings[move_mappings_FRU[1]](cube); // some syntax like this to call it for each digit, should be mapped for the different moves.. 
+                    break;
+                case '2':
+                    function_mappings[move_mappings_FRU[2]](cube);
+                    break;
+                case '3':
+                    function_mappings[move_mappings_FRU[3]](cube);
+                    break;
+                case '4':
+                    function_mappings[move_mappings_FRU[4]](cube);
+                    break;
+                case '5':
+                    function_mappings[move_mappings_FRU[5]](cube);
+                    break;
+                case '6':
+                    function_mappings[move_mappings_FRU[6]](cube);
+                    break;
+                case '7':
+                    function_mappings[move_mappings_FRU[7]](cube);
+                    break;
+                case '8':
+                    function_mappings[move_mappings_FRU[8]](cube);
+                    break;
+                case '9':
+                    function_mappings[move_mappings_FRU[9]](cube);
+                    break;
+                default:
+                    std::cerr << "UH OH SOMETHING WENT WERY WRONG!" << endl;
+                    break;
+                }
+            } else {
+                // need to change digit into an integer. or change the indexes from ints to chars? or just the numbers for the ascii.. couple ways.
+                switch (pi_digit)
+                {
+                case '0': // do whatever is mapped to digit 0 at this moment.
+                    function_mappings[move_mappings_BLD[0]](cube);
+                    break;
+                case '1': // do whatever is mapped to digit 1 at this moment.
+                    function_mappings[move_mappings_BLD[1]](cube); // some syntax like this to call it for each digit, should be mapped for the different moves.. 
+                    break;
+                case '2':
+                    function_mappings[move_mappings_BLD[2]](cube);
+                    break;
+                case '3':
+                    function_mappings[move_mappings_BLD[3]](cube);
+                    break;
+                case '4':
+                    function_mappings[move_mappings_BLD[4]](cube);
+                    break;
+                case '5':
+                    function_mappings[move_mappings_BLD[5]](cube);
+                    break;
+                case '6':
+                    function_mappings[move_mappings_BLD[6]](cube);
+                    break;
+                case '7':
+                    function_mappings[move_mappings_BLD[7]](cube);
+                    break;
+                case '8':
+                    function_mappings[move_mappings_BLD[8]](cube);
+                    break;
+                case '9':
+                    function_mappings[move_mappings_BLD[9]](cube);
+                    break;
+                default:
+                    std::cerr << "UH OH SOMETHING WENT WERY WRONG!" << endl;
+                    break;
+                }
+            }
+            //PrintCube(_cube);
+            Solved = IsCubeSolved(cube);
+            number_of_moves++;
+
+           /* if (number_of_moves >= 651316) {
+                int test = 0;
+            }*/
+
+            if (Solved) {
+                break; // if solved break?
+            }
+
+            index++;// go to next buffer index
+            if (index >= bytes_read) { // after chunk of characters have been read
+                pi_file.seekg(saved_pos); // go back to the saved position?
+                pi_file.read(buffer.data(), chunk_size);
+                bytes_read = pi_file.gcount(); // something if bytes read is less than the chunk size.. end of file.
+                saved_pos = pi_file.tellg();
+                //cout << "-- GONE THROUGH 64KB OF DIGITS --" << endl;
+                index = 0; // reset for going through next buffer.
+                if (bytes_read < chunk_size) {
+                    cout << "-- nearing end of file- LAST CHUNK --" << endl;
+                    end_of_file = true;
+                }
             }
         }
+
+        // solves history
+        std::ofstream solve_file("solves.txt", std::ios::app);
+        if (!solve_file) {
+            std::cerr << "Failed to open solve.txt";
+            return 1;
+        }
+        // SAVE STATE
+        std::ofstream save_file("save.txt");
+        if (!save_file) {
+            std::cerr << "Failed to open save.txt";
+            return 1;
+        }
+
+
+        number_of_attempts++;
+        solve_file << "--------------------- ATTEMPT #";
+        solve_file.imbue(std::locale("en_US.UTF-8")); // change formatting for writing number to 
+        solve_file << number_of_attempts << " ---------------------" << endl;
+        solve_file.imbue(old_locale); // change it back
+        solve_file << "Mapping for 0-9 of type Front-Right-Up: ";
+
+        cout << "--------------------- ATTEMPT #";
+        cout.imbue(std::locale("en_US.UTF-8")); // change formatting for writing number to 
+        cout << number_of_attempts << " ---------------------" << endl;
+        cout.imbue(old_locale); // change it back
+        cout << "Mapping for 0-9 of type Front-Right-Up: ";
+
+        save_file << number_of_attempts << endl;
+        for (const auto& move : possible_moves_FRU) {
+            cout << move << ", ";
+            solve_file << move << ", ";
+            save_file << "\"" << move << "\"" << ", ";
+        }
+        save_file << endl;
+        solve_file << endl << "Mapping for 0-9 of type Back-Left-Down: ";
+        cout << endl << "Mapping for 0-9 of type Back-Left-Down: ";
+        for (const auto& move : possible_moves_BLD) {
+            cout << move << ", ";
+            solve_file << move << ", ";
+            save_file << "\"" << move << "\"" << ", ";
+        }     
+
+
+        if (Solved) {           
+            solve_file << endl  << "Number of total moves to SOLVE: ";
+            solve_file.imbue(std::locale("en_US.UTF-8")); // change formatting for writing number to 
+            solve_file << number_of_moves << endl;
+            solve_file.imbue(old_locale); // change it back
+
+            cout << endl << "Number of total moves to SOLVE: ";
+            cout.imbue(std::locale("en_US.UTF-8")); // change formatting for number output
+            cout << number_of_moves << endl;
+            cout.imbue(old_locale); // change it back
+        }
+        else {
+            solve_file << endl << "Number of total moves made with NO solve: ";
+            solve_file.imbue(std::locale("en_US.UTF-8")); // change formatting for writing number to 
+            solve_file << number_of_moves << endl;
+            solve_file.imbue(old_locale); // change it back
+
+            cout << endl << "Number of total moves made with NO solve: ";
+            cout.imbue(std::locale("en_US.UTF-8")); // change formatting for number output
+            cout << number_of_moves << endl;
+            cout.imbue(old_locale); // change it back
+        }        
+        //PrintCube(cube); 
+        cout << "-------------------------------------------" << endl << endl;
+
+        // RESET THE CUBE YOU DUMBASS
+        for (short int qb = 0; qb < 24; qb++) {
+            cube[qb] = qb;
+        }
+    } while (std::next_permutation(possible_moves_FRU.begin(), possible_moves_FRU.end()) 
+          && std::next_permutation(possible_moves_BLD.begin(), possible_moves_BLD.end())); // go through all the permutations of the possible moves.
+    // save which permutation that it is on
+    // save which permutations and the number of moves etc. (maybe sort)
+
        
-    }      
-
-    
-
-    cout << endl << "-------------------------------------------";
-    cout << endl << "--------------- Final State ---------------";
-    cout << endl << "-------------------------------------------";
-    cout << endl << "Number of total moves: " << number_of_moves << endl;
-
-    PrintCube(cube); // make a print result?
     return 0;
 }
 
