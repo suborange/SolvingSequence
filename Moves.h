@@ -23,3 +23,5 @@ void InverseFrontTurn(short int* _cube);
 void BackTurn(short int* _cube); 
 void DoubleBackTurn(short int* _cube);
 void InverseBackTurn(short int* _cube);
+
+void DoNothing(short int* _cube);

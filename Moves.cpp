@@ -64,7 +64,7 @@ void RightTurn(short int* _cube) {
     _cube[7] = _cube[5];
     _cube[5] = right;
     //print("right turn")
-    cout << endl << "RIGHT TURN,";
+    //cout << endl << "RIGHT TURN,";
 }
 void DoubleRightTurn(short int* _cube) {
     //top face square
@@ -107,7 +107,7 @@ void DoubleRightTurn(short int* _cube) {
     _cube[5] = right;
 
     //print("right turn")
-    cout << endl << "DOUBLE RIGHT TURN,";
+    //cout << endl << "DOUBLE RIGHT TURN,";
 }
 void InverseRightTurn(short int* _cube) {
     //top face square
@@ -131,7 +131,7 @@ void InverseRightTurn(short int* _cube) {
     _cube[7] = _cube[6];
     _cube[6] = right;
     //print("right turn")
-    cout << endl << "INVERSE RIGHT TURN,";
+    //cout << endl << "INVERSE RIGHT TURN,";
 }
 #pragma endregion RightTurns
 
@@ -158,7 +158,7 @@ void LeftTurn(short int* _cube) {
     _cube[15] = _cube[13];
     _cube[13] = left;
     //print("left turn")
-    cout << endl << "LEFT TURN,";
+    //cout << endl << "LEFT TURN,";
 }
 void DoubleLeftTurn(short int* _cube) {
     //top face square
@@ -201,7 +201,7 @@ void DoubleLeftTurn(short int* _cube) {
     _cube[13] = left;
 
     //print("left turn")
-    cout << endl << "DOUBLE LEFT TURN,";
+    //cout << endl << "DOUBLE LEFT TURN,";
 }
 void InverseLeftTurn(short int* _cube) {
     //top face square
@@ -226,7 +226,7 @@ void InverseLeftTurn(short int* _cube) {
     _cube[14] = left;
 
     //print("left turn")
-    cout << endl << "INVERSE LEFT TURN,";
+    //cout << endl << "INVERSE LEFT TURN,";
 }
 #pragma endregion LeftTurns
 
@@ -253,7 +253,7 @@ void UpTurn(short int* _cube) {
     _cube[19] = _cube[17];
     _cube[17] = up;
     //print("up turn")
-    cout << endl << "UP TURN,";
+    //cout << endl << "UP TURN,";
 }
 void DoubleUpTurn(short int* _cube) {
     // left face square
@@ -296,7 +296,7 @@ void DoubleUpTurn(short int* _cube) {
     _cube[17] = up;
 
     //print("up turn")
-    cout << endl << "DOUBLE UP TURN,";
+    //cout << endl << "DOUBLE UP TURN,";
 }
 void InverseUpTurn(short int* _cube) {
     // left face square
@@ -322,7 +322,7 @@ void InverseUpTurn(short int* _cube) {
 
     //print("up turn")
     // 
-    cout << endl << "INVERSE UP TURN,";
+    //cout << endl << "INVERSE UP TURN,";
 }
 #pragma endregion UpTurns
 
@@ -349,7 +349,7 @@ void DownTurn(short int* _cube) {
     _cube[23] = _cube[21];
     _cube[21] = down;
     //print("down turn")
-    cout << endl << "DOWN TURN,";
+    //cout << endl << "DOWN TURN,";
 }
 void DoubleDownTurn(short int* _cube) {
     // left face square
@@ -392,7 +392,7 @@ void DoubleDownTurn(short int* _cube) {
     _cube[21] = down;
 
     //print("down turn")
-    cout << endl << "DOUBLE DOWN TURN,";
+    //cout << endl << "DOUBLE DOWN TURN,";
 }
 void InverseDownTurn(short int* _cube) {
     // left face square
@@ -416,7 +416,7 @@ void InverseDownTurn(short int* _cube) {
     _cube[23] = _cube[22];
     _cube[22] = down;
     //print("down turn")
-    cout << endl << "INVERSE DOWN TURN,";
+    //cout << endl << "INVERSE DOWN TURN,";
 }
 #pragma endregion DownTurns
 
@@ -443,7 +443,7 @@ void FrontTurn(short int* _cube) {
     _cube[3] = _cube[1];
     _cube[1] = front;
     //print("front turn")
-    cout << endl << "FRONT TURN,";
+    //cout << endl << "FRONT TURN,";
 }
 void DoubleFrontTurn(short int* _cube) {
     // left face square
@@ -486,7 +486,7 @@ void DoubleFrontTurn(short int* _cube) {
     _cube[1] = front;
 
     //print("front turn")
-    cout << endl << "DOUBLE FRONT TURN,";
+    //cout << endl << "DOUBLE FRONT TURN,";
 }
 void InverseFrontTurn(short int* _cube) {
     // left face square
@@ -510,7 +510,7 @@ void InverseFrontTurn(short int* _cube) {
     _cube[3] = _cube[2];
     _cube[2] = front;
     //print("front turn")
-    cout << endl << "INVERSE FRONT TURN,";
+    //cout << endl << "INVERSE FRONT TURN,";
 }
 #pragma endregion FrontTurns
 
@@ -537,7 +537,7 @@ void BackTurn(short int* _cube) {
     _cube[11] = _cube[9];
     _cube[9] = back;
     //print("back turn")
-    cout << endl << "BACK TURN,";
+    //cout << endl << "BACK TURN,";
 }
 void DoubleBackTurn(short int* _cube) {
     // left face square
@@ -580,7 +580,7 @@ void DoubleBackTurn(short int* _cube) {
     _cube[9] = back;
 
     //print("back turn")
-    cout << endl << "DOUBLE BACK TURN,";
+    //cout << endl << "DOUBLE BACK TURN,";
 }
 void InverseBackTurn(short int* _cube) {
     // left face square
@@ -604,6 +604,10 @@ void InverseBackTurn(short int* _cube) {
     _cube[11] = _cube[10];
     _cube[10] = back;
     //print("back turn")
-    cout << endl << "INVERSE BACK TURN,";
+    //cout << endl << "INVERSE BACK TURN,";
 }
 #pragma endregion BackTurns
+
+void DoNothing(short int* _cube) {
+    //empty function
+}
